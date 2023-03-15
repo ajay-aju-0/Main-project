@@ -1,0 +1,94 @@
+{% extends 'shared/directorpanel.html' %}
+
+{% block pagetitle %}
+
+{% if staff %}
+{% include 'shared/messages.html' %}
+{% endif %}
+    
+
+<div class="d-flex justify-content-between">
+    <h1>Manage zoo time</h1>
+</div>
+
+<br>
+{% endblock pagetitle %}
+
+{% block display %}
+
+<div class="container" style="height: 80vh;">
+        <div class="row">
+            <div class="col-sm-7">
+                <table class="table table-stripped" style="height: inherit;margin-left: 150px;">
+                    <tr>
+                        <th>Day</th>
+                        <th>Open time</th>
+                        <th>Close time</th>
+                        <th>Action</th>
+                    </tr>
+                    
+                    {% for time in time %}
+                    <tr>
+                        <td>{{time.day}}</td>
+                        <td>{{time.open_time}}</td>
+                        <td>{{time.close_time}}</td>
+                        <td>
+                            <button data-toggle="modal" data-target="#zootimemodal{{time.id}}" data-backdrop="static" class="btn btn-block btn-success text-white">Update</button>
+                            <div class="modal fade" id="zootimemodal{{time.id}}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="false">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                            <div class="modal-header">
+                                                    <h5 class="modal-title">Update Time</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                </div>
+                                        <div class="modal-body">
+                                        
+                                            <form method="post" class="font-weight-bold">
+                                                
+                                            {% csrf_token %}
+                                            <input type="hidden" name="id" id="id" value="{{time.id}}">
+                                            {{timeform.day.label}} &nbsp;&nbsp;&nbsp;
+                                            <input class="form-control" type="text" name="day" id="day" value="{{time.day}}" disabled>
+                                                <br>
+                                            {{timeform.open_time.label}} &nbsp;&nbsp;&nbsp;
+                                            <input class="form-control" type="time" name="open time" id="open time">
+                                                <br>
+                                            {{timeform.close_time.label}} &nbsp;&nbsp;&nbsp;
+                                            <input class="form-control" type="time" name="close time" id="close time">
+                                            <br>
+                                            <div class="modal-footer">
+                                                <button type="submit" class="btn btn-success btn-block w-100">Update</button>
+                                            </div>
+                                             </form>                
+                                            
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                              </div>
+                              
+                              <script>
+                                $('#exampleModal').on('show.bs.modal', event => {
+                                    var button = $(event.relatedTarget);
+                                    var modal = $(this);
+                                    // Use above variables to manipulate the DOM
+                                    
+                                });
+                              </script>
+                            
+                        </td>
+                    </tr>
+                    {% endfor %}
+                        
+                </table>
+            </div>
+        </div>
+    </div>
+
+  
+  <!-- Modal -->
+  
+{% endblock display %}
+    

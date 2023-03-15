@@ -1,0 +1,64 @@
+{% extends 'shared/directorpanel.html' %}
+{% load static %}
+
+
+{% block pagetitle %}
+<div class="d-flex justify-content-between">
+    <h1>Manage ticket rates</h1>
+    <button class="btn btn-primary text-dark fw-bold" data-toggle="modal" data-target="#catagorymodal" data-backdrop="static">+ Add Catagory</button>
+</div>
+<br>
+{% endblock pagetitle %}
+    
+
+
+{% block display %}
+
+{% include 'ticketcatagory.html' %}
+<br><br>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9 offset-1">
+            <table class="table table-stripped datatable">
+                <thead>
+                <tr>
+                    <th>Catagory</th>
+                    <th>Rate</th>
+                    <th colspan="2" class="text-center col-sm-2">Action</th>
+                </tr>
+                </thead>
+                {% for i in rates %}
+                    <tr class="record">
+                        <td>{{i.type}}</td>
+                        <td>{{i.rate}}</td>
+                        <td>
+                            <button data-toggle="modal" data-target="#updatemodal{{i.id}}" data-backdrop="static" class="btn btn-block btn-success text-white">Update</button>
+                            {% include 'updateticketcatagory.html' %}
+                        </td>
+                        <td>
+                            <a href="{% url 'director_delete_ticket_catagory' i.id %}" onclick="return confirm('Sure to delete')" class="btn btn-block btn-danger text-white btn-del">Delete</a>
+                        </td>
+                    </tr>
+                {% endfor %}      
+            </table>
+        </div>
+    </div>
+</div>
+
+
+{% if error %}
+    <script src="{% static 'assets/js/jquery-3.6.3.slim.min.js' %}"></script>
+    <script src="{% static 'assets/js/jquery-3.6.3.min.js' %}"></script>
+    <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script>
+        $(document).ready(function() {
+            $('#catagorymodal').modal('show');
+        })
+    </script>
+{% endif %}
+    
+    
+{% endblock display %}
+
+
+    

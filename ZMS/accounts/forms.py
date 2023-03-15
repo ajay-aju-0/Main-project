@@ -6,7 +6,7 @@ class DateInput(forms.DateInput):
     input_type = 'date'
 
 
-class VisitorRegistrationForm(forms.ModelForm):
+class RegistrationForm(forms.ModelForm):
     
     class Meta:
         model = Users
@@ -32,3 +32,16 @@ class VisitorRegistrationForm(forms.ModelForm):
         help_texts = {'username':None}
 
 
+class VacancyForm(forms.ModelForm):
+
+    class Meta:
+        model = JobVacancy
+        exclude = ('issue_date','vstatus')
+        widgets = {
+            'vposition':forms.TextInput(attrs={'class':'form-control'}),
+            'qualification':forms.TextInput(attrs={'class':'form-control'}),
+            'description':forms.Textarea(attrs={'class':'form-control'}),
+            'vtype':forms.Select(attrs={'class':'form-control'}),
+            'vstart':DateInput(attrs={'class':'form-control'}),
+            'vend':DateInput(attrs={'class':'form-control'}),
+        }

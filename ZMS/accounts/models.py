@@ -15,7 +15,7 @@ class Users(AbstractUser):
         ('United Arab Emirates','United Arab Emirates'), ('United Kingdom','United Kingdom'), ('United States','United States'), ('Uruguay','Uruguay'), ('Uzbekistan','Uzbekistan'), ('Vanuatu','Vanuatu'), ('Vatican City','Vatican City'), ('Venezuela','Venezuela'), ('Vietnam','Vietnam'), ('Yemen','Yemen'), ('Zambia','Zambia'), ('Zimbabwe','Zimbabwe')
     )
     gender = models.CharField(max_length=1,choices=gen_choice)
-    dob = models.DateField()
+    dob = models.DateField(null=True)
     country = models.CharField(max_length=32,choices=con_choice)
     state =models.CharField(max_length=30)
     city = models.CharField(max_length=20)
@@ -24,85 +24,113 @@ class Users(AbstractUser):
     house_name = models.CharField(max_length=50)
     phone = models.BigIntegerField(default=0)
     usertype = models.CharField(max_length=15)
+    profile = models.FileField(upload_to="DP",max_length=300,verbose_name="profile photo",default="null")
     id_card = models.FileField(upload_to="id",max_length=300)
 
+    def __str__(self):
+        return self.username
+
 class Staffs(models.Model):
-    desig = models.CharField(max_length=20,verbose_name="designation")
+    desig = models.CharField(max_length=20,verbose_name="Designation")
     salary = models.BigIntegerField()
     bonus = models.IntegerField()
     user = models.ForeignKey(to=Users,on_delete=models.CASCADE)
 
+class ZooTimings(models.Model):
+    day_choice = [('sunday','Sunday'),('monday','Monday'),('tuesday','Tuesday'),('wednesday','Wednesday'),('thursday','Thursday'),('friday','Friday'),('saturday','Saturday')]
+    day = models.CharField(max_length=10,choices=day_choice)
+    open_time = models.TimeField()
+    close_time = models.TimeField()
+
 class TicketRate(models.Model):
-    type = models.CharField(max_length=20,verbose_name="ticket type")
+    type = models.CharField(max_length=20,verbose_name="Ticket type")
     rate = models.IntegerField()
 
 class Ticket(models.Model):
+    time_choices = (('morning','morning'),('noon','noon'))
     tdate = models.DateField(auto_now_add=True)
-    adult_no = models.IntegerField(default=0)
-    child_no = models.IntegerField(default=0)
-    student_no = models.IntegerField(default=0)
+    Iadult = models.IntegerField(default=0,verbose_name="No. of Adults(Indian)")
+    Ichild = models.IntegerField(default=0,verbose_name="No. of Childrens(Indian)")
+    Fadult = models.IntegerField(default=0,verbose_name="No. of Adults(Foreign)")
+    Fchild = models.IntegerField(default=0,verbose_name="No. of Childrens(Foreign)")
+    students = models.IntegerField(default=0,verbose_name="No. of Students")
     total = models.IntegerField()
-    reporting_date = models.DateTimeField(null=False)
-    paid = models.BooleanField()
+    reporting_date = models.DateField(null=False)
+    reporting_time = models.CharField(max_length=10,default="morning",choices=time_choices)
     uid = models.ForeignKey(to=Users,on_delete=models.CASCADE)
     Guide = models.ForeignKey(to=Staffs,on_delete=models.CASCADE,default="not assigned")
 
 class Feedback(models.Model):
+    fdate = models.DateField(auto_now_add=True)
     feedback = models.CharField(max_length=250)
     reply = models.CharField(max_length=200,null=True)
     uid = models.ForeignKey(to=Users,on_delete=models.CASCADE)
 
 class Complaints(models.Model):
+    cdate = models.DateField(auto_now_add=True)
     complaint = models.CharField(max_length=250)
     reply = models.CharField(max_length=200,null=True)
     uid = models.ForeignKey(to=Users,on_delete=models.CASCADE)
+    rid = models.ForeignKey(to=Staffs,on_delete=models.CASCADE)
 
-class Locations(models.Model):
-    name = models.CharField(max_length=20,verbose_name="location name")
+class Enclosures(models.Model):
+    name = models.CharField(max_length=20,verbose_name="Enclosure name")
     archieved = models.BooleanField(default=False)
 
+    def __str__(self):
+        return self.name
+
 class Taxonomy(models.Model):
-    Aorder = models.CharField(max_length=30,primary_key=True)
-    Aclass = models.CharField(max_length=30)
+    class_choice = (('mammalia','Mammalia'),('reptilia','Reptilia'),('amphibia','Amphibia'),('aves','Aves'),('fish','Fish'))
+    Aclass = models.CharField(max_length=10,choices=class_choice)
 
 class AnimalKind(models.Model):
     general_name = models.CharField(max_length=30)
     species = models.CharField(max_length=30)
-    avg_lifespan = models.CharField(max_length=25)
-    habitat = models.CharField(max_length=250,verbose_name="natural habitat")
+    avg_lifespan = models.CharField(max_length=25,verbose_name='Average lifespan')
+    habitat = models.CharField(max_length=250,verbose_name="Natural habitat")
     origin = models.CharField(max_length=20)
-    Aorder = models.ForeignKey(to=Taxonomy,on_delete=models.CASCADE)
-    characteristics = models.CharField(max_length=200)
+    Aorder = models.CharField(max_length=30,verbose_name='Animal order')
+    class_id = models.ForeignKey(to=Taxonomy,on_delete=models.CASCADE)
+    characteristics = models.CharField(max_length=200,verbose_name="Physical characteristics")
 
 class Animals(models.Model):
     choice = (('m','male'),('f','female'))
+    health_choice = (('healthy','Healthy'),('sick','Sick'))
     given_name = models.CharField(max_length=20)
     gender = models.CharField(max_length=1,choices=choice)
     height = models.FloatField()
     weight = models.FloatField()
     birth_date = models.DateField()
-    death_date = models.DateField(null=True,default="")
+    death_date = models.DateField(null=True)
     death_cause = models.CharField(max_length=100,null=True)
     incineration = models.CharField(max_length=100,null=True)
-    location = models.ForeignKey(to=Locations,on_delete=models.CASCADE)
-    area_id = models.CharField(max_length=10)
-    health_status = models.CharField(max_length=10)
+    location = models.ForeignKey(to=Enclosures,on_delete=models.CASCADE)
+    area_id = models.CharField(max_length=10,verbose_name='Area ID')
+    health_status = models.CharField(max_length=10,verbose_name='Health status',choices=health_choice)
     status = models.BooleanField()
-    diatery_req = models.CharField(max_length=100,verbose_name='diatery requirement')
+    diatery_req = models.CharField(max_length=100,verbose_name='Diatery requirement')
+    date_joined = models.DateField(auto_now_add=True)
+    image1 = models.FileField(upload_to='Animals',max_length=300,verbose_name="Image 1",default='')
+    image2 = models.FileField(upload_to='Animals',max_length=300,verbose_name="Image 2",null=True,blank=True)
+    image3 = models.FileField(upload_to='Animals',max_length=300,verbose_name="Image 3",null=True,blank=True)
     caretaker = models.ForeignKey(to=Staffs,on_delete=models.CASCADE)
     akind = models.ForeignKey(to=AnimalKind,on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.given_name
 
 class TransferDetails(models.Model):
     animal = models.ForeignKey(to=Animals,on_delete=models.CASCADE)
     transfer_from = models.CharField(max_length=25)
     transfer_to = models.CharField(max_length=25)
     transfer_date = models.DateField()
-    reason = models.CharField(max_length=150,verbose_name="transfer_reason")
+    reason = models.CharField(max_length=150,verbose_name="transfer reason")
 
 class Animal_of_the_week(models.Model):
     animal = models.ForeignKey(to=Animals,on_delete=models.CASCADE)
     performance = models.FileField(upload_to="performances",max_length=300)
-    an_week_date = models.DateField()
+    an_week_date = models.DateField(auto_now_add=True)
 
 class Medicines(models.Model):
     medicine = models.CharField(max_length=30)
@@ -110,6 +138,7 @@ class Medicines(models.Model):
 
 class sickness_details(models.Model):
     animal = models.ForeignKey(to=Animals,on_delete=models.CASCADE)
+    sdate = models.DateField(auto_now_add=True,verbose_name="added date")
     disease = models.CharField(max_length=50)
     medicine = models.ForeignKey(to=Medicines,on_delete=models.CASCADE)
     status = models.CharField(max_length=20)
@@ -123,10 +152,10 @@ class Purchase(models.Model):
     pdate = models.DateField()
 
 class Events(models.Model):
-    ename = models.CharField(max_length=30)
-    estart = models.DateField()
-    eend = models.DateField()
-    eimage = models.FileField(upload_to='events',max_length=300)
+    ename = models.CharField(max_length=30,verbose_name="Event name")
+    estart = models.DateField(verbose_name="Starting date")
+    eend = models.DateField(verbose_name="Ending date")
+    eimage = models.FileField(upload_to='events',max_length=300,verbose_name="Image")
     estatus = models.CharField(max_length=10)
 
 class Participants(models.Model):
@@ -135,19 +164,46 @@ class Participants(models.Model):
 
 class JobVacancy(models.Model):
     type_choice = (("temporary","temporary"),("permenant","permenant"))
-    status_choice = (("available","available"),("closed","closed"))
     vposition = models.CharField(max_length=25,verbose_name="vacancy position")
     qualification = models.CharField(max_length=20)
     description = models.CharField(max_length=200)
-    vtype = models.CharField(max_length=10,choices=type_choice)
+    vtype = models.CharField(max_length=10,choices=type_choice,verbose_name="vacancy type")
     vstart = models.DateField(verbose_name="start date")
     vend = models.DateField(verbose_name="end date")
-    vstatus = models.CharField(max_length=10,choices=status_choice)
+    vstatus = models.CharField(max_length=10,default="available",verbose_name="status")
+    issue_date = models.DateField(auto_now=True)
 
 class Applications(models.Model):
+    date = models.DateField(auto_now_add=True)
     fullname = models.CharField(max_length=25)
     email = models.EmailField()
     phone = models.BigIntegerField()
     cv = models.FileField(upload_to="cv",max_length=300)
     vacancy = models.ForeignKey(to=JobVacancy,on_delete=models.CASCADE)
     status = models.CharField(max_length=10)
+
+class SponserDetails(models.Model):
+    stype_choice = (('individual','Individual'),('corporate','Corporate'))
+    name = models.CharField(max_length=30,verbose_name="Sponser name")
+    address = models.CharField(max_length=100,verbose_name="Address")
+    phone = models.BigIntegerField(default=0)
+    email = models.EmailField()
+    stype = models.CharField(max_length=15,choices=stype_choice)
+    amount = models.BigIntegerField(default=0)
+    sdate = models.DateField(verbose_name="Start date")
+    edate = models.DateField(verbose_name="End date")
+    joined_date = models.DateField(auto_now_add=True)
+    notes = models.CharField(max_length=100,verbose_name="Notes")
+
+class SponseredAnimals(models.Model):
+    sponser = models.ForeignKey(to=SponserDetails,on_delete=models.CASCADE)
+    animal = models.ForeignKey(to=Animals,on_delete=models.CASCADE)
+
+class ZooDetails(models.Model):
+    name = models.CharField(max_length=30,verbose_name="zoo name")
+    location = models.CharField(max_length=20)
+    total_animal_capacity = models.IntegerField(default=0,verbose_name="Total animal capacity")
+    current_animal_occupancy = models.IntegerField(default=0,verbose_name="Current animal occupancy")
+    enclosure_types = models.IntegerField(default=0)
+    visitor_capacity = models.IntegerField(default=0)
+    total_area = models.CharField(max_length=15,verbose_name="Total area")

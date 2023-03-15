@@ -1,0 +1,83 @@
+{% extends 'shared/directorpanel.html' %}
+{% load static %}
+
+
+{% block pagetitle %}
+{% include 'shared/messages.html' %}
+
+<!-- {% if staff %}
+{% endif %} -->
+    
+
+<div class="d-flex justify-content-between">
+    <h1>Manage staffs</h1>
+    <a href="{% url 'director_add_curator' %}" class="btn btn-success text-white" style="width:max-content;"> <b>+ Add Curator</b> </a>
+</div>
+
+<br>
+{% endblock pagetitle %}
+
+
+{% block display %}
+
+    <div class="row">
+        <div class="col-sm-12">
+            <table class="table table-stripped datatable" style="height: inherit;">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Gender</th>
+                        <th>DOB</th>
+                        <th>Address</th>
+                        <th>Phone</th>
+                        <th>Designation</th>
+                        <th>Salary</th>
+                        <th>Bonus</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                
+                {% for staff in staffs %}
+                <tbody>
+                <tr>
+                    <td>{{staff.user.first_name}} {{staff.user.last_name}}</td>
+                    <td>{{staff.user.username}}</td>
+                    <td>{{staff.user.email}}</td>
+                    
+                    {% if staff.user.gender == 'm' %}
+                    <td>Male</td>
+                    {% else %}
+                    <td>Female</td>
+                    {% endif %}
+                        
+                    <td>{{staff.user.dob}}</td>
+                    <td>{{staff.user.house_name}} <br> {{staff.user.street}},{{staff.user.city}},<br>{{staff.user.state}},{{staff.user.country}}</td>
+                    <td>{{staff.user.phone}}</td>
+                    <td>{{staff.desig}}</td>
+                    <td>{{staff.salary}}</td>
+                    <td>{{staff.bonus}}</td>
+                    <td><a href="{% url 'director_update_staff' staff.user.id %}" class="btn btn-success text-white">
+                        Update
+                        </a>
+                    {% if staff.user.is_active == 1 %}
+                    <a href="{% url 'director_change_staffstatus' staff.user.id %}" onclick="return confirm('Are you sure?')" class="btn btn-danger text-white activate p-1 my-1" style="padding-top: 0;">
+                        Deactivate
+                    </a>
+                    {% else %}
+                    <a href="{% url 'director_change_staffstatus' staff.user.id %}" onclick="return confirm('Are you sure?')" class="btn btn-success text-white activate p-1 my-1" style="padding-top: 0;">
+                        Activate
+                    </a>
+                    {% endif %}
+                    </td>
+                </tr>
+            </tbody>
+                {% endfor %}
+                    
+            </table>
+        </div>
+    </div>
+  
+{% endblock display %}
+    

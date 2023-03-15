@@ -15,6 +15,7 @@ import os
 
 from django.contrib.messages import constants as messages
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -23,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-@h=4y)w$tr_-4y4qacw7q(zxsie(cc1_aoh$(&j6hy3lzz$)vh'
+SECRET_KEY = 'django-insecure-p!y25qnnis6qvtv#gh+51$pdicyt_4gn1-byz+ue)z*$tl7%#i'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -42,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'accounts',
     'Director',
+    'Curator',
 ]
 
 MIDDLEWARE = [
@@ -146,4 +148,3 @@ MESSAGE_TAGS = {
     messages.WARNING : 'alert-warning',
     messages.ERROR :'alert-danger'
 }
-

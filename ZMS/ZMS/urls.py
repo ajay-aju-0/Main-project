@@ -24,4 +24,5 @@ urlpatterns = [
     path('',loadHome,name="home"),
     path('accounts/',include('accounts.urls')),
     path('director/',include('Director.urls')),
+    path('curator/',include('Curator.urls')),
 ]+static(settings.MEDIA_URL,document_root = settings.MEDIA_ROOT)

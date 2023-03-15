@@ -1,0 +1,66 @@
+{% extends 'shared/curatorpanel.html' %}
+
+
+{% block pagetitle %}
+    
+
+<div class="d-flex justify-content-between">
+    <h1>Manage Visitors</h1>
+</div>
+
+<br>
+{% endblock pagetitle %}
+
+{% block display %}
+
+<div class="container" style="height: 80vh;">
+        <div class="row">
+            <div class="col-sm-12">
+                <table class="table table-stripped datatable" style="height: inherit;">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Gender</th>
+                            <th>DOB</th>
+                            <th>Address</th>
+                            <th>Phone</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    
+                    
+                    {% for visitor in visitors %}
+                    <tr>
+                        <td>{{visitor.first_name}} {{visitor.last_name}}</td>
+                        <td>{{visitor.username}}</td>
+                        <td>{{visitor.email}}</td>
+                        
+                        {% if visitor.gender == 'm' %}
+                        <td>Male</td>
+                        {% else %}
+                        <td>Female</td>
+                        {% endif %}
+                            
+                        <td>{{visitor.dob}}</td>
+                        <td>{{visitor.house_name}} <br> {{visitor.street}},{{visitor.city}},<br>{{visitor.state}},{{visitor.country}}</td>
+                        <td>{{visitor.phone}}</td>
+                        <td>
+                            
+                            {% if visitor.is_active == True %}
+                            <a href="{% url 'curator_change_visitor_status' visitor.id %}" onclick="return confirm('Sure to block user?')" class="btn btn-danger">Block</a>  
+                            {% else %}
+                            <a href="{% url 'curator_change_visitor_status' visitor.id %}" onclick="return confirm('this visitor will be unblocked!')" class="btn btn-success">Unblock</a>  
+                            {% endif %}
+                                
+                        </td>
+                    </tr>
+                    {% endfor %}
+                        
+                </table>
+            </div>
+        </div>
+    </div>
+    
+{% endblock display %}

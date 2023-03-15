@@ -1,0 +1,70 @@
+{% extends 'shared/directorpanel.html' %}
+
+
+{% block pagetitle %}
+{% include 'shared/messages.html' %}
+    
+
+<div class="d-flex justify-content-between">
+    <h1>View Animals</h1>
+</div>
+
+<br>
+{% endblock pagetitle %}
+
+
+{% block display %}
+
+    <div class="row">
+        <div class="col-sm-12">
+            <table class="table table-stripped datatable">
+                <thead>
+                    <tr>
+                        <th>SI No.</th>
+                        <th>Name</th>
+                        <th>Gender</th>
+                        <th>Birth Date</th>
+                        <th>Date Joined</th>
+                        <th>Caretaker</th>
+                        <th>Class</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                
+                
+                {% for animal in animals %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{animal.given_name}}</td>
+                        
+                        {% if animal.gender == 'm' %}
+                            <td>Male</td>
+                        {% else %}
+                            <td>Female</td>
+                        {% endif %}
+                            
+                        <td>{{animal.birth_date}}</td>
+                        <td>{{animal.date_joined}}</td>
+                        <td>{{animal.caretaker.user}}</td>
+                        <td>{{animal.akind.class_id.Aclass}}</td>
+                        
+                        
+                        {% if animal.status == True %}
+                           <td>Present</td> 
+                        {% else %}
+                           <td>Unavailable</td> 
+                        {% endif %}
+                            
+                        <td>
+                            <a href="" class="btn btn-secondary"><i class="bi bi-eye"></i></a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+               
+                    
+            </table>
+        </div>
+    </div>
+  
+{% endblock display %}

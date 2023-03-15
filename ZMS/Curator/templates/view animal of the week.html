@@ -1,0 +1,52 @@
+{% extends 'shared/curatorpanel.html' %}
+
+{% block pagetitle %}
+{% include 'shared/messages.html' %}
+    
+
+<div class="d-flex justify-content-between">
+    <h1>Animal of the week</h1>
+    <button class="btn btn-success text-white" style="width:max-content;" data-toggle="modal" data-target="#performancemodal" data-backdrop="static"> <b>+ Upload</b> </button>
+</div>
+
+<br>
+{% endblock pagetitle %}
+
+{% block display %}
+{% include 'upload performance.html' %}
+
+    <div class="row">
+        <div class="col-sm-12">
+            <table class="table table-stripped datatable">
+                <thead>
+                    <tr>
+                        <th>SI No.</th>
+                        <th>Animal</th>
+                        <th>Date</th>
+                        <th>Performance</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                
+                
+                {% for animal in AOW %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{animal.animal.given_name}}</td>
+                        <td>{{animal.an_week_date}}</td>
+                        <td>
+                            <img src="{{animal.performance.url}}" alt="" height="50px" width="100px">
+                        </td>
+                            
+                        <td>
+                            <a href="{% url 'curator_remove_animal_performance' animal.id %}" onclick="return confirm('sure to delete?')" class="btn btn-danger">Delete</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+               
+                    
+            </table>
+        </div>
+    </div>
+  
+{% endblock display %}

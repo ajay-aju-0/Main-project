@@ -12,13 +12,12 @@ def loadHome(request):
     return render(request,'index.html')
 
 def visitorRegistration(request):
-    form = VisitorRegistrationForm(initial={"usertype":"visitor"})
+    form = RegistrationForm(initial={"usertype":"visitor"})
     if request.method == 'GET':
         return render(request,'visitor registration.html',{'form':form})
     elif request.method == 'POST':
-        regForm = VisitorRegistrationForm(request.POST,request.FILES)
+        regForm = RegistrationForm(request.POST,request.FILES)
         pwd = request.POST['password']
-        print(regForm.data)
         if regForm.is_valid():
             obj = regForm.save(commit=False)
             obj.set_password(pwd)
@@ -26,7 +25,7 @@ def visitorRegistration(request):
             messages.success(request,"Visitor registered successfully")
             return render(request,'visitor registration.html',{'form':form})
         else:
-            messages.error(request, 'Invalid form submission.')
+            messages.error(request, 'error while submitting form.')
             return render(request,'visitor registration.html',{'form':regForm})
     else:
         return render(request,'visitor registration.html',{'form':form})

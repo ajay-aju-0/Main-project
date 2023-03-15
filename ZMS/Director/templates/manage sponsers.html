@@ -1,0 +1,39 @@
+{% extends 'shared/directorpanel.html' %}
+}
+
+{% block pagetitle %}
+{% include 'shared/messages.html' %}
+
+<div class="d-flex justify-content-between">
+    <h1>Manage Sponsers</h1>
+    <a href="{% url 'director_add_sponser' %}" class="btn btn-success text-white" style="width:max-content;"> <b>+ Add Sponser</b> </a>
+</div>
+
+<br>
+{% endblock pagetitle %}
+
+
+{% block display %}
+
+    <div class="row">
+        <div class="col-sm-12">
+            <table class="table table-stripped datatable" style="height: inherit;">
+                <thead>
+                    <tr>
+                        
+                    </tr>
+                </thead>
+                
+                
+                {% for event in events %}
+                <tr style="padding-left: 50px;">
+                    
+                </tr>
+                {% endfor %}
+                    
+            </table>
+        </div>
+    </div>
+        
+{% endblock display %}
+    

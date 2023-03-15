@@ -1,0 +1,59 @@
+{% extends 'shared/curatorpanel.html' %}
+
+{% block pagetitle %}
+{% include 'shared/messages.html' %}
+    
+
+<div class="d-flex justify-content-between">
+    <h1>Update Animals</h1>
+</div>
+<nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'curator_manage_animals' %}">Manage animals</a></li>
+      <li class="breadcrumb-item active">Update Animal</li>
+    </ol>
+</nav>
+
+<br>
+{% endblock pagetitle %}
+
+
+{% block display %}
+
+<div class="col-sm-8 offset-2 shadow rounded" style="background-color: #ffffcc;font-weight: bold;">
+    <div class="panel panel-primary">
+        <div class="panel-heading text-center">
+            <h1>Update Animal</h1>
+        </div>
+        <div class="panel-body">
+            <form action="" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{form1.as_p}}
+                <label for="caretaker">Caretaker:</label>
+                <select class="form-control" name="caretaker" id="caretaker" required>
+                    {% for keeper in keepers %}
+                    
+                    {% if keeper == current.name  %}
+                    <option value="{{keeper.id}}" default>{{keeper.username}}</option>
+                    {% else %}
+                    <option value="{{keeper.id}}">{{keeper.username}}</option>
+                    {% endif %}
+                        
+                    {% endfor %}
+                </select><br>
+                {{form2.as_p}}
+                {{form3.as_p}}
+                <div class="panel-footer">
+                    <br>
+                    <button type="submit" class="btn btn-block btn-success fw-bold w-100 fs-5" >SUBMIT</button>
+                </div>
+            </form>
+        </div>
+        
+    </div>
+    <br>
+</div>
+<br>
+
+
+{% endblock display %}

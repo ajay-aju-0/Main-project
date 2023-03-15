@@ -1,0 +1,48 @@
+{% extends 'shared/directorpanel.html' %}
+
+{% block pagetitle %}
+{% include 'shared/messages.html' %}
+
+<div class="d-flex justify-content-between">
+    <h1>Add Sponser</h1>
+</div>
+<nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'director_manage_sponsers' %}">Manage sponser</a></li>
+      <li class="breadcrumb-item active">Add Sponser</li>
+    </ol>
+</nav>
+
+<br>
+{% endblock pagetitle %}
+
+
+
+{% block display %}    
+
+    <br>
+<div class="col-sm-8 offset-2 shadow rounded" style="background-color: #ffffcc;font-weight: bold;">
+    <div class="panel panel-primary">
+        <div class="panel-heading text-center">
+            <h1>Sponser Registration</h1>
+        </div>
+        <div class="panel-body">
+            <form action="{% url 'director_add_event' %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{form1.as_p}}
+                {{form2.as_p}}
+                
+                <div class="panel-footer">
+                    <br>
+                    <button type="submit" class="btn btn-block btn-success fw-bold w-100 fs-5" >SUBMIT</button>
+                </div>
+            </form>
+        </div>
+        
+    </div>
+    <br>
+</div>
+<br>
+
+
+{% endblock display %}

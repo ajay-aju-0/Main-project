@@ -1,0 +1,78 @@
+{% extends 'shared/directorpanel.html' %}
+
+
+{% block pagetitle %}
+
+{% if vacancy %}
+{% include 'shared/messages.html' %}
+{% endif %}
+    
+
+<div class="d-flex justify-content-between">
+    <h1>Manage vacancy</h1>
+    <a href="{% url 'director_add_vacancy' %}" class="btn btn-success text-white" style="width:max-content;"> <b>+ Add Vacancy</b> </a>
+</div>
+
+<br>
+{% endblock pagetitle %}
+
+{% block display %}
+
+    <div class="container" style="height: inherit;">
+        <div class="row">
+            <div class="col-sm-12">
+                <table class="table table-stripped datatable">
+                    <thead>
+                    <tr>
+                        <th>Position</th>
+                        <th>Qualification</th>
+                        <th>Deacription</th>
+                        <th>Type</th>
+                        <th>Start date</th>
+                        <th>End date</th>
+                        <th>Issued on</th>
+                        <th colspan="2">Action</th>
+                    </tr>
+                </thead>
+                    
+                    {% for vacancy in vacancies %}
+                    <tr>
+                        <td>{{vacancy.vposition}}</td>
+                        <td>{{vacancy.qualification}}</td>
+                        <td>{{vacancy.description}}</td>                            
+                        <td>{{vacancy.vtype}}</td>
+                        <td>{{vacancy.vstart}}</td>
+                        <td>{{vacancy.vend}}</td>
+                        <td>{{vacancy.issue_date}}</td>
+                        <td>
+                            {% if vacancy.vstatus == 'available' %}
+                            <a href="{% url 'director_update_vacancy' vacancy.id %}" class="btn btn-success text-white">
+                            Update
+                            </a>
+                            <br>
+                            <a href="{% url 'director_close_vacancy' vacancy.id %}" onclick="return confirm('Sure to close?')" class="btn btn-danger text-white my-1">
+                            Close
+                            </a>
+                            {% else %}
+                           <h6 class="text-center"> Vacancy closed</h6>
+                            {% endif %}      
+                        </td>
+                    </tr>
+                    {% endfor %}
+                        
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    {% if message %}
+        <script>
+            alert("Vacancy closed")
+        </script>
+    {% endif %}
+        
+
+    
+
+{% endblock display %}
+    

@@ -1,0 +1,59 @@
+{% extends 'shared/curatorpanel.html' %}
+}
+
+{% block pagetitle %}
+{% include 'shared/messages.html' %}
+
+<div class="d-flex justify-content-between">
+    <h1>Manage Events</h1>
+</div>
+
+<br>
+{% endblock pagetitle %}
+
+
+{% block display %}
+
+    <div class="row">
+        <div class="col-sm-12">
+            <table class="table table-stripped datatable" style="height: inherit;">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Starting date</th>
+                        <th>Ending date</th>
+                        <th>Image</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                
+                
+                {% for event in events %}
+                <tr style="padding-left: 50px;">
+                    <td>{{event.ename}}</td>
+                    <td>{{event.estart}}</td>
+                    <td>{{event.eend}}</td>
+                    <td>
+                        <img src="{{event.eimage.url}}" height="50px" width="100px">
+                    </td>
+                    <td>{{event.estatus}}</td>
+                        
+                    <td>   
+                        {% if event.estatus == 'finished' %}
+                            <i>Not available</i>
+                        {% else %}
+                        <a href="#" class="btn btn-success text-white">
+                          Add Participants
+                        </a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+                    
+            </table>
+        </div>
+    </div>
+        
+{% endblock display %}
+    
