@@ -1,0 +1,64 @@
+{% extends 'shared/doctorpanel.html' %}
+
+{% block pagetitle %}
+{% include 'shared/messages.html' %}
+
+<div class="d-flex justify-content-between">
+    <h1>Manage Death Details</h1>
+</div>
+<br>
+{% endblock pagetitle %}
+
+{% block display %}
+
+    <div class="row">
+        <div class="col-sm-12">
+            <table class="table table-stripped datatable">
+                <thead>
+                    <tr>
+                        <th>SI No.</th>
+                        <th>Name</th>
+                        <th>Gender</th>
+                        <th>Birth Date</th>
+                        <th>Date Joined</th>
+                        <th>Death Date</th>
+                        <th>Death Cause</th>
+                        <th>Inceneration</th>
+                        <th colspan="3">Action</th>
+                    </tr>
+                </thead>
+                
+                
+                {% for animal in animals %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{animal.given_name}}</td>
+                        
+                        {% if animal.gender == 'm' %}
+                            <td>Male</td>
+                        {% else %}
+                            <td>Female</td>
+                        {% endif %}
+                            
+                        <td>{{animal.birth_date}}</td>
+                        <td>{{animal.date_joined}}</td>
+                        <td>{{animal.death_date}}</td>
+                        <td>{{animal.death_cause}}</td>
+                        <td>{{animal.incineration}}</td>
+                            
+                        <td>
+                            
+                            <a href="{% url 'doctor_view_animal_details' animal.id %}" class="btn btn-secondary"><i class="bi bi-eye"></i></a>                           
+                            {% if animal.death_date == None %}
+                            <a href="{% url 'doctor_update_death_details' animal.id %}" class="btn btn-success">Update</a>
+                            {% endif %}
+                                
+                        </td>
+                    </tr>
+                {% endfor %}
+               
+                    
+            </table>
+        </div>
+    </div>
+{% endblock display %}

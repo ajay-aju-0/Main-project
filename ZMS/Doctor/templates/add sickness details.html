@@ -1,0 +1,46 @@
+{% extends 'shared/doctorpanel.html' %}
+
+{% block pagetitle %}
+{% include 'shared/messages.html' %}
+    
+
+<div class="d-flex justify-content-between">
+    <h1>Add Sickness Details</h1>
+</div>
+<nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'doctor_manage_sick_animals' %}">Manage sickness details</a></li>
+      <li class="breadcrumb-item active">Add Sickness Details</li>
+    </ol>
+</nav>
+
+<br>
+{% endblock pagetitle %}
+
+{% block display %}    
+
+    <br>
+<div class="col-sm-8 offset-2 shadow rounded" style="background-color: #ffffcc;font-weight: bold;">
+    <div class="panel panel-primary">
+        <div class="panel-heading text-center">
+            <h1>Add Sickness Details</h1>
+        </div>
+        <div class="panel-body">
+            <form action="" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{form.as_p}}       
+                    
+                <div class="panel-footer">
+                    <br>
+                    <button type="submit" class="btn btn-block btn-success fw-bold w-100 fs-5" >SUBMIT</button>
+                </div>
+            </form>
+        </div>
+        
+    </div>
+    <br>
+</div>
+<br>
+
+
+{% endblock display %}

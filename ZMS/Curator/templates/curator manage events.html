@@ -1,5 +1,5 @@
 {% extends 'shared/curatorpanel.html' %}
-}
+}{% load static %}
 
 {% block pagetitle %}
 {% include 'shared/messages.html' %}
@@ -14,6 +14,7 @@
 
 {% block display %}
 
+
     <div class="row">
         <div class="col-sm-12">
             <table class="table table-stripped datatable" style="height: inherit;">
@@ -24,6 +25,7 @@
                         <th>Ending date</th>
                         <th>Image</th>
                         <th>Status</th>
+                        <th>Participants</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -38,14 +40,28 @@
                         <img src="{{event.eimage.url}}" height="50px" width="100px">
                     </td>
                     <td>{{event.estatus}}</td>
+                    <td>
+                    {% for participant in participants  %}
+                        
+                        {% if participant.event.id == event.id %}
+                            {{participant.animal}}
+                        {% else %}
+                           <h2>No participants</h2> 
+                        {% endif %}
+                        {% endfor %}
+                    </td>         
+                        
                         
                     <td>   
                         {% if event.estatus == 'finished' %}
                             <i>Not available</i>
                         {% else %}
-                        <a href="#" class="btn btn-success text-white">
+                        <a href="{% url 'curator_add_participants' event.id %}" class="btn btn-success text-white">
                           Add Participants
                         </a>
+                        <a href="{% url 'curator_remove_participants' event.id %}" class="btn btn-danger text-white">
+                            Remove Participants
+                          </a>
                         {% endif %}
                     </td>
                 </tr>
@@ -54,6 +70,9 @@
             </table>
         </div>
     </div>
+
+  
+  
         
 {% endblock display %}
     

@@ -25,7 +25,7 @@
                 <form action="{% url 'director_update_ticket_rate' i.id %}" method="post" class="font-weight-bold">
                     
                 {% csrf_token %}
-                Catagory: <input type="text" class="form-control" value="{{i.type}}" name="type"> 
+                Catagory: <input type="text" class="form-control" value="{{i.type}}" name="type" disabled> 
                 {{form.rate.label}}: <input type="number" class="form-control" value="{{i.rate}}" name="rate">
                 <br>
                 <div class="modal-footer">

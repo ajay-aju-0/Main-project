@@ -1,0 +1,49 @@
+  <!-- Modal -->
+  <!-- Button trigger modal -->
+  
+  <!-- Modal -->
+  <div class="modal fade" id="updatemedicinemodal{{medicine.id}}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+                <div class="modal-header">
+                        <h5 class="modal-title">Update Medicine stock</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                    </div>
+            <div class="modal-body">
+                
+                {% if error %}
+                {% include 'shared/messages.html' %}
+                {% endif %}
+                {% if error %}
+                <div class="bg-danger bg-opacity-50 text-white">
+                    {{form.errors.type}}
+                    {{form.errors.rate}}
+                </div>
+                {% endif %}
+                <form action="{% url 'doctor_update_medicine_stock' medicine.id %}" method="post" class="font-weight-bold">
+                    
+                {% csrf_token %}
+                Name: <input type="text" class="form-control" value="{{medicine.medicine}}" name="medicine" disabled> 
+                {{form.stock.label}}: <input type="number" class="form-control" value="{{medicine.stock}}" name="stock">
+                <br>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success btn-block">Update</button>
+                </div>
+                 </form>                
+                
+            </div>
+            
+        </div>
+    </div>
+  </div>
+  
+  <script>
+    $('#exampleModal').on('show.bs.modal', event => {
+        var button = $(event.relatedTarget);
+        var modal = $(this);
+        // Use above variables to manipulate the DOM
+        
+    });
+  </script>

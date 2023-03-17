@@ -76,7 +76,7 @@ def addAnimal(request):
             obj1 = form1.save(commit=False)
             obj1.location = enclosure
             obj1.caretaker = caretaker
-            obj1.status = 1
+            obj1.status = -1
 
             AclassCheck = Taxonomy.objects.filter(Aclass = request.POST['Aclass']).exists()
             AkindCheck = AnimalKind.objects.filter(general_name = request.POST['general_name'],species = request.POST['species'],Aorder = request.POST['Aorder']).exists()
@@ -315,6 +315,8 @@ def changeVisitorStatus(request,id):
 
 def eventsList(request):
     events = Events.objects.all()
+    participants = Participants.objects.all()
+    animals = Animals.objects.all()
     current_date = date.today()
     for event in events:
         print(event.estart,event.eend)
@@ -326,4 +328,56 @@ def eventsList(request):
             event.estatus = "finished"
         event.save()
     
-    return render(request,'curator manage events.html',{'events':events})
+    return render(request,'curator manage events.html',{'events':events,'participants':participants,'animals':animals})
+
+def addParticipants(request,id):
+    animals = Animals.objects.all()
+    event = Events.objects.get(pk=id)
+    if request.method == 'GET':
+        return render(request,'add participants.html',{'animals':animals,'event':event})
+    elif request.method == 'POST':
+        participants = request.POST.getlist('participants')
+        print(participants)
+        for p in participants:
+            participant = Participants()
+            participant.event = event
+            animal = Animals.objects.get(pk=p)
+            participant.animal = animal
+            participant.save()
+        return redirect('curator_manage_events')
+
+
+def removeParticipants(request,id):
+    event = Events.objects.get(pk=id)
+    animals = Participants.objects.filter(event=event)
+    if request.method == 'GET':
+        return render(request,'remove participants.html',{'participants':animals,'event':event})
+    elif request.method == 'POST':
+        participants = request.POST.getlist('participants')
+        # print(participants)
+        for p in participants:
+            print(event,p)
+            participant = Participants.objects.get(event=event.id,animal=p)
+            participant.delete()
+        return redirect('curator_manage_events')
+    else:
+        return render(request,'remove participants.html',{'participants':animals,'event':event})
+
+def viewAnimalDetails(request,id):
+    animal = Animals.objects.get(pk=id)
+    return render(request,'animaldetails.html',{'animal':animal})
+
+def changeAnimalStatus(request,id):
+    animal = Animals.objects.get(pk=id)
+    
+    if animal.status == 1:
+        animal.status = 0
+    else:
+        animal.status = 1
+    animal.save()
+    return redirect('curator_manage_animals')
+
+def viewMedicineStocks(request):
+    medicines = Medicines.objects.all()
+    return render(request,'view medicine stocks.html',{'medicines':medicines})
+    

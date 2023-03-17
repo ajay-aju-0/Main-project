@@ -2,8 +2,10 @@ from django.shortcuts import render,redirect
 from django.http import HttpResponse,JsonResponse
 from django.contrib import messages
 from accounts.forms import *
+from accounts.models import *
 from .forms import *
 from datetime import date
+
 
 
 # Create your views here.
@@ -255,6 +257,10 @@ def animalList(request):
     animals = Animals.objects.all()
     return render(request,'view animal.html',{'animals':animals})
 
+def showAnimalDetails(request,id):
+    animal = Animals.objects.get(pk=id)
+    return render(request,'viewanimaldetails.html',{'animal':animal})
+
 def showPurchases(request):
     purchase = Purchase.objects.all()
     return render(request,'view purchase history.html',{'purchase':purchase})
@@ -269,3 +275,25 @@ def addSponser(request):
 
     if request.method == 'GET':
             return render(request,'add sponser.html',{'form1':sponserForm,'form2':sponseredAnimalsForm})
+    
+    elif request.method == 'POST':
+        form1 = SponserForm(request.POST)
+        form2 = SponseredAnimalForm(request.POST)
+
+        if form1.is_valid() and form2.is_valid():
+            if SponserDetails.objects.filter(name=request.POST['name'],address=request.POST['address'],phone=request.POST['phone'],email=request.POST['email'],stype=request.POST['stype'],amount=request.POST['amount'],sdate=request.POST['sdate'],edate=request.POST['edate']).exists():
+                sponserObj = SponserDetails.objects.get(name=request.POST['name'],address=request.POST['address'],phone=request.POST['phone'],email=request.POST['email'],stype=request.POST['stype'],amount=request.POST['amount'],sdate=request.POST['sdate'],edate=request.POST['edate'])
+            else: 
+                form1.save()
+                sponserObj = SponserDetails.objects.get(name=request.POST['name'],address=request.POST['address'],phone=request.POST['phone'],email=request.POST['email'],stype=request.POST['stype'],amount=request.POST['amount'],sdate=request.POST['sdate'],edate=request.POST['edate'])
+                
+            obj = form2.save(commit=False)
+            obj.sponser = sponserObj
+            obj.save()
+            messages.success(request,"Sponser registered successfully")
+            return redirect("director_manage_sponsers")
+        else:
+            messages.error(request,"error while submitting form")
+            return render(request,'add sponser.html',{'form1':form1,'form2':form2})
+    else:
+        return redirect('director_manage_sponsers')

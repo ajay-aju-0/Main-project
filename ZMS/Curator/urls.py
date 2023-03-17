@@ -23,6 +23,12 @@ urlpatterns = [
    path('manage visitors/',visitorList,name='curator_manage_visitors'),
    path('change visitor status/<id>',changeVisitorStatus,name='curator_change_visitor_status'),
    path('manage events/',eventsList,name='curator_manage_events'),
+   path('add participants/<id>',addParticipants,name='curator_add_participants'),
+   path('remove participants/<id>',removeParticipants,name='curator_remove_participants'),
+   path('animal details/<id>',viewAnimalDetails,name='curator_view_animal_details'),
+   path('change animal status/<id>',changeAnimalStatus,name='curator_change_animal_status'),
+   path('medicine stocks/',viewMedicineStocks,name='curator_view_medicine_stock')
+
 
 
 ]

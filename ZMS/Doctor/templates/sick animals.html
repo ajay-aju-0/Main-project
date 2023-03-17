@@ -1,0 +1,58 @@
+{% extends 'shared/doctorpanel.html' %}
+
+{% block pagetitle %}
+{% include 'shared/messages.html' %}
+    
+
+<div class="d-flex justify-content-between">
+    <h1>Manage Sickness Details</h1>
+    <a href="{% url 'doctor_add_sickness_details' %}" class="btn btn-success text-white" style="width:max-content;"> <b>+ Add Sickness Detail</b> </a>
+</div>
+
+<br>
+{% endblock pagetitle %}
+
+{% block display %}
+
+    <div class="row">
+        <div class="col-sm-12">
+            <table class="table table-stripped datatable">
+                <thead>
+                    <tr>
+                        <th>SI No.</th>
+                        <th>Animal</th>
+                        <th>Reported date</th>
+                        <th>Disease</th>
+                        <th>Medicine</th>
+                        <th>Status</th>
+                        <th colspan="3">Action</th>
+                    </tr>
+                </thead>
+                
+                
+                {% for animal in sickAnimals %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{animal.animal.given_name}}</td>                            
+                        <td>{{animal.sdate}}</td>
+                        <td>{{animal.disease}}</td>
+                        <td>{{animal.medicine.medicine}}</td>
+                        <td>{{animal.status}}</td>
+                            
+                        <td>
+                            
+                            {% if animal.status == 'sick' %}
+                            <a href="{% url 'doctor_mark_animal_cured' animal.id %}" onclick="return confirm('Sure to mark as cured?')" class="btn btn-success text-white">Mark as Cured</a>    
+                            {% else %}
+                            Not Available 
+                            {% endif %}
+                                
+                        </td>
+                    </tr>
+                {% endfor %}
+               
+                    
+            </table>
+        </div>
+    </div>
+{% endblock display %}

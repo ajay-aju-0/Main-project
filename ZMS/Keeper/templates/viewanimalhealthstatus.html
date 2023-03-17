@@ -1,0 +1,66 @@
+{% extends 'shared/keeperpanel.html' %}
+
+{% block pagetitle %}
+{% include 'shared/messages.html' %}
+    
+
+<div class="d-flex justify-content-between">
+    <h1>Health Status</h1>
+</div>
+
+<br>
+{% endblock pagetitle %}
+
+{% block display %}
+
+    <div class="row">
+        <div class="col-sm-12">
+            <table class="table table-stripped datatable">
+                <thead>
+                    <tr>
+                        <th>SI No.</th>
+                        <th>Name</th>
+                        <th>Gender</th>
+                        <th>Birth Date</th>
+                        <th>Date Joined</th>
+                        <th>Class</th>
+                        <th>Health Status</th>
+                        <th colspan="3">Action</th>
+                    </tr>
+                </thead>
+                
+                
+                {% for animal in animals %}
+
+                {% if animal.caretaker.user.username == 'riyaz' %}
+        
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{animal.given_name}}</td>
+                        
+                        {% if animal.gender == 'm' %}
+                            <td>Male</td>
+                        {% else %}
+                            <td>Female</td>
+                        {% endif %}
+                            
+                        <td>{{animal.birth_date}}</td>
+                        <td>{{animal.date_joined}}</td>
+                        <td>{{animal.akind.class_id.Aclass}}</td>
+                        <td>{{animal.health_status}}</td>
+                            
+                        <td>
+                            <a href="{% url 'keeper_view_animal_details' animal.id %}" class="btn btn-secondary"><i class="bi bi-eye"></i></a>                           
+                            {% if animal.status != -1 %}
+                            <a href="{% url 'keeper_change_animal_health_status' animal.id %}" onclick="return confirm('Sure to change health status?')" class="btn btn-danger">change status</a>
+                            {% endif %}
+                                
+                        </td>
+                    </tr>
+                {% endif %}
+                {% endfor %}
+               
+            </table>
+        </div>
+    </div>
+{% endblock display %}

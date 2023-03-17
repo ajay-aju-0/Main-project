@@ -51,16 +51,22 @@
                         <td>{{animal.akind.class_id.Aclass}}</td>
                         
                         
-                        {% if animal.status == True %}
+                        {% if animal.status == 1 %}
                            <td>Present</td> 
+                        {% elif animal.status == -1 %}
+                           <td>Unverified</td>
                         {% else %}
                            <td>Unavailable</td> 
                         {% endif %}
                             
                         <td>
-                            <a href="" class="btn btn-secondary"><i class="bi bi-eye"></i></a>
+                            <a href="{% url 'curator_view_animal_details' animal.id %}" class="btn btn-secondary"><i class="bi bi-eye"></i></a>                           
                             <a href="{% url 'curator_update_animal' animal.id %}" class="btn btn-success"><i class="bi bi-pencil"></i></a>
-                            <a href="" class="btn btn-danger">change status</a>
+                            
+                            {% if animal.status != -1 %}
+                            <a href="{% url 'curator_change_animal_status' animal.id %}" onclick="return confirm('Sure to change status?')" class="btn btn-danger">change status</a>
+                            {% endif %}
+                                
                         </td>
                     </tr>
                 {% endfor %}
@@ -69,5 +75,4 @@
             </table>
         </div>
     </div>
-  
 {% endblock display %}

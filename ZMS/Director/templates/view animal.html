@@ -57,7 +57,7 @@
                         {% endif %}
                             
                         <td>
-                            <a href="" class="btn btn-secondary"><i class="bi bi-eye"></i></a>
+                            <a href="{% url 'director_view_animal_details' animal.id %}" class="btn btn-secondary"><i class="bi bi-eye"></i></a>
                         </td>
                     </tr>
                     {% endfor %}

@@ -1,0 +1,51 @@
+{% extends 'shared/curatorpanel.html' %}
+
+{% block pagetitle %}
+{% include 'shared/messages.html' %}
+
+<div class="d-flex justify-content-between">
+    <h1>Add Participant</h1>
+</div>
+<nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'curator_manage_events' %}">Manage events</a></li>
+      <li class="breadcrumb-item active">Add participant</li>
+    </ol>
+</nav>
+<br>
+{% endblock pagetitle %}
+
+{% block display %}    
+
+    <br>
+<div class="col-sm-8 offset-2 shadow rounded" style="background-color: #ffffcc;font-weight: bold;">
+    <div class="panel panel-primary">
+        <div class="panel-heading text-center">
+            <h1>Add participants</h1>
+        </div>
+        <div class="panel-body">
+            <form action="" method="post">
+                {% csrf_token %}
+                <label>Check animals those who participate in event &nbsp;&nbsp;&nbsp; "{{event.ename}}"</label><br><br>
+                {% for animal in animals %}
+                    <label>
+                        <input type="checkbox" name="participants" id="participants" value="{{animal.id}}">
+                        {{animal.given_name}}
+                    </label>
+                {% endfor %}
+                    
+                <div class="panel-footer">
+                    <br>
+                    <button type="submit" class="btn btn-block btn-success fw-bold w-100 fs-5" >SUBMIT</button>
+                </div>
+            </form>
+        </div>
+        
+    </div>
+    <br>
+</div>
+<br>
+
+
+{% endblock display %}
+    

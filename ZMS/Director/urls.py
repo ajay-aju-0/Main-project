@@ -25,5 +25,7 @@ urlpatterns = [
    path('view enclosures/',enclosureList,name='director_view_enclosures'),
    path('view purchases/',showPurchases,name='director_view_purchase_history'),
    path('view animals/',animalList,name="director_view_animals"),
+   path('animal details/<id>',showAnimalDetails,name='director_view_animal_details'),
+
 
 ]

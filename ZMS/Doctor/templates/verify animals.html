@@ -1,0 +1,72 @@
+{% extends 'shared/doctorpanel.html' %}
+
+
+{% block pagetitle %}
+{% include 'shared/messages.html' %}
+    
+
+<div class="d-flex justify-content-between">
+    <h1>Verify Animals</h1>
+</div>
+
+<br>
+{% endblock pagetitle %}
+
+
+{% block display %}
+
+    <div class="row">
+        <div class="col-sm-12">
+            <table class="table table-stripped datatable">
+                <thead>
+                    <tr>
+                        <th>SI No.</th>
+                        <th>Name</th>
+                        <th>Gender</th>
+                        <th>Birth Date</th>
+                        <th>Date Joined</th>
+                        <th>General name</th>
+                        <th>Diatery req.</th>
+                        <th>Species</th>
+                        <th>Order</th>
+                        <th>Class</th>
+                        <th colspan="3">Action</th>
+                    </tr>
+                </thead>
+                
+                
+                {% for animal in animals %}
+                
+                    {% if animal.status == -1 %}
+                                       
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{animal.given_name}}</td>
+                        
+                        {% if animal.gender == 'm' %}
+                            <td>Male</td>
+                        {% else %}
+                            <td>Female</td>
+                        {% endif %}
+                            
+                        <td>{{animal.birth_date}}</td>
+                        <td>{{animal.date_joined}}</td>
+                        <td>{{animal.akind.general_name}}</td>
+                        <td>{{animal.diatery_req}}</td>
+                        <td>{{animal.akind.species}}</td>
+                        <td>{{animal.akind.Aorder}}</td>
+                        <td>{{animal.akind.class_id.Aclass}}</td>
+                            
+                        <td>                            
+                            <a href="{% url 'doctor_verified_animal' animal.id %}" onclick="return confirm('do you want to verify this animal?')" class="btn btn-success">Verify</a>
+                                
+                        </td>
+                    </tr>
+                    {% endif %}
+                {% endfor %}
+               
+                    
+            </table>
+        </div>
+    </div>
+{% endblock display %}

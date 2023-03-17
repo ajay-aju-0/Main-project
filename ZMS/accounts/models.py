@@ -108,7 +108,7 @@ class Animals(models.Model):
     location = models.ForeignKey(to=Enclosures,on_delete=models.CASCADE)
     area_id = models.CharField(max_length=10,verbose_name='Area ID')
     health_status = models.CharField(max_length=10,verbose_name='Health status',choices=health_choice)
-    status = models.BooleanField()
+    status = models.IntegerField(default=-1)
     diatery_req = models.CharField(max_length=100,verbose_name='Diatery requirement')
     date_joined = models.DateField(auto_now_add=True)
     image1 = models.FileField(upload_to='Animals',max_length=300,verbose_name="Image 1",default='')
@@ -136,9 +136,12 @@ class Medicines(models.Model):
     medicine = models.CharField(max_length=30)
     stock = models.IntegerField()
 
+    def __str__(self):
+        return self.medicine
+
 class sickness_details(models.Model):
     animal = models.ForeignKey(to=Animals,on_delete=models.CASCADE)
-    sdate = models.DateField(auto_now_add=True,verbose_name="added date")
+    sdate = models.DateField(verbose_name="Reported date")
     disease = models.CharField(max_length=50)
     medicine = models.ForeignKey(to=Medicines,on_delete=models.CASCADE)
     status = models.CharField(max_length=20)

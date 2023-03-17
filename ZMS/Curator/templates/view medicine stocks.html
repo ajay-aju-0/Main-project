@@ -1,0 +1,49 @@
+{% extends 'shared/curatorpanel.html' %}
+{% load static %}
+
+{% block pagetitle %}
+{% include 'shared/messages.html' %}
+    
+
+<div class="d-flex justify-content-between">
+    <h1>View medicines</h1>
+</div>
+
+<br>
+{% endblock pagetitle %}
+
+
+{% block display %}
+
+<div class="row">
+    <div class="col-sm-8 offset-1">
+        <table class="table table-stripped datatable" style="height: inherit;">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Stock</th>
+                </tr>
+            </thead>
+            
+            
+            {% for medicine in medicines %}
+            <tr>
+                <td>{{medicine.medicine}}</td>
+                
+                {% if medicine.stock == 0 %}
+                    <td>Stock out</td>
+                {% else %}
+                    <td>{{medicine.stock}}</td>    
+                {% endif %}
+                    
+            </tr>
+            {% endfor %}
+                
+        </table>
+    </div>
+</div>
+    
+
+
+{% endblock display %}
+    

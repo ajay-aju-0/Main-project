@@ -1,0 +1,41 @@
+
+
+<div class="modal fade" id="medicinemodal" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true" >
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+                <div class="modal-header">
+                        <h5 class="modal-title">Add Medicine</h5>
+                            <button type="button" class="close bg-danger text-white" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                    </div>
+            <div class="modal-body">
+                
+                {% if error %}
+                {% include 'shared/messages.html' %}
+                {% endif %}
+                    
+                <form action="{% url 'doctor_manage_medicines' %}" method="post" class="font-weight-bold">      
+                
+                {% csrf_token %}
+                {{form.as_p}}
+                <br>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success btn-block w-100">Add</button>
+                </div>
+                 </form>                
+                
+            </div>
+            
+        </div>
+    </div>
+</div>
+  
+  <script>
+    $('#enclosuremodal').on('show.bs.modal', event => {
+        var button = $(event.relatedTarget);
+        var modal = $(this);
+        // Use above variables to manipulate the DOM
+    });
+
+  </script>
