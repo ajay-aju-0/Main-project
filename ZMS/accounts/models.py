@@ -49,16 +49,19 @@ class TicketRate(models.Model):
 class Ticket(models.Model):
     time_choices = (('morning','morning'),('noon','noon'))
     tdate = models.DateField(auto_now_add=True)
-    Iadult = models.IntegerField(default=0,verbose_name="No. of Adults(Indian)")
-    Ichild = models.IntegerField(default=0,verbose_name="No. of Childrens(Indian)")
-    Fadult = models.IntegerField(default=0,verbose_name="No. of Adults(Foreign)")
-    Fchild = models.IntegerField(default=0,verbose_name="No. of Childrens(Foreign)")
-    students = models.IntegerField(default=0,verbose_name="No. of Students")
     total = models.IntegerField()
-    reporting_date = models.DateField(null=False)
-    reporting_time = models.CharField(max_length=10,default="morning",choices=time_choices)
+    reporting_date = models.DateField(null=False,verbose_name='Booking Date')
+    reporting_time = models.CharField(max_length=10,default="morning",choices=time_choices,verbose_name='Booking Slot')
+    total_person = models.IntegerField(default=0)
+    payment_status = models.BooleanField(default=False)
     uid = models.ForeignKey(to=Users,on_delete=models.CASCADE)
-    Guide = models.ForeignKey(to=Staffs,on_delete=models.CASCADE,default="not assigned")
+    Guide = models.ForeignKey(to=Staffs,on_delete=models.CASCADE,null=True,blank=True)
+
+class BookedCatagory(models.Model):
+    catagory = models.CharField(max_length=20)
+    count = models.IntegerField(default=0)
+    rate = models.IntegerField(default=0)
+    ticket = models.ForeignKey(to=Ticket,on_delete=models.CASCADE)
 
 class Feedback(models.Model):
     fdate = models.DateField(auto_now_add=True)

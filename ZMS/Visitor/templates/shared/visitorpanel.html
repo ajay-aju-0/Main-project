@@ -75,7 +75,7 @@
           <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
             <li class="dropdown-header">
               <h6>{{user}}</h6>
-              <span>Keeper</span>
+              <span>Visitor</span>
             </li>
             <li>
               <hr class="dropdown-divider">
@@ -112,7 +112,7 @@
             </li>
 
             <li>
-              <a class="dropdown-item d-flex align-items-center" href="#">
+              <a class="dropdown-item d-flex align-items-center" href="{% url 'logout' %}">
                 <i class="bi bi-box-arrow-right"></i>
                 <span>Sign Out</span>
               </a>
@@ -139,23 +139,23 @@
       </li><!-- End Dashboard Nav -->
 
       <li class="nav-item">
-        <a class="nav-link " href="{% url 'keeper_view_animal_health_status' %}">
-            <i class="bi bi-heart-pulse"></i>
+        <a class="nav-link " href="{% url 'visitor_view_tickets' %}">
+            <i class="bi bi-ticket"></i>
             <span>Book tickets</span>
         </a>
       </li><!-- End Manage staff Nav -->
 
       <li class="nav-item">
-        <a class="nav-link " href="{% url 'director_manage_staff' %}">
-            <i class="bi bi-clock"></i>
-            <span>View Complaints</span>
+        <a class="nav-link " href="{% url 'visitor_view_feedback' %}">
+            <i class="bi bi-chat-dots"></i>
+            <span>View Feedbacks</span>
         </a>
       </li><!-- End Manage staff Nav -->
 
       <li class="nav-item">
-        <a class="nav-link " href="#">
+        <a class="nav-link " href="{% url 'visitor_view_complaints' %}">
             <i class="bi bi-envelope-exclamation"></i>
-            <span>View Feedbacks</span>
+            <span>View Complaints</span>
         </a>
       </li><!-- End Complaints Nav -->
 

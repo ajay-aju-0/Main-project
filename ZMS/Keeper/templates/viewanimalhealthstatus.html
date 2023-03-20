@@ -31,8 +31,8 @@
                 
                 
                 {% for animal in animals %}
-
-                {% if animal.caretaker.user.username == 'riyaz' %}
+             
+                {% if animal.caretaker.user.username == user.username %}
         
                     <tr>
                         <td>{{forloop.counter}}</td>

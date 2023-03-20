@@ -21,8 +21,8 @@
                     {{form.errors.type}}
                     {{form.errors.rate}}
                 </div>
-                
                 {% endif %}
+                
                 {% csrf_token %}
                 Catagory: {{form.type}}
                 {{form.rate.label}}: {{form.rate}}

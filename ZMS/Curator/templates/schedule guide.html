@@ -1,0 +1,50 @@
+  <!-- Modal -->
+  <!-- Button trigger modal -->
+  
+  <!-- Modal -->
+  <div class="modal fade" id="schedulemodal{{ticket.id}}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+                <div class="modal-header">
+                        <h5 class="modal-title">Schedule Guide</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                    </div>
+            <div class="modal-body">
+                
+                {% if error %}
+                {% include 'shared/messages.html' %}
+                {% endif %}
+               
+                <form action="{% url 'curator_view_bookings' %}" method="post" class="font-weight-bold">
+                    
+                {% csrf_token %}
+                <input type="hidden" name="ticket" id="ticket" value="{{ticket.id}}">
+                <label for="assign_guide">Guide</label>
+                <select class="form-control" name="assign_guide">
+                    <option value="None">-------------</option>
+                    {% for keeper in keepers %}
+                    <option value="{{keeper.id}}">{{keeper.first_name}} {{keeper.last_name}}</option>
+                    {% endfor %}
+                </select>                
+                <br>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success btn-block fw-bold">Assign</button>
+                </div>
+                 </form>                
+                
+            </div>
+            
+        </div>
+    </div>
+  </div>
+  
+  <script>
+    $('#exampleModal').on('show.bs.modal', event => {
+        var button = $(event.relatedTarget);
+        var modal = $(this);
+        // Use above variables to manipulate the DOM
+        
+    });
+  </script>

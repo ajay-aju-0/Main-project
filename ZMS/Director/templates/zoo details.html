@@ -1,0 +1,63 @@
+{% extends 'shared/directorpanel.html' %}
+
+{% block pagetitle %}
+    
+
+<div class="d-flex justify-content-between">
+    <h1>Zoo Details</h1>
+</div>
+
+<br>
+{% endblock pagetitle %}
+
+
+{% block display %}
+
+<div class="row">
+    <div class="col-sm-8 offset-2 bg-info opacity-0.2 shadow rounded">
+        <table class="table table-stripped" style="border: black;">
+            <thead>
+              <tr class="text-center fw-bold fs-5">
+                <th colspan="2" style="width: 100%;border-bottom: 2px solid black;">Zoo Details</th>
+              </tr>
+            </thead>
+            <tbody>
+            
+              <tr>
+                <td class="fw-bold">Name</td>
+                <td> {{details.name}} </td>
+              </tr>
+              <tr>
+                <td class="fw-bold">Location</td>
+                <td> {{details.location}} </td>
+              </tr>
+              <tr>
+                <td class="fw-bold">Total Animal Capacity</td>
+                <td> {{details.total_animal_capacity}} </td>
+              </tr>
+              <tr>
+                <td class="fw-bold">Current Animal Occupancy</td>
+                <td> {{details.current_animal_occupancy}} </td>
+              </tr>
+              <tr>
+                <td class="fw-bold">No. of enclosures</td>
+                <td> {{details.enclosure_types}} </td>
+              </tr>
+              <tr>
+                <td class="fw-bold">Visitor Capacity</td>
+                <td> {{details.visitor_capacity}} </td>
+              </tr>
+              <tr>
+                <td class="fw-bold">Total Area</td>
+                <td> {{details.total_area}} </td>
+              </tr>
+            </tbody>
+          </table>
+          <button class="btn btn-success offset-10" data-toggle="modal" data-target="#zoodetailmodal{{details.id}}" data-backdrop="static"><i class="bi bi-pen"></i>&nbsp;Update</button>
+            <br><br>
+            {% include 'update zoo details.html' %}
+    </div>
+</div>
+
+{% endblock display %}
+    

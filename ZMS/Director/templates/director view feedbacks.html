@@ -1,0 +1,45 @@
+{% extends 'shared/directorpanel.html' %}
+
+{% block pagetitle %}
+{% include 'shared/messages.html' %}
+    
+
+<div class="d-flex justify-content-between">
+    <h1>View Feedbacks</h1>
+</div>
+
+<br>
+{% endblock pagetitle %}
+
+
+{% block display %}
+<div class="row">
+    <div class="col-sm-10 offset-1">
+        <table class="table table-stripped datatable" style="height: inherit;">
+            <thead>
+                <tr>
+                    <th>SI No.</th>
+                    <th>From</th>
+                    <th>Date</th>
+                    <th>Feedback</th>
+                    <th>Reply</th>
+                </tr>
+            </thead>
+            
+            
+            {% for feedback in feedbacks %}
+            <tr>
+                <td>{{forloop.counter}}</td>
+                <td>{{feedback.uid.username}}</td>
+                <td>{{feedback.fdate}}</td>
+                <td>{{feedback.feedback}}</td>
+                <td>{{feedback.reply}}</td>
+                    
+            </tr>
+            {% endfor %}
+                
+        </table>
+    </div>
+</div>
+{% endblock display %}
+    

@@ -1,0 +1,52 @@
+{% extends 'shared/visitorpanel.html' %}
+
+
+{% block pagetitle %}
+
+
+<div class="d-flex justify-content-between">
+    <h1>View Ticket Details</h1>
+</div>
+<nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'visitor_view_tickets' %}">View tickets</a></li>
+      <li class="breadcrumb-item active">booked tickets</li>
+    </ol>
+</nav>
+
+<br>
+{% endblock pagetitle %}
+
+{% block display %}
+
+    
+
+    
+<div class="row">
+    <div class="col-sm-8 offset-2 bg-info opacity-0.2 shadow rounded">
+        <table class="table table-stripped" style="border: black;">
+            <thead>
+                <tr class="text-center fw-bold fs-5">
+                    <th colspan="3" style="width: 100%;border-bottom: 2px solid black;">Booked catagories and price</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th>Catagory</th>
+                    <th>Rate</th>
+                    <th>Ticket count</th>
+                </tr>
+                {% for catagory in catagories %}
+              <tr>
+                <td class="fw-bold">{{catagory.catagory}}</td>
+                <td> {{catagory.rate}} </td>
+                <td> {{catagory.count}} </td>
+              </tr>
+            {% endfor %}
+
+            </tbody>
+          </table>
+    </div>
+</div>
+
+{% endblock display %}

@@ -112,7 +112,7 @@
             </li>
 
             <li>
-              <a class="dropdown-item d-flex align-items-center" href="#">
+              <a class="dropdown-item d-flex align-items-center" href="{% url 'logout' %}">
                 <i class="bi bi-box-arrow-right"></i>
                 <span>Sign Out</span>
               </a>
@@ -139,7 +139,7 @@
       </li><!-- End Dashboard Nav -->
 
       <li class="nav-item">
-        <a class="nav-link " href="#">
+        <a class="nav-link " href="{% url 'director_view_zoo_details' %}">
             <i class="bi bi-house-fill"></i>
             <span>Zoo details</span>
         </a>
@@ -174,7 +174,7 @@
       </li><!-- End Manage rates Nav -->
 
       <li class="nav-item">
-        <a class="nav-link " href="#">
+        <a class="nav-link " href="{% url 'director_view_ticket_sales' %}">
             <i class="bi bi-ticket"></i>
             <span>View ticket sales</span>
         </a>
@@ -230,14 +230,14 @@
       </li><!-- End Manage sponsers Nav -->
 
       <li class="nav-item">
-        <a class="nav-link " href="#">
+        <a class="nav-link " href="{% url 'director_view_feedbacks' %}">
             <i class="bi bi-chat-dots"></i>
             <span>View feedback</span>
         </a>
       </li><!-- End Feedback Nav -->
 
       <li class="nav-item">
-        <a class="nav-link " href="#">
+        <a class="nav-link " href="{% url 'director_view_complaints' %}">
             <i class="bi bi-envelope-exclamation"></i>
             <span>View complaints</span>
         </a>

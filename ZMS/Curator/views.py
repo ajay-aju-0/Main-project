@@ -7,8 +7,6 @@ from Director.forms import *
 from django.contrib import messages
 from datetime import date
 
-
-
 # Create your views here.
 
 
@@ -380,4 +378,70 @@ def changeAnimalStatus(request,id):
 def viewMedicineStocks(request):
     medicines = Medicines.objects.all()
     return render(request,'view medicine stocks.html',{'medicines':medicines})
+
+def viewBookings(request):
+    tickets = Ticket.objects.all()
+    keepers = Users.objects.filter(usertype='keeper', is_active=True)
+
+    if request.method == 'GET':
+        return render(request,'view bookings.html',{'tickets':tickets,'keepers':keepers})
     
+    elif request.method == 'POST':
+        guide = request.POST.get('assign_guide')
+        if guide != 'None':
+            ticket = Ticket.objects.get(pk=request.POST.get('ticket'))
+            ticket.Guide = Staffs.objects.get(user=guide)
+            ticket.save()
+            return redirect('curator_view_bookings')
+        else:
+            return render(request,"view bookings.html",{'tickets':tickets,'keepers':keepers,'error':True})
+
+    else:
+        return render(request,'view bookings.html',{'tickets':tickets,'keepers':keepers})
+
+
+def showBookingDetails(request,id):
+    catagories = BookedCatagory.objects.filter(ticket = id)
+    return render(request,'booking details.html',{'catagories':catagories})
+    
+
+def curatorViewFeedbacks(request):
+    feedbacks = Feedback.objects.all()
+
+    if request.method == 'GET':
+        return render(request,'view feedbacks.html',{'feedbacks':feedbacks})
+
+    elif request.method == 'POST':
+        feedback_id = request.POST.get('feedback_id')
+        reply = request.POST.get('reply')
+        print(feedback_id,reply)
+
+        feedback_obj = Feedback.objects.get(pk=feedback_id)
+        feedback_obj.reply = reply
+        feedback_obj.save()
+        return redirect('curator_view_feedbacks')
+    else:
+        return render(request,'view feedbacks.html',{'feedbacks':feedbacks})
+
+def deleteFeedback(request,id):
+    feedback = Feedback.objects.get(pk=id)
+    feedback.delete()
+    return redirect('curator_view_feedbacks')
+
+def viewComplaints(request):
+    complaints = Complaints.objects.filter(rid = Staffs.objects.get(user=request.user.id))
+
+    if request.method == 'GET':
+        return render(request,'curator view complaints.html',{'complaints':complaints})
+    
+    elif request.method == 'POST':
+        complaint_id = request.POST.get('complaint_id')
+        reply = request.POST.get('reply')
+        print(complaint_id,reply)
+
+        complaint_obj = Complaints.objects.get(pk=complaint_id)
+        complaint_obj.reply = reply
+        complaint_obj.save()
+        return redirect('curator_view_complaints')
+    else:
+        return render(request,'curator view complaints.html',{'complaints':complaints})

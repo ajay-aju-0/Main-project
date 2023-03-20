@@ -4,6 +4,7 @@ from Director.views import *
 
 urlpatterns = [
    path('home/',loadDirectorHome,name="director_home"),
+   path('zoo details/',viewZooDetails,name='director_view_zoo_details'),
    path('manage_staff/',staffList,name="director_manage_staff"),
    path('add_curator/',addCurator,name="director_add_curator"),
    path('update staff/<id>',updateStaff,name="director_update_staff"),
@@ -21,11 +22,18 @@ urlpatterns = [
    path('add event/',addEvents,name="director_add_event"),
    path('update event/<id>',updateEvents,name="director_update_event"),
    path('manage sponsers/',sponserList,name="director_manage_sponsers"),
+   path('update sponser/<id>',updateSponser,name="director_update_sponser"),
    path('add sponser/',addSponser,name="director_add_sponser"),
    path('view enclosures/',enclosureList,name='director_view_enclosures'),
    path('view purchases/',showPurchases,name='director_view_purchase_history'),
    path('view animals/',animalList,name="director_view_animals"),
    path('animal details/<id>',showAnimalDetails,name='director_view_animal_details'),
+   path('sponsered animal/<id>',showSponseredAnimals,name='director_view_sponsered_animals'),
+   path('delete sponsered animals/<id>',deleteSponseredAnimal,name='director_delete_sponsered_animals'),
+   path('delete sponser/<id>',deleteSponser,name='director_delete_sponser'),
+   path('view feedback/',showFeedbacks,name='director_view_feedbacks'),
+   path('ticket sales',viewTicketSales,name='director_view_ticket_sales'),
+   path('view complaints/',viewComplaints,name='director_view_complaints'),
 
 
 ]

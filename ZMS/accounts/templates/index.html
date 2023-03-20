@@ -44,8 +44,9 @@
                     <a class="nav-link text-white" href="{% url 'register_visitor' %}">Visitor registration</a>
                 </li>
             </ul>
-            <div class="mr-2">
-                <button class="btn btn-success">Login</button>
+            <div class="ms-auto px-5">
+                <button class="btn btn-success" data-toggle="modal" data-target="#loginmodal">Login</button>
+                
             </div>
             {% endblock navbar %}
         </div>            
@@ -53,7 +54,20 @@
 
       <div style="padding-top: 100px;">
         {% block display %}
-            
+        {% include 'login.html' %}
+
+        {% if error %}
+        <script src="{% static 'assets/js/jquery-3.6.3.slim.min.js' %}"></script>
+        <script src="{% static 'assets/js/jquery-3.6.4.min.js' %}"></script>
+        <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+        <script>
+            $(document).ready(function() {
+                $('#loginmodal').modal('show');
+            })
+        </script>
+        {% endif %}
+
+
         {% endblock display %}
       </div>
   </body>

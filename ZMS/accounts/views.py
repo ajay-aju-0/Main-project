@@ -1,8 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.http import HttpResponse
 from .models import *
 from .forms import *
 from django.contrib import messages
+from django.contrib.auth import authenticate,login,logout
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.cache import cache_control
 
 
 
@@ -29,3 +32,35 @@ def visitorRegistration(request):
             return render(request,'visitor registration.html',{'form':regForm})
     else:
         return render(request,'visitor registration.html',{'form':form})
+
+def loginUser(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(username = username , password = password)
+        
+        if user != None:
+            user_type = user.usertype
+            login(request,user)
+            if user_type == 'admin':
+                return redirect('/admin/')
+            elif user_type == 'director':
+                return redirect('director_home')
+            elif user_type == 'curator':
+                return redirect('curator_home')
+            elif user_type == 'keeper':
+                return redirect('keeper_home')
+            elif user_type == 'doctor':
+                return redirect('doctor_home')
+            elif user_type == 'visitor':
+                return redirect('visitor_home')
+            else:
+                return HttpResponse('requested page unavailable')
+        else:
+            messages.error(request,'invalid username or password')
+            return render(request,'index.html',{'error':True})
+
+def logoutUser(request):
+    logout(request)
+    request.user = None
+    return redirect('home')

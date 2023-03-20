@@ -27,7 +27,13 @@ urlpatterns = [
    path('remove participants/<id>',removeParticipants,name='curator_remove_participants'),
    path('animal details/<id>',viewAnimalDetails,name='curator_view_animal_details'),
    path('change animal status/<id>',changeAnimalStatus,name='curator_change_animal_status'),
-   path('medicine stocks/',viewMedicineStocks,name='curator_view_medicine_stock')
+   path('medicine stocks/',viewMedicineStocks,name='curator_view_medicine_stock'),
+   path('view bookings/',viewBookings,name='curator_view_bookings'),
+   path('view booking details/<id>',showBookingDetails,name='curator_view_ticket_details'),
+   path('view feedback/',curatorViewFeedbacks,name='curator_view_feedbacks'),
+   path('delete feedback/<id>',deleteFeedback,name='curator_delete_feedbacks'),
+   path('view complaints/',viewComplaints,name='curator_view_complaints'),
+   
 
 
 

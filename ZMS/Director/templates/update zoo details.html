@@ -1,0 +1,51 @@
+  <!-- Modal -->
+  <!-- Button trigger modal -->
+  
+  <!-- Modal -->
+  <div class="modal fade" id="zoodetailmodal{{details.id}}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+                <div class="modal-header">
+                        <h5 class="modal-title">Update Zoo Details</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                    </div>
+            <div class="modal-body">
+                
+                {% if error %}
+                {% include 'shared/messages.html' %}
+                {% endif %}
+                {% if error %}
+                <div class="bg-danger bg-opacity-50 text-white">
+                    {{form.errors.name}}
+                    {{form.errors.location}}
+                    {{form.errors.total_animal_capacity}}
+                    {{form.errors.visitor_capacity}}
+                    {{form.errors.total_area}}
+
+                </div>
+                {% endif %}
+                <form action="" method="post" class="font-weight-bold">
+                    
+                {% csrf_token %}
+                {{form.as_p}}
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success btn-block">Update</button>
+                </div>
+                 </form>                
+                
+            </div>
+            
+        </div>
+    </div>
+  </div>
+  
+  <script>
+    $('#exampleModal').on('show.bs.modal', event => {
+        var button = $(event.relatedTarget);
+        var modal = $(this);
+        // Use above variables to manipulate the DOM
+        
+    });
+  </script>

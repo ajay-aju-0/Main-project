@@ -1,0 +1,41 @@
+{% extends 'shared/visitorpanel.html' %}
+
+{% block pagetitle %}
+<div class="d-flex justify-content-between">
+    <h1>Confirm Booking</h1>
+</div>
+{% endblock pagetitle %}
+
+
+{% block display %}
+    
+    <table>      
+            <tr>
+            <th>Booking Date:</th>
+            <td>{{ticket.reporting_date}}</td>
+            </tr>
+            <tr>
+                <th>Booking Slot:</th>
+                <td>{{ticket.reporting_time}}</td>
+            </tr>
+            <tr>
+                <th>Total Person:</th>
+                <td>{{ticket.total_person}}</td>
+            </tr>
+            <tr>
+                <th>Total:</th>
+                <td>{{ticket.total}}</td>
+            </tr>
+            <tr colspan="2" class="text-center">
+                <td>
+                    <a href="{% url 'visitor_decline_payment' ticket.id %}" class="btn btn-danger">Decline</a>
+                    <a href="{% url 'visitor_accept_payment' ticket.id %}" class="btn btn-success">Pay</a>
+                </td>
+            </tr>
+                  
+        
+    </table>
+
+
+{% endblock display %}
+    

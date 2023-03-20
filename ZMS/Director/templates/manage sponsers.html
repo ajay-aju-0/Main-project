@@ -20,14 +20,42 @@
             <table class="table table-stripped datatable" style="height: inherit;">
                 <thead>
                     <tr>
-                        
+                        <th>Name</th>
+                        <th>Address</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>Type</th>
+                        <th>Amount</th>
+                        <th>Starting date</th>
+                        <th>Ending date</th>
+                        <th>Joined date</th>
+                        <th>Notes</th>
+                        <th>Animals</th>
+                        <th>Action</th> 
                     </tr>
                 </thead>
                 
-                
                 {% for sponser in sponsers %}
                 <tr>
-                    
+                    <td>{{sponser.name}}</td>
+                    <td>{{sponser.address}}</td>
+                    <td>{{sponser.phone}}</td>
+                    <td>{{sponser.email}}</td>
+                    <td>{{sponser.stype}}</td>
+                    <td>{{sponser.amount}}</td>
+                    <td>{{sponser.sdate}}</td>
+                    <td>{{sponser.edate}}</td>
+                    <td>{{sponser.joined_date}}</td>
+                    <td>{{sponser.notes}}</td>
+                    <td>
+                        <a href="{% url 'director_view_sponsered_animals' sponser.id %}" class="btn btn-secondary"><i class="bi bi-eye"></i></a>
+                    </td>
+                    <td>
+                        {% if sponser.edate != currentDate %}
+                        <a href="{% url 'director_update_sponser' sponser.id %}" class="btn btn-success text-white my-1">Update</a>
+                        {% endif %}
+                        <a href="{% url 'director_delete_sponser' sponser.id %}" onclick="return confirm('are you sure?,You will lose sponsered animal list also.')" class="btn btn-danger text-white">Delete</a>
+                    </td>
                 </tr>
                 {% endfor %}
                     

@@ -139,3 +139,16 @@ class SponseredAnimalForm(forms.ModelForm):
         widgets={
             'animal':forms.Select(attrs={'class':'form-control'})
         }
+
+class ZooDetailsForm(forms.ModelForm):
+
+    class Meta:
+        model = ZooDetails
+        exclude = ['current_animal_occupancy','enclosure_types']
+        widgets = {
+            'name':forms.TextInput(attrs={'class':'form-control'}),
+            'location':forms.TextInput(attrs={'class':'form-control'}),
+            'total_animal_capacity':forms.NumberInput(attrs={'class':'form-control'}),
+            'visitor_capacity':forms.NumberInput(attrs={'class':'form-control'}),
+            'total_area':forms.TextInput(attrs={'class':'form-control'})
+        }

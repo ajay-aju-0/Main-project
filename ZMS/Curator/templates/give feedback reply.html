@@ -1,0 +1,40 @@
+  <!-- Modal -->
+  <!-- Button trigger modal -->
+  
+  <!-- Modal -->
+  <div class="modal fade" id="feedbackmodal{{feedback.id}}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+                <div class="modal-header">
+                        <h5 class="modal-title">Give Feedback Reply</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                    </div>
+            <div class="modal-body">
+                
+                <form action="{% url 'curator_view_feedbacks' %}" method="post" class="font-weight-bold">
+                    
+                {% csrf_token %}
+                <input type="hidden" name="feedback_id" value="{{feedback.id}}">
+                <label for="feedback">Reply:</label>
+                <textarea class="form-control" name="reply" id="reply" cols="30" rows="10"></textarea>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success btn-block">SUBMIT</button>
+                </div>
+                 </form>                
+                
+            </div>
+            
+        </div>
+    </div>
+  </div>
+  
+  <script>
+    $('#exampleModal').on('show.bs.modal', event => {
+        var button = $(event.relatedTarget);
+        var modal = $(this);
+        // Use above variables to manipulate the DOM
+        
+    });
+  </script>

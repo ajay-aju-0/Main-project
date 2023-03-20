@@ -1,0 +1,51 @@
+{% extends 'shared/curatorpanel.html' %}
+
+{% block pagetitle %}
+
+<div class="d-flex justify-content-between">
+    <h1>View Complaints</h1>
+</div>
+
+<br>
+{% endblock pagetitle %}
+
+{% block display %}
+
+    <div class="row">
+        <div class="col-sm-12">
+            <table class="table table-stripped datatable" style="height: inherit;">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>From</th>
+                        <th>Complaint</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                
+                {% for complaint in complaints %}
+                <tbody>
+                    <tr>
+                        <td>{{complaint.cdate}}</td>
+                        <td>{{complaint.uid.first_name}} {{complaint.uid.last_name}}</td>
+                        <td>{{complaint.complaint}}</td>
+                        
+                        <td>
+                            {% if complaint.reply == None %}
+                            <button data-toggle="modal" data-target="#complaintmodal{{complaint.id}}" data-backdrop="static"  class="btn btn-danger text-white p-1 my-1">Reply</button>
+                            {% include 'curator give complaint reply.html' %}
+                            
+                            {% else %}
+                                {{complaint.reply}}
+                            {% endif %}
+                        </td>
+                    </tr>
+                </tbody>
+                {% endfor %}
+                    
+            </table>
+        </div>
+    </div>
+  
+{% endblock display %}
+    

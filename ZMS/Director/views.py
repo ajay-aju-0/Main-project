@@ -1,6 +1,7 @@
 from django.shortcuts import render,redirect
 from django.http import HttpResponse,JsonResponse
 from django.contrib import messages
+from django.db.models import Count
 from accounts.forms import *
 from accounts.models import *
 from .forms import *
@@ -12,6 +13,26 @@ from datetime import date
 
 def loadDirectorHome(request):
     return render(request,'directorHome.html')
+
+def viewZooDetails(request):
+    details = ZooDetails.objects.get(pk=1)
+    detailsForm = ZooDetailsForm(instance=details)
+    if request.method == 'GET':
+        return render(request,'zoo details.html',{'form':detailsForm,'details':details})
+    elif request.method == 'POST':
+        form = ZooDetailsForm(request.POST,instance=details)
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.current_animal_occupancy = Animals.objects.filter(status=1).count()
+            obj.enclosure_types = Enclosures.objects.all().count()
+            obj.save()
+            messages.success(request,"Zoo details Updated successfully")
+            return redirect('director_view_zoo_details')
+        else:
+            # messages.error(request,'error while updating form')
+            return render(request,'zoo details.html',{'form':form,'details':details})
+    else:
+        return render(request,'zoo details.html',{'form':detailsForm,'details':details})
 
 
 def staffList(request):
@@ -123,6 +144,13 @@ def UpdateTicketCatagory(request,id):
             return render(request,'manageticketrates.html',{'update_form':form,'form':rateForm,'rates':rates,'error':True})
     else:
         return render(request,'manageticketrates.html',{'form':rateForm,'rates':rates})
+
+
+def viewTicketSales(request):
+    tickets = Ticket.objects.values('tdate').annotate(tcount=Count('tdate')).order_by()
+    for i in tickets:
+        print(i.get('tdate'),i.get('tcount'))
+    return render(request,'view ticket sales.html',{'tickets':tickets})
 
 
 def vacancyList(request):
@@ -272,9 +300,10 @@ def sponserList(request):
 def addSponser(request):
     sponserForm = SponserForm()
     sponseredAnimalsForm = SponseredAnimalForm()
+    current_date = date.today()
 
     if request.method == 'GET':
-            return render(request,'add sponser.html',{'form1':sponserForm,'form2':sponseredAnimalsForm})
+            return render(request,'add sponser.html',{'form1':sponserForm,'form2':sponseredAnimalsForm,'currentDate':current_date})
     
     elif request.method == 'POST':
         form1 = SponserForm(request.POST)
@@ -297,3 +326,59 @@ def addSponser(request):
             return render(request,'add sponser.html',{'form1':form1,'form2':form2})
     else:
         return redirect('director_manage_sponsers')
+
+def updateSponser(request,id):
+    sponser = SponserDetails.objects.get(pk=id)
+    sponserForm = SponserForm(instance=sponser)
+    if request.method == 'GET':
+        return render(request,'update sponser.html',{'form':sponserForm})
+    
+    elif request.method == 'POST':
+        form = SponserForm(request.POST,instance=sponser)
+
+        if form.is_valid():
+            form.save()
+            messages.success(request,'sponser updated successfully')
+            return redirect('director_manage_sponsers')
+        else:
+            messages.error(request,"error while submitting form")
+            return render(request,'update sponser.html',{'form1':form})
+    else:
+        return redirect('director_manage_sponsers')
+
+def showSponseredAnimals(request,id):
+    animals = SponseredAnimals.objects.filter(sponser = id)
+    return render(request,'sponsered animal details.html',{'animals':animals})
+
+def deleteSponseredAnimal(request,id):
+    animal = SponseredAnimals.objects.get(pk = id)
+    animal.delete()
+    messages.success(request,"sponsered animal deleted successfully!")
+    return redirect('director_manage_sponsers')
+
+def deleteSponser(request,id):
+    sponser = SponserDetails.objects.get(pk=id)
+    sponser.delete()
+    return redirect('director_manage_sponsers')
+
+def showFeedbacks(request):
+    feedbacks = Feedback.objects.all()
+    return render(request,'director view feedbacks.html',{'feedbacks':feedbacks})
+
+def viewComplaints(request):
+    complaints = Complaints.objects.filter(rid = Staffs.objects.get(user=request.user.id))
+
+    if request.method == 'GET':
+        return render(request,'director view complaints.html',{'complaints':complaints})
+    
+    elif request.method == 'POST':
+        complaint_id = request.POST.get('complaint_id')
+        reply = request.POST.get('reply')
+        # print(complaint_id,reply)
+
+        complaint_obj = Complaints.objects.get(pk=complaint_id)
+        complaint_obj.reply = reply
+        complaint_obj.save()
+        return redirect('director_view_complaints')
+    else:
+        return render(request,'director view complaints.html',{'complaints':complaints})

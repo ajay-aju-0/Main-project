@@ -1,0 +1,53 @@
+{% extends 'shared/visitorpanel.html' %}
+{% include 'shared/messages.html' %}
+
+
+{% block pagetitle %}
+<div class="d-flex justify-content-between">
+    <h1>Book Ticket</h1>
+</div>
+<nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'visitor_view_tickets' %}">My tickets</a></li>
+      <li class="breadcrumb-item active">book ticket</li>
+    </ol>
+</nav>
+{% endblock pagetitle %}
+
+{% block display %}    
+
+    <br>
+<div class="col-sm-8 offset-2 shadow rounded" style="background-color: #ffffcc;font-weight: bold;">
+    <div class="panel panel-primary">
+        <div class="panel-heading text-center">
+            <h1>Book Ticket</h1>
+        </div>
+        <div class="panel-body">
+            <form action="" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <p>
+                    NB:Update the catagory of tickets as per your need and keep rest as default
+                </p>
+                {% for catagory in catagories %}
+                <p>
+                    <label for="catagory_type" value="{{catagory.type}}" name="catagory_type">{{catagory.type}}:</label>
+                    <input class="form-control" type="number" value = '0' id="catagory" name="catagory">
+                </p>
+                {% endfor %}
+                    
+                {{form.as_p}}
+                <div class="panel-footer">
+                    <br>
+                    <button type="submit" class="btn btn-block btn-success fw-bold w-100 fs-5" >BOOK TICKET</button>
+                </div>
+            </form>
+        </div>
+        
+    </div>
+    <br>
+</div>
+<br>
+
+
+{% endblock display %}
+    

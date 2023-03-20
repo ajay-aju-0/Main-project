@@ -1,0 +1,140 @@
+{% extends 'shared/directorpanel.html' %}
+
+
+{% block pagetitle %}
+{% include 'shared/messages.html' %}
+
+<div class="d-flex justify-content-between">
+    <h1>Sponsered Animals</h1>
+</div>
+
+<br>
+{% endblock pagetitle %}
+
+{% block display %}
+
+{% for animal in animals %}
+
+<div class="row">
+    <div class="col-sm-8 offset-2 bg-info opacity-0.2 shadow rounded">
+        <table class="table table-stripped" style="border: black;">
+            <thead>
+                <tr class="text-center fw-bold fs-5">
+                <th colspan="2" style="width: 100%;border-bottom: 2px solid black;">{{animal.animal.given_name}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td colspan="2" class="fw-bold text-center">
+                    <img src="{{animal.animal.image1.url}}" alt="" height="80px" width="100px">
+                    
+                    {% if animal.animal.image2 != '' %}
+                    <img src="{{animal.animal.image2.url}}" alt="" height="80px" width="100px">    
+                    {% endif %}
+                    {% if animal.animal.image3 != '' %}
+                    <img src="{{animal.animal.image3.url}}" alt="" height="80px" width="100px">    
+                    {% endif %}
+                </td>
+              </tr>
+              <tr>
+                <td class="fw-bold">General Name</td>
+                <td> {{animal.animal.akind.general_name}} </td>
+              </tr>
+              <tr>
+                <td class="fw-bold">Gender</td>
+                
+                {% if animal.animal.gender == 'm' %}
+                <td> Male </td>
+                {% else %}
+                <td> Female </td>
+                {% endif %}
+
+              </tr>
+              <tr>
+                <td class="fw-bold">Height</td>
+                <td> {{animal.animal.height}} </td>
+              </tr>
+              <tr>
+                <td class="fw-bold">Weight</td>
+                <td> {{animal.animal.weight}} </td>
+              </tr>
+              <tr>
+                <td class="fw-bold">Date joined</td>
+                <td> {{animal.animal.date_joined}} </td>
+              </tr>
+              <tr>
+                <td class="fw-bold">Birth date</td>
+                <td> {{animal.animal.birth_date}} </td>
+              </tr>
+              <tr>
+                <td class="fw-bold">Death date</td>
+                <td> {{animal.animal.death_date}} </td>
+              </tr>
+              <tr>
+                <td class="fw-bold">Death cause</td>
+                <td> {{animal.animal.death_cause}} </td>
+              </tr>
+              <tr>
+                <td class="fw-bold">Incineration</td>
+                <td> {{animal.animal.incineration}} </td>
+              </tr>
+              <tr>
+                <td class="fw-bold">Location</td>
+                <td> {{animal.animal.location}} </td>
+              </tr>
+              <tr>
+                <td class="fw-bold">area ID</td>
+                <td> {{animal.animal.area_id}} </td>
+              </tr>
+              <tr>
+                <td class="fw-bold">Health status</td>
+                <td> {{animal.animal.health_status}} </td>
+              </tr>
+              <tr>
+                <td class="fw-bold">Diatery Req.</td>
+                <td> {{animal.animal.diatery_req}} </td>
+              </tr>
+              <tr>
+                <td class="fw-bold">Species</td>
+                <td> {{animal.animal.akind.species}} </td>
+              </tr>
+              <tr>
+                <td class="fw-bold">Avg. lifespan</td>
+                <td> {{animal.animal.akind.avg_lifespan}} </td>
+              </tr>
+              <tr>
+                <td class="fw-bold">Habitat</td>
+                <td> {{animal.animal.akind.habitat}} </td>
+              </tr>
+              <tr>
+                <td class="fw-bold">Origin</td>
+                <td> {{animal.animal.akind.origin}} </td>
+              </tr>
+              <tr>
+                <td class="fw-bold">Order</td>
+                <td> {{animal.animal.akind.Aorder}} </td>
+              </tr>
+              <tr>
+                <td class="fw-bold">Class</td>
+                <td> {{animal.animal.akind.class_id.Aclass}} </td>
+              </tr>
+              <tr>
+                <td class="fw-bold">Characteristics</td>
+                <td> {{animal.animal.akind.characteristics}} </td>
+              </tr>
+              <tr>
+                <td class="fw-bold">Caretaker</td>
+                <td> {{animal.animal.caretaker.user}} </td>
+              </tr>
+            </tbody>
+          </table>
+        <a href="{% url 'director_delete_sponsered_animals' animal.id %}" onclick="return confirm('Sure to delete?')" class="btn btn-danger offset-10 my-1">Delete</a>
+
+          <br><br>
+    </div>
+</div>
+<br>
+<div style="border-bottom: 10px solid white;"></div>
+{% endfor %}
+
+{% endblock display %}
