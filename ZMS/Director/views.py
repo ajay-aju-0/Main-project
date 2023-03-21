@@ -382,3 +382,28 @@ def viewComplaints(request):
         return redirect('director_view_complaints')
     else:
         return render(request,'director view complaints.html',{'complaints':complaints})
+
+def viewProfile(request):
+    profileForm = UpdateProfileForm(instance=request.user)
+    if request.method == 'GET':
+        return render(request,'director update profile.html',{'form':profileForm})
+
+    elif request.method == 'POST':
+        form = UpdateProfileForm(request.POST,instance=request.user)
+
+        if form.is_valid():
+            print('valid')
+            form.save()
+            messages.success(request,'profile updated successfully')
+            return redirect('director_view_profile')
+        else:
+            print('invalid')
+            print(form.errors)
+            messages.error(request,'Error while submitting form')
+            return render(request,'director update profile.html',{'form':form})
+    else:
+        print('nothing')
+        return render(request,'director update profile.html',{'form':profileForm})
+
+
+            

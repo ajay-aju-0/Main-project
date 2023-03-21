@@ -152,3 +152,29 @@ class ZooDetailsForm(forms.ModelForm):
             'visitor_capacity':forms.NumberInput(attrs={'class':'form-control'}),
             'total_area':forms.TextInput(attrs={'class':'form-control'})
         }
+
+class DateInput(forms.DateInput):
+    input_type = 'date'
+
+
+class UpdateProfileForm(forms.ModelForm):
+    
+    class Meta:
+        model = Users
+        fields = ('first_name','last_name','phone','gender','dob','country','state','city','street','pincode','house_name','email','username','id_card','profile')
+        widgets = {
+            'username':forms.TextInput(attrs={'class':'form-control'}),
+            'first_name':forms.TextInput(attrs={'class':'form-control'}),
+            'last_name':forms.TextInput(attrs={'class':'form-control'}),
+            'country':forms.Select(attrs={'class':'form-control'}),
+            'state':forms.TextInput(attrs={'class':'form-control'}),
+            'city':forms.TextInput(attrs={'class':'form-control'}),
+            'street':forms.TextInput(attrs={'class':'form-control'}),
+            'pincode':forms.TextInput(attrs={'class':'form-control'}),
+            'house_name':forms.TextInput(attrs={'class':'form-control'}),
+            'phone':forms.NumberInput(attrs={'class':'form-control'}),
+            'gender':forms.Select(attrs={'class':'form-control'}),
+            'dob':DateInput(attrs={'class':'form-control'}),
+            'email':forms.EmailInput(attrs={'class':'form-control'}),
+        }
+        help_texts = {'username':None}

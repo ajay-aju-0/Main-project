@@ -143,7 +143,7 @@ class StaffRegistrationForm(forms.ModelForm):
     
     class Meta:
         model = Users
-        fields = ('first_name','last_name','phone','gender','dob','country','state','city','street','pincode','house_name','email','username','password','id_card')
+        fields = ('first_name','last_name','phone','gender','dob','country','state','city','street','pincode','house_name','email','username','password','id_card','profile')
         widgets = {
             'username':forms.TextInput(attrs={'class':'form-control'}),
             'password':forms.PasswordInput(attrs={'class':'form-control'}),
@@ -160,5 +160,7 @@ class StaffRegistrationForm(forms.ModelForm):
             'dob':DateInput(attrs={'class':'form-control'}),
             'email':forms.EmailInput(attrs={'class':'form-control'}),
             'id_card':forms.FileInput(attrs={'class':'form-control'}),
+            'profile':forms.FileInput(attrs={'class':'form-control'}),
+
         }
         help_texts = {'username':None}

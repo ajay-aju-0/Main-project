@@ -1,6 +1,7 @@
 from django.shortcuts import render,redirect
 from accounts.models import *
 from .forms import *
+from Visitor.forms import ComplaintForm
 from django.contrib import messages
 
 # Create your views here.
@@ -119,4 +120,31 @@ def updateDeathDetails(request,id):
     else:
         return render(request,'add death details.html',{'form':deathForm,'animal':animal})
 
-            
+def viewComplaints(request):
+    complaints = Complaints.objects.filter(uid = request.user.id)
+    recipient = Users.objects.filter(usertype__in = ['curator','director'])
+    # print(recipient[0].usertype)
+    complaintForm = ComplaintForm()
+
+    if request.method == 'GET':
+        return render(request,'doctor view complaint.html',{'complaints':complaints,'form':complaintForm,'recipients':recipient})
+
+    elif request.method == 'POST':
+        recipient = request.POST['recipient']
+        form = ComplaintForm(request.POST)
+
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.uid = Users.objects.get(pk=request.user.id)
+            obj.rid = Staffs.objects.get(user=recipient)
+            obj.save()
+            return redirect('doctor_view_complaints')
+        else:
+            return render(request,"doctor view complaints.html",{'complaints':complaints,'form':form,'recipients':recipient,'error':True})
+    else:
+        return render(request,'doctor view complaints.html',{'complaints':complaints,'form':complaintForm,'recipients':recipient})
+
+def deleteComplaint(request,id):
+    complaint = Complaints.objects.get(pk=id)
+    complaint.delete()
+    return redirect('doctor_view_complaints')

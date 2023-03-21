@@ -7,4 +7,6 @@ urlpatterns = [
     path('animal health status/',viewAnimalHealthStatus,name='keeper_view_animal_health_status'),
     path('animal details/<id>',showAnimalDetails,name='keeper_view_animal_details'),
     path('health status/<id>',changeAnimalHealthStatus,name='keeper_change_animal_health_status'),
+    path('view complaint/',viewComplaints,name='keeper_view_complaint'),
+    path('delete complaint/<id>',deleteComplaint,name='keeper_delete_complaint')
 ]

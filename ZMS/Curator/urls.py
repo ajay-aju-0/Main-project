@@ -33,6 +33,8 @@ urlpatterns = [
    path('view feedback/',curatorViewFeedbacks,name='curator_view_feedbacks'),
    path('delete feedback/<id>',deleteFeedback,name='curator_delete_feedbacks'),
    path('view complaints/',viewComplaints,name='curator_view_complaints'),
+   path('view given complaint/',viewGivenComplaints,name='curator_view_send_complaint'),
+   path('delete complaint/<id>',deleteComplaint,name='curator_delete_complaint')
    
 
 

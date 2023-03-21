@@ -24,7 +24,7 @@ class Users(AbstractUser):
     house_name = models.CharField(max_length=50)
     phone = models.BigIntegerField(default=0)
     usertype = models.CharField(max_length=15)
-    profile = models.FileField(upload_to="DP",max_length=300,verbose_name="profile photo",default="null")
+    profile = models.ImageField(upload_to="DP",max_length=300,verbose_name="profile photo",default="null")
     id_card = models.FileField(upload_to="id",max_length=300)
 
     def __str__(self):

@@ -34,6 +34,7 @@ urlpatterns = [
    path('view feedback/',showFeedbacks,name='director_view_feedbacks'),
    path('ticket sales',viewTicketSales,name='director_view_ticket_sales'),
    path('view complaints/',viewComplaints,name='director_view_complaints'),
+   path('view profile/',viewProfile,name='director_view_profile')
 
 
 ]

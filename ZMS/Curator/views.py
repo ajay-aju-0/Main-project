@@ -4,6 +4,7 @@ from django.db.models import Q
 from accounts.models import *
 from .forms import *
 from Director.forms import *
+from Visitor.forms import *
 from django.contrib import messages
 from datetime import date
 
@@ -445,3 +446,33 @@ def viewComplaints(request):
         return redirect('curator_view_complaints')
     else:
         return render(request,'curator view complaints.html',{'complaints':complaints})
+
+
+def viewGivenComplaints(request):
+    complaints = Complaints.objects.filter(uid = request.user.id)
+    recipient = Users.objects.filter(usertype__in = ['director'])
+    # print(recipient[0].usertype)
+    complaintForm = ComplaintForm()
+
+    if request.method == 'GET':
+        return render(request,'curator view given complaints.html',{'complaints':complaints,'form':complaintForm,'recipients':recipient})
+
+    elif request.method == 'POST':
+        recipient = request.POST['recipient']
+        form = ComplaintForm(request.POST)
+
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.uid = Users.objects.get(pk=request.user.id)
+            obj.rid = Staffs.objects.get(user=recipient)
+            obj.save()
+            return redirect('curator_view_send_complaint')
+        else:
+            return render(request,"curator view given complaints.html",{'complaints':complaints,'form':form,'recipients':recipient,'error':True})
+    else:
+        return render(request,'curator view given complaints.html',{'complaints':complaints,'form':complaintForm,'recipients':recipient})
+
+def deleteComplaint(request,id):
+    complaint = Complaints.objects.get(pk=id)
+    complaint.delete()
+    return redirect('curator_view_send_complaint')

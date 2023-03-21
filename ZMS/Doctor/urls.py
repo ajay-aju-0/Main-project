@@ -16,7 +16,9 @@ urlpatterns = [
    path('mark cured/<id>',markCured,name='doctor_mark_animal_cured'),
    path('animal death details/',viewDeathDetails,name='doctor_manage_animal_death'),
    path('animal details/<id>',viewAnimalDetails,name='doctor_view_animal_details'),
-   path('update death details/<id>',updateDeathDetails,name='doctor_update_death_details')
+   path('update death details/<id>',updateDeathDetails,name='doctor_update_death_details'),
+   path('view complaint/',viewComplaints,name='doctor_view_complaints'),
+   path('delete complaint/<id>',deleteComplaint,name='doctor_delete_complaint')
 
    
 

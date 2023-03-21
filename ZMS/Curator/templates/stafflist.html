@@ -35,8 +35,8 @@
                     </tr>
                 </thead>
                 
-                {% for staff in staffs %}
                 <tbody>
+                {% for staff in staffs %}
                 <tr>
                     <td>{{staff.user.first_name}} {{staff.user.last_name}}</td>
                     <td>{{staff.user.username}}</td>
@@ -68,8 +68,8 @@
                     {% endif %}
                     </td>
                 </tr>
-            </tbody>
                 {% endfor %}
+            </tbody>
                     
             </table>
         </div>
