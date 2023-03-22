@@ -161,7 +161,7 @@ class UpdateProfileForm(forms.ModelForm):
     
     class Meta:
         model = Users
-        fields = ('first_name','last_name','phone','gender','dob','country','state','city','street','pincode','house_name','email','username','id_card','profile')
+        fields = ('first_name','last_name','phone','gender','dob','country','state','city','street','pincode','house_name','email','username','id_card')
         widgets = {
             'username':forms.TextInput(attrs={'class':'form-control'}),
             'first_name':forms.TextInput(attrs={'class':'form-control'}),
@@ -178,3 +178,10 @@ class UpdateProfileForm(forms.ModelForm):
             'email':forms.EmailInput(attrs={'class':'form-control'}),
         }
         help_texts = {'username':None}
+
+
+class ProfileImageForm(forms.ModelForm):
+
+    class Meta:
+        model = Users
+        fields = ['profile']

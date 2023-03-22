@@ -1,0 +1,40 @@
+
+<div class="modal fade" id="uploadprofilemodal" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true" >
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+                <div class="modal-header">
+                        <h5 class="modal-title">Add Profile Photo</h5>
+                            <button type="button" class="close bg-danger text-white" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                    </div>
+            <div class="modal-body">
+                
+                {% if error %}
+                {% include 'shared/messages.html' %}
+                {% endif %}
+                    
+                <form action="{% url 'director_upload_profile_image' %}" method="post" enctype="multipart/form-data" class="font-weight-bold">      
+                
+                    {{imageform.as_p}}
+                {% csrf_token %}
+                
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success btn-block w-100">Submit</button>
+                </div>
+                 </form>                
+                
+            </div>
+            
+        </div>
+    </div>
+</div>
+  
+  <script>
+    $('#catagorymodal').on('show.bs.modal', event => {
+        var button = $(event.relatedTarget);
+        var modal = $(this);
+        // Use above variables to manipulate the DOM
+    });
+
+  </script>

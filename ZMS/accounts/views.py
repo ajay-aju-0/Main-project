@@ -59,6 +59,8 @@ def loginUser(request):
         else:
             messages.error(request,'invalid username or password')
             return render(request,'index.html',{'error':True})
+    else:
+        return render(request,'index.html')
 
 def logoutUser(request):
     logout(request)

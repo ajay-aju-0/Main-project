@@ -34,7 +34,10 @@ urlpatterns = [
    path('view feedback/',showFeedbacks,name='director_view_feedbacks'),
    path('ticket sales',viewTicketSales,name='director_view_ticket_sales'),
    path('view complaints/',viewComplaints,name='director_view_complaints'),
-   path('view profile/',viewProfile,name='director_view_profile')
+   path('view profile/',viewProfile,name='director_view_profile'),
+   path('upload profile image/',updateProfileImage,name='director_upload_profile_image'),
+   path('delete profile/',deleteProfileImage,name='director_delete_profile_photo'),
+   path('change password/',changePassword,name='director_change_password'),
 
 
 ]

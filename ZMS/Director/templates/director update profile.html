@@ -1,5 +1,5 @@
 {% extends 'shared/directorpanel.html' %}
-
+{% load static %}
 
 {% block pagetitle %}
 {% include 'shared/messages.html' %}
@@ -22,7 +22,7 @@
       <div class="card">
         <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
 
-          <img src="{{user.profile.url}}" alt="Profile" class="rounded-circle">
+          <img src="{{user.profile.url}}" alt="Profile" class="rounded-circle" height="150px" width="150px">
           <h2>{{user}}</h2>
           <h3>Director</h3>
           <div class="social-links mt-2">
@@ -102,18 +102,18 @@
             <div class="tab-pane fade profile-edit pt-3" id="profile-edit">
 
               <!-- Profile Edit Form -->
-              <form method="POST" enctype="multipart/form-data">
                 <div class="row mb-3">
                   <label for="profileImage" class="col-md-4 col-lg-3 col-form-label">Profile Image</label>
                   <div class="col-md-8 col-lg-9">
-                    <img src="{{user.profile.url}}" alt="Profile">
-                    <div class="pt-2 Upload">
-                      <a href="#" class="btn btn-primary btn-sm" title="Upload new profile image"><i class="bi bi-upload"></i></a>
-                      <a href="#" class="btn btn-danger btn-sm" title="Remove my profile image"><i class="bi bi-trash"></i></a>
+                    <img src="{{user.profile.url}}" alt="Profile Photo" class="rounded-circle" height="100px" width="100px">
+                    <div class="pt-2 px-3">
+                      <button data-toggle="modal" data-target="#uploadprofilemodal" data-backdrop="static" class="btn btn-primary btn-sm" title="Upload new profile image"><i class="bi bi-upload"></i></button>
+                      {% include 'upload profile image.html' %}
+                      <a href="{% url 'director_delete_profile_photo' %}" class="btn btn-danger btn-sm" title="Remove my profile image"><i class="bi bi-trash"></i></a>
                     </div>
                   </div>
                 </div>
-
+            <form method="POST" enctype="multipart/form-data">
                 <div class="row mb-3">
                     <label class="col-md-4 col-lg-3 col-form-label">{{form.profile.label}}</label>
                     
@@ -245,7 +245,7 @@
 
             <div class="tab-pane fade pt-3" id="profile-change-password">
               <!-- Change Password Form -->
-              <form>
+              <form action="{% url 'director_change_password' %}" method="post">
 
                 <div class="row mb-3">
                   <label for="currentPassword" class="col-md-4 col-lg-3 col-form-label">Current Password</label>
@@ -267,7 +267,7 @@
                     <input name="renewpassword" type="password" class="form-control" id="renewPassword">
                   </div>
                 </div>
-
+                {% csrf_token %}
                 <div class="text-center">
                   <button type="submit" class="btn btn-success">Change Password</button>
                 </div>
@@ -283,10 +283,15 @@
     </div>
   </div>
 
-  <script>
-    $('#browse').click(function(){
-        $(this).parent().find('input').click();
-    })
-  </script>
+  {% if error %}
+    <script src="{% static 'assets/js/jquery-3.6.3.slim.min.js' %}"></script>
+    <script src="{% static 'assets/js/jquery-3.6.4.min.js' %}"></script>
+    <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script>
+        $(document).ready(function() {
+            $('#uploadprofilemodal').modal('show');
+        })
+    </script>
+    {% endif %}
 {% endblock display %}
     
