@@ -7,6 +7,7 @@ from Director.forms import *
 from Visitor.forms import *
 from django.contrib import messages
 from datetime import date
+from django.contrib.auth import authenticate
 
 # Create your views here.
 
@@ -145,19 +146,23 @@ def updateAnimal(request,id):
                 if AkindCheck:
                     obj1 = form1.save(commit=False)
                     obj1.akind = AnimalKind.objects.get(general_name = request.POST['general_name'],species = request.POST['species'],Aorder = request.POST['Aorder'])
+                    obj1.status = -1
                     obj1.save()
                 else:
                     AnimalKind.objects.create(general_name = request.POST['general_name'],species = request.POST['species'],Aorder = request.POST['Aorder'],avg_lifespan = request.POST['avg_lifespan'],habitat = request.POST['habitat'],origin = request.POST['origin'],characteristics = request.POST['characteristics'],class_id =Taxonomy.objects.get(Aclass = request.POST['Aclass']))
                     obj2 = AnimalKind.objects.get(general_name = request.POST['general_name'],species = request.POST['species'],Aorder = request.POST['Aorder'],avg_lifespan = request.POST['avg_lifespan'],habitat = request.POST['habitat'],origin = request.POST['origin'],characteristics = request.POST['characteristics'],class_id =Taxonomy.objects.get(Aclass = request.POST['Aclass']).id)
                     obj1 = form1.save(commit=False)
                     obj1.akind = obj2
+                    obj1.status = -1
                     obj1.save()
             else:
+                print(3)
                 Taxonomy.objects.create(Aclass = request.POST['Aclass'])
                 AnimalKind.objects.create(general_name = request.POST['general_name'],species = request.POST['species'],Aorder = request.POST['Aorder'],avg_lifespan = request.POST['avg_lifespan'],habitat = request.POST['habitat'],origin = request.POST['origin'],characteristics = request.POST['characteristics'],class_id =Taxonomy.objects.get(Aclass = request.POST['Aclass']).id)
                 obj2 = AnimalKind.objects.get(general_name = request.POST['general_name'],species = request.POST['species'],Aorder = request.POST['Aorder'],avg_lifespan = request.POST['avg_lifespan'],habitat = request.POST['habitat'],origin = request.POST['origin'],characteristics = request.POST['characteristics'],class_id =Taxonomy.objects.get(Aclass = request.POST['Aclass']).id)
                 obj1 = form1.save(commit=False)
                 obj1.akind = obj2
+                obj1.status = -1
                 obj1.save()
             messages.success(request,'Animal updated successfully')
             return redirect('curator_manage_animals')
@@ -344,6 +349,9 @@ def addParticipants(request,id):
             participant.animal = animal
             participant.save()
         return redirect('curator_manage_events')
+    else:
+        return render(request,'add participants.html',{'animals':animals,'event':event})
+
 
 
 def removeParticipants(request,id):
@@ -375,6 +383,29 @@ def changeAnimalStatus(request,id):
         animal.status = 1
     animal.save()
     return redirect('curator_manage_animals')
+
+def vacancyList(request):
+    vacancy = JobVacancy.objects.all()
+    unreviewed_applications = Applications.objects.filter(status = 'unreviewed')
+    return render(request,'curator view vacancy.html',{'vacancies':vacancy,'unreviewed':unreviewed_applications})
+
+def viewApplications(request,id):
+    applications = Applications.objects.filter(vacancy = id)
+    return render(request,'curator view applications.html',{'applications':applications})
+
+def acceptApplication(request,id,vid):
+    vacancy = JobVacancy.objects.get(id = vid)
+    application = Applications.objects.get(pk=id)
+    application.status = 'accepted'
+    application.save()
+    return redirect('curator_view_applications',vacancy.id)
+
+def rejectApplication(request,id,vid):
+    vacancy = JobVacancy.objects.get(id = vid)
+    application = Applications.objects.get(pk=id)
+    application.status = 'rejected'
+    application.save()
+    return redirect('curator_view_applications',vacancy.id)
 
 def viewMedicineStocks(request):
     medicines = Medicines.objects.all()
@@ -476,3 +507,61 @@ def deleteComplaint(request,id):
     complaint = Complaints.objects.get(pk=id)
     complaint.delete()
     return redirect('curator_view_send_complaint')
+
+
+def viewProfile(request):
+    profileForm = UpdateProfileForm(instance=request.user)
+    profileImageForm = ProfileImageForm(instance=request.user)
+    if request.method == 'GET':
+        return render(request,'curator update profile.html',{'form':profileForm,'imageform':profileImageForm})
+
+    elif request.method == 'POST':
+        form = UpdateProfileForm(request.POST,instance=request.user)
+
+        if form.is_valid():
+            form.save()
+            messages.success(request,'profile updated successfully')
+            return redirect('curator_view_profile')
+        else:
+            messages.error(request,'Error while submitting form')
+            return render(request,'curator update profile.html',{'form':form})
+    else:
+        return render(request,'curator update profile.html',{'form':profileForm})
+
+def updateProfileImage(request):
+    profileImageForm = ProfileImageForm(instance=request.user)
+    if request.method == 'POST':
+        form = ProfileImageForm(request.POST,request.FILES,instance = request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request,'profile image updated successfully')
+            return redirect('curator_view_profile')
+        else:
+            return render(request,'curator update profile.html',{'form':form,'imageform':profileImageForm,'error':True})
+
+def deleteProfileImage(request):
+    userObj = Users.objects.get(pk=request.user.id)
+    userObj.profile = 'null'
+    userObj.save()
+    messages.success(request,'profile photo deleted successfully!')
+    return redirect('curator_view_profile')
+
+def changePassword(request):
+    currentPassword = request.POST['password']
+    newPassword = request.POST['newpassword']
+    renewPassword = request.POST['renewpassword']
+
+    user = authenticate(username = request.user.username , password = currentPassword)
+
+    if user:
+        if newPassword == renewPassword:
+            request.user.set_password(newPassword)
+            request.user.save()
+            messages.success(request,'Password changed successfully!')
+            return redirect('login_user')
+        else:
+            messages.error(request,'new and reentered passwords mismatch!')
+            return redirect('curator_view_profile')
+    else:
+        messages.error(request,'current password is wrong!')
+        return redirect('curator_view_profile')

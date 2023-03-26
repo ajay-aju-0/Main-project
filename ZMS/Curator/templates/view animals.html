@@ -55,15 +55,17 @@
                            <td>Present</td> 
                         {% elif animal.status == -1 %}
                            <td>Unverified</td>
+                        {% elif animal.status == -2 %}
+                           <td><i class="fw-bold">Rejected</i>: {{animal.reason}} </td>
                         {% else %}
                            <td>Unavailable</td> 
                         {% endif %}
                             
                         <td>
-                            <a href="{% url 'curator_view_animal_details' animal.id %}" class="btn btn-secondary"><i class="bi bi-eye"></i></a>                           
+                            <a href="{% url 'curator_view_animal_details' animal.id %}" class="btn btn-secondary"><i class="bi bi-eye"></i></a>                        
                             <a href="{% url 'curator_update_animal' animal.id %}" class="btn btn-success"><i class="bi bi-pencil"></i></a>
                             
-                            {% if animal.status != -1 %}
+                            {% if animal.status != -1 and animal.status != -2 %}
                             <a href="{% url 'curator_change_animal_status' animal.id %}" onclick="return confirm('Sure to change status?')" class="btn btn-danger">change status</a>
                             {% endif %}
                                 

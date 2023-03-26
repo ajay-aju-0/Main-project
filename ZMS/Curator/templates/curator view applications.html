@@ -1,0 +1,62 @@
+{% extends 'shared/curatorpanel.html' %}
+
+
+{% block pagetitle %}
+    
+
+<div class="d-flex justify-content-between">
+    <h1>View Applications</h1>
+</div>
+
+<br>
+{% endblock pagetitle %}
+
+{% block display %}
+
+    <div class="container" style="height: inherit;">
+        <div class="row">
+            <div class="col-sm-12">
+                <table class="table table-stripped datatable">
+                    <thead>
+                    <tr>
+                        <th>Full name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Applied on</th>
+                        <th>CV</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                    
+                    {% for application in applications %}
+                    <tr>
+                        <td>{{application.uid.first_name}} {{application.uid.last_name}}</td>
+                        <td>{{application.uid.email}}</td>
+                        <td>{{application.uid.phone}}</td>
+                        <td>{{application.date}}</td>                            
+                        <td><a href="{{application.cv.url}}" target="_blank">{{application.cv}}</a></td>
+                        <td>
+                            
+                            {% if application.status == 'unreviewed' %}
+                                <a href="{% url 'curator_accept_application' application.id application.vacancy.id %}" onclick="return confirm('Sure to accept?')" class="btn btn-success text-white"><i class="bi bi-person-check fw-bold"></i> Accept</a>
+                                <a href="{% url 'curator_reject_application' application.id application.vacancy.id %}" onclick="return confirm('Sure to reject?')" class="btn btn-danger text-white"><i class="bi bi-person-x fw-bold"></i> Reject</a>
+                            {% elif application.status == 'accepted' %}
+                                <h6 class="text-center">Accepted</h6>
+                            {% else %}
+                                <h6 class="text-center">Rejected</h6>
+                            {% endif %}
+                                
+                        </td>
+                    </tr>
+                    {% endfor %}
+                        
+                </table>
+            </div>
+        </div>
+    </div>
+        
+
+    
+
+{% endblock display %}
+    

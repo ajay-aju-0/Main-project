@@ -1,0 +1,48 @@
+{% extends 'shared/visitorpanel.html' %}
+{% include 'shared/messages.html' %}
+
+
+{% block pagetitle %}
+<div class="d-flex justify-content-between">
+    <h1>Job application</h1>
+</div>
+<nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'visitor_view_vacancy' %}">View vacancy</a></li>
+      <li class="breadcrumb-item active">Apply</li>
+    </ol>
+</nav>
+{% endblock pagetitle %}
+
+{% block display %}    
+
+    <br>
+<div class="col-sm-8 offset-2 shadow rounded" style="background-color: #ffffcc;font-weight: bold;">
+    <div class="panel panel-primary">
+        <div class="panel-heading text-center">
+            <h1>Job Application</h1>
+        </div>
+        <div class="panel-body">
+            <form action="" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <p>
+                    <label for="vacancy">Vacancy:</label>
+                    <input type="text" name="vacancy" id="vacancy" value="{{vacancy.vposition}}" class="form-control" disabled>
+                </p>
+                
+                {{form.as_p}}
+                <div class="panel-footer">
+                    <br>
+                    <button type="submit" class="btn btn-block btn-success fw-bold w-100 fs-5" >SUBMIT</button>
+                </div>
+            </form>
+        </div>
+        
+    </div>
+    <br>
+</div>
+<br>
+
+
+{% endblock display %}
+    

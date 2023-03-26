@@ -34,3 +34,14 @@ class ComplaintForm(forms.ModelForm):
         widgets = {
             'complaint':forms.Textarea(attrs={'class':'form-control'}),
         }
+
+class ApplicationForm(forms.ModelForm):
+
+    class Meta:
+        model = Applications
+        fields = ['qualification','cv']
+        widgets = {
+            'qualification':forms.TextInput(attrs={'class':'form-control'}),
+            'cv':forms.FileInput(attrs={'class':'form-control'})
+        }
+        

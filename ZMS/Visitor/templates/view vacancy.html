@@ -1,0 +1,72 @@
+{% extends 'shared/visitorpanel.html' %}
+
+
+{% block pagetitle %}
+    
+
+<div class="d-flex justify-content-between">
+    <h1>View vacancy</h1>
+</div>
+
+<br>
+{% endblock pagetitle %}
+
+{% block display %}
+
+    <div class="container" style="height: inherit;">
+        <div class="row">
+            <div class="col-sm-12">
+                <table class="table table-stripped datatable">
+                    <thead>
+                    <tr>
+                        <th>Position</th>
+                        <th>Qualification</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                        <th>Start date</th>
+                        <th>End date</th>
+                        <th>Issued on</th>
+                        <th colspan="2">Action</th>
+                    </tr>
+                </thead>
+                    
+                    {% for vacancy in vacancies %}
+                    <tr>
+                        <td>{{vacancy.vposition}}</td>
+                        <td>{{vacancy.qualification}}</td>
+                        <td>{{vacancy.vtype}}</td>
+                        <td>{{vacancy.description}}</td>                            
+                        <td>{{vacancy.vstart}}</td>
+                        <td>{{vacancy.vend}}</td>
+                        <td>{{vacancy.issue_date}}</td>
+                        <td>
+                            {% if vacancy.vstatus == 'closed' %}
+                                <h6 class="text-center"> Vacancy closed </h6>
+                           
+                            {% elif appl_obj %}
+                                
+                                {% for apply in appl_obj %}
+                                    
+                                    {% if apply.vacancy.id == vacancy.id %}
+                                    <h6 class="text-center"> Applied </h6>
+                                    {% endif %}
+                                        
+                                {% endfor %}
+
+                            {% else %}
+                                <a href="{% url 'visitor_apply_job' vacancy.id %}" class="btn btn-success text-white">Apply</a>
+                            {% endif %}      
+                        </td>
+                    </tr>
+                    {% endfor %}
+                        
+                </table>
+            </div>
+        </div>
+    </div>
+        
+
+    
+
+{% endblock display %}
+    

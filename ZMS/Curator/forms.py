@@ -18,7 +18,7 @@ class AnimalForm(forms.ModelForm):
 
     class Meta:
         model = Animals
-        exclude = ['death_date','death_cause','incineration','date_joined','akind','status','caretaker']
+        exclude = ['death_date','death_cause','incineration','date_joined','akind','status','caretaker','reason']
 
         location = forms.ModelChoiceField(
             queryset = Enclosures.objects.all(),
@@ -69,7 +69,7 @@ class UpdateAnimalForm(forms.ModelForm):
 
     class Meta:
         model = Animals
-        exclude = ['death_date','death_cause','incineration','date_joined','akind','status','caretaker']
+        exclude = ['death_date','death_cause','incineration','date_joined','akind','status','caretaker','reason']
 
         location = forms.ModelChoiceField(
             queryset = Enclosures.objects.all(),

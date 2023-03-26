@@ -1,0 +1,57 @@
+{% extends 'shared/curatorpanel.html' %}
+
+
+{% block pagetitle %}
+    
+
+<div class="d-flex justify-content-between">
+    <h1>View Vacancy</h1>
+</div>
+
+<br>
+{% endblock pagetitle %}
+
+{% block display %}
+
+    <div class="container" style="height: inherit;">
+        <div class="row">
+            <div class="col-sm-12">
+                <table class="table table-stripped datatable">
+                    <thead>
+                    <tr>
+                        <th>Position</th>
+                        <th>Qualification</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                        <th>Start date</th>
+                        <th>End date</th>
+                        <th>Issued on</th>
+                        <th>View Applications</th>
+                    </tr>
+                </thead>
+                    
+                    {% for vacancy in vacancies %}
+                    <tr>
+                        <td>{{vacancy.vposition}}</td>
+                        <td>{{vacancy.qualification}}</td>
+                        <td>{{vacancy.vtype}}</td>
+                        <td>{{vacancy.description}}</td>                            
+                        <td>{{vacancy.vstart}}</td>
+                        <td>{{vacancy.vend}}</td>
+                        <td>{{vacancy.issue_date}}</td>
+                        <td>
+                            <a href="{% url 'curator_view_applications' vacancy.id %}" class="btn btn-secondary text-white"><i class="bi bi-eye"></i></a>                                
+                        </td>
+                    </tr>
+                    {% endfor %}
+                        
+                </table>
+            </div>
+        </div>
+    </div>
+        
+
+    
+
+{% endblock display %}
+    

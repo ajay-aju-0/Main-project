@@ -2,6 +2,9 @@ from django.shortcuts import render,redirect,HttpResponse
 from accounts.models import *
 from .forms import *
 from datetime import date
+from Director.forms import *
+from django.contrib.auth import authenticate
+from django.contrib import messages
 # Create your views here.
 
 def loadVisitorHome(request):
@@ -138,3 +141,98 @@ def deleteComplaint(request,id):
     complaint = Complaints.objects.get(pk=id)
     complaint.delete()
     return redirect('visitor_view_complaints')
+
+def viewProfile(request):
+    profileForm = UpdateProfileForm(instance=request.user)
+    profileImageForm = ProfileImageForm(instance=request.user)
+    if request.method == 'GET':
+        return render(request,'visitor update profile.html',{'form':profileForm,'imageform':profileImageForm})
+
+    elif request.method == 'POST':
+        form = UpdateProfileForm(request.POST,instance=request.user)
+
+        if form.is_valid():
+            form.save()
+            messages.success(request,'profile updated successfully')
+            return redirect('visitor_view_profile')
+        else:
+            messages.error(request,'Error while submitting form')
+            return render(request,'visitor update profile.html',{'form':form})
+    else:
+        return render(request,'visitor update profile.html',{'form':profileForm})
+
+def updateProfileImage(request):
+    profileImageForm = ProfileImageForm(instance=request.user)
+    if request.method == 'POST':
+        form = ProfileImageForm(request.POST,request.FILES,instance = request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request,'profile image updated successfully')
+            return redirect('visitor_view_profile')
+        else:
+            return render(request,'visitor update profile.html',{'form':form,'imageform':profileImageForm,'error':True})
+
+def deleteProfileImage(request):
+    userObj = Users.objects.get(pk=request.user.id)
+    userObj.profile = 'null'
+    userObj.save()
+    messages.success(request,'profile photo deleted successfully!')
+    return redirect('visitor_view_profile')
+
+def changePassword(request):
+    currentPassword = request.POST['password']
+    newPassword = request.POST['newpassword']
+    renewPassword = request.POST['renewpassword']
+
+    user = authenticate(username = request.user.username , password = currentPassword)
+
+    if user:
+        if newPassword == renewPassword:
+            request.user.set_password(newPassword)
+            request.user.save()
+            messages.success(request,'Password changed successfully!')
+            return redirect('login_user')
+        else:
+            messages.error(request,'new and reentered passwords mismatch!')
+            return redirect('visitor_view_profile')
+    else:
+        messages.error(request,'current password is wrong!')
+        return redirect('visitor_view_profile')
+
+def viewVacancy(request):
+    vacancy = JobVacancy.objects.all()
+    application = Applications.objects.filter(uid = request.user.id)
+    return render(request,'view vacancy.html',{'vacancies':vacancy,'appl_obj':application})
+
+def apply(request,id):
+    vacancy = JobVacancy.objects.get(pk=id)
+    applicationForm = ApplicationForm()
+
+    if request.method == 'GET':
+        return render(request,'apply job.html',{'form':applicationForm,'vacancy':vacancy})
+
+    elif request.method == 'POST':
+        form = ApplicationForm(request.POST,request.FILES)
+
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.vacancy = vacancy
+            obj.uid = request.user
+            obj.status = 'unreviewed'
+            obj.save()
+            messages.success(request,'Application submitted successfully!')
+            return redirect('visitor_view_vacancy')
+        else:
+            messages.error(request,'Error while submitting form!')
+            return render(request,'apply job.html',{'form':form,'vacancy':vacancy})
+    else:
+        return render(request,'apply job.html',{'form':applicationForm,'vacancy':vacancy})
+
+def viewApplications(request):
+    applications = Applications.objects.filter(uid = request.user.id)
+    return render(request,'view applications.html',{'applications':applications})
+
+def deleteApplication(request,id):
+    application = Applications.objects.get(pk=id)
+    application.delete()
+    return redirect('visitor_view_job_application')

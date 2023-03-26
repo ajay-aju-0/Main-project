@@ -51,3 +51,12 @@ class DeathForm(forms.ModelForm):
             'death_cause':forms.TextInput(attrs={'class':'form-control'}),
             'incineration':forms.TextInput(attrs={'class':'form-control'})
         }
+
+class ReasonForm(forms.ModelForm):
+
+    class Meta:
+        model = Animals
+        fields = ['reason']
+        widgets = {
+            'reason':forms.Textarea(attrs={'class':'form-control'})
+        }

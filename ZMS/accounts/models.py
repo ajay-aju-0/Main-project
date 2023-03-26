@@ -117,6 +117,7 @@ class Animals(models.Model):
     image1 = models.FileField(upload_to='Animals',max_length=300,verbose_name="Image 1",default='')
     image2 = models.FileField(upload_to='Animals',max_length=300,verbose_name="Image 2",null=True,blank=True)
     image3 = models.FileField(upload_to='Animals',max_length=300,verbose_name="Image 3",null=True,blank=True)
+    reason = models.CharField(max_length=100,default='null')
     caretaker = models.ForeignKey(to=Staffs,on_delete=models.CASCADE)
     akind = models.ForeignKey(to=AnimalKind,on_delete=models.CASCADE)
 
@@ -181,11 +182,10 @@ class JobVacancy(models.Model):
 
 class Applications(models.Model):
     date = models.DateField(auto_now_add=True)
-    fullname = models.CharField(max_length=25)
-    email = models.EmailField()
-    phone = models.BigIntegerField()
+    qualification = models.CharField(max_length=20)
     cv = models.FileField(upload_to="cv",max_length=300)
     vacancy = models.ForeignKey(to=JobVacancy,on_delete=models.CASCADE)
+    uid = models.ForeignKey(to=Users,on_delete=models.CASCADE)
     status = models.CharField(max_length=10)
 
 class SponserDetails(models.Model):

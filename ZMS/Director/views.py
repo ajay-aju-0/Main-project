@@ -395,17 +395,13 @@ def viewProfile(request):
         form = UpdateProfileForm(request.POST,instance=request.user)
 
         if form.is_valid():
-            print('valid')
             form.save()
             messages.success(request,'profile updated successfully')
             return redirect('director_view_profile')
         else:
-            print('invalid')
-            print(form.errors)
             messages.error(request,'Error while submitting form')
             return render(request,'director update profile.html',{'form':form})
     else:
-        print('nothing')
         return render(request,'director update profile.html',{'form':profileForm})
 
 def updateProfileImage(request):
@@ -427,7 +423,6 @@ def deleteProfileImage(request):
     return redirect('director_view_profile')
 
 def changePassword(request):
-    # userObj = Users.objects.get(pk=request.user.id)
     currentPassword = request.POST['password']
     newPassword = request.POST['newpassword']
     renewPassword = request.POST['renewpassword']
@@ -447,6 +442,3 @@ def changePassword(request):
         messages.error(request,'current password is wrong!')
         return redirect('director_view_profile')
     
-
-    print(currentPassword,newPassword,renewPassword)
-    return redirect('director_view_profile')

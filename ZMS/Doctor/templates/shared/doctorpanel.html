@@ -82,7 +82,7 @@
             </li>
 
             <li>
-              <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+              <a class="dropdown-item d-flex align-items-center" href="{% url 'doctor_view_profile' %}">
                 <i class="bi bi-person"></i>
                 <span>My Profile</span>
               </a>
@@ -141,7 +141,12 @@
       <li class="nav-item">
         <a class="nav-link " href="{% url 'doctor_verify_animals' %}">
             <i class="bi bi-people"></i>
-            <span>Verify animals</span>
+            <span class="">Verify animals</span>
+            
+            {% if unverified_animals > 0  %}                
+            &nbsp;&nbsp;&nbsp;
+            <span class="rounded-circle bg-danger px-1 fw-bold text-white">{{unverified_animals}}</span>
+            {% endif %}
         </a>
       </li><!-- End Manage staff Nav -->
 

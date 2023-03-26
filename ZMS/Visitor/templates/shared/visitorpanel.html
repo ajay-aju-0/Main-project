@@ -82,7 +82,7 @@
             </li>
 
             <li>
-              <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+              <a class="dropdown-item d-flex align-items-center" href="{% url 'visitor_view_profile' %}">
                 <i class="bi bi-person"></i>
                 <span>My Profile</span>
               </a>
@@ -143,14 +143,14 @@
             <i class="bi bi-ticket"></i>
             <span>Book tickets</span>
         </a>
-      </li><!-- End Manage staff Nav -->
+      </li><!-- End Book tickets Nav -->
 
       <li class="nav-item">
         <a class="nav-link " href="{% url 'visitor_view_feedback' %}">
             <i class="bi bi-chat-dots"></i>
             <span>View Feedbacks</span>
         </a>
-      </li><!-- End Manage staff Nav -->
+      </li><!-- End Feedbacks Nav -->
 
       <li class="nav-item">
         <a class="nav-link " href="{% url 'visitor_view_complaints' %}">
@@ -158,6 +158,23 @@
             <span>View Complaints</span>
         </a>
       </li><!-- End Complaints Nav -->
+
+      
+      {% if user.country == 'India' %}
+      <li class="nav-item">
+        <a class="nav-link " href="{% url 'visitor_view_vacancy' %}">
+            <i class="bi bi-person-add"></i>
+            <span>View Vacancy</span>
+        </a>
+      </li><!-- End Complaints Nav -->
+      <li class="nav-item">
+        <a class="nav-link " href="{% url 'visitor_view_job_application' %}">
+            <i class="bi bi-file-earmark-plus"></i>
+            <span>My Applications</span>
+        </a>
+      </li><!-- End Complaints Nav -->
+      {% endif %}
+        
 
     </ul>
 

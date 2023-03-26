@@ -108,7 +108,7 @@
                     <img src="{{user.profile.url}}" alt="Profile Photo" class="rounded-circle" height="100px" width="100px">
                     <div class="pt-2 px-3">
                       <button data-toggle="modal" data-target="#uploadprofilemodal" data-backdrop="static" class="btn btn-primary btn-sm" title="Upload new profile image"><i class="bi bi-upload"></i></button>
-                      {% include 'upload profile image.html' %}
+                      {% include 'director upload profile image.html' %}
                       <a href="{% url 'director_delete_profile_photo' %}" class="btn btn-danger btn-sm" title="Remove my profile image"><i class="bi bi-trash"></i></a>
                     </div>
                   </div>

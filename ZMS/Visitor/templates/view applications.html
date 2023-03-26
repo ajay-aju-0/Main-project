@@ -1,0 +1,67 @@
+{% extends 'shared/visitorpanel.html' %}
+
+
+{% block pagetitle %}
+    
+
+<div class="d-flex justify-content-between">
+    <h1>My Applications</h1>
+</div>
+
+<br>
+{% endblock pagetitle %}
+
+{% block display %}
+
+    <div class="container" style="height: inherit;">
+        <div class="row">
+            <div class="col-sm-12">
+                <table class="table table-stripped datatable">
+                    <thead>
+                    <tr>
+                        <th>Position</th>
+                        <th>Qualification</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                        <th>Start date</th>
+                        <th>End date</th>
+                        <th>Issued on</th>
+                        <th>Applied on</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                    
+                    {% for application in applications %}
+                    <tr>
+                        <td>{{application.vacancy.vposition}}</td>
+                        <td>{{application.vacancy.qualification}}</td>
+                        <td>{{application.vacancy.vtype}}</td>
+                        <td>{{application.vacancy.description}}</td>                            
+                        <td>{{application.vacancy.vstart}}</td>
+                        <td>{{application.vacancy.vend}}</td>
+                        <td>{{application.vacancy.issue_date}}</td>
+                        <td>{{application.date}}</td>
+                        <td>
+                            
+                            {% if application.status == 'unreviewed' %}
+                                <a href="{% url 'visitor_delete_application' application.id %}" onclick="return confirm('Are you sure?')" class="btn btn-danger text-white">Delete</a>
+                            {% elif application.status == 'accepted' %}
+                                <h6 class="text-center"><b class="bg-success text-white">&nbsp;Accepted </b>&nbsp;: rest will be informed through mail</h6>
+                            {% else %}
+                                <h6 class="text-center bg-danger text-white">&nbsp;Rejected&nbsp;</h6>
+                            {% endif %}
+                                
+                        </td>
+                    </tr>
+                    {% endfor %}
+                        
+                </table>
+            </div>
+        </div>
+    </div>
+        
+
+    
+
+{% endblock display %}
+    

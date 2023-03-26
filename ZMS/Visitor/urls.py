@@ -14,5 +14,13 @@ urlpatterns = [
     path('my feedback/',showFeedbacks,name='visitor_view_feedback'),
     path('delete feedback/<id>',deleteFeedback,name='visitor_delete_reply'),
     path('view complaints',viewComplaints,name='visitor_view_complaints'),
-    path('delete complaint/<id>',deleteComplaint,name='visitor_delete_complaint')
+    path('delete complaint/<id>',deleteComplaint,name='visitor_delete_complaint'),
+    path('view vacancy/',viewVacancy,name='visitor_view_vacancy'),
+    path('apply job/<id>',apply,name='visitor_apply_job'),
+    path('view applications',viewApplications,name='visitor_view_job_application'),
+    path('delete application/<id>',deleteApplication,name='visitor_delete_application'),
+    path('view profile/',viewProfile,name='visitor_view_profile'),
+    path('upload profile image/',updateProfileImage,name='visitor_upload_profile_image'),
+    path('delete profile/',deleteProfileImage,name='visitor_delete_profile_photo'),
+    path('change password/',changePassword,name='visitor_change_password'),
 ]
