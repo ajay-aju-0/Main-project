@@ -119,9 +119,6 @@ class SponserForm(forms.ModelForm):
             'phone':forms.NumberInput(attrs={'class':'form-control'}),
             'email':forms.EmailInput(attrs={'class':'form-control'}),
             'stype':forms.Select(attrs={'class':'form-control'}),
-            'amount':forms.NumberInput(attrs={'class':'form-control'}),
-            'sdate':DateInput(attrs={'class':'form-control'}),
-            'edate':DateInput(attrs={'class':'form-control'}),
             'notes':forms.Textarea(attrs={'class':'form-control'})
         }
 
@@ -129,7 +126,7 @@ class SponseredAnimalForm(forms.ModelForm):
 
     class Meta:
         model = SponseredAnimals
-        fields = ['animal']
+        exclude = ['sponser']
 
         animal = forms.ModelChoiceField(
             queryset = Animals.objects.all(),
@@ -137,7 +134,10 @@ class SponseredAnimalForm(forms.ModelForm):
             required = True,
         )
         widgets={
-            'animal':forms.Select(attrs={'class':'form-control'})
+            'animal':forms.Select(attrs={'class':'form-control'}),
+            'amount':forms.NumberInput(attrs={'class':'form-control'}),
+            'sdate':DateInput(attrs={'class':'form-control'}),
+            'edate':DateInput(attrs={'class':'form-control'}),
         }
 
 class ZooDetailsForm(forms.ModelForm):

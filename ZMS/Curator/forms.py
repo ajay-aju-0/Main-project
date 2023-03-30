@@ -124,6 +124,7 @@ class TransferDetailsForm(forms.ModelForm):
             'transfer_to':forms.TextInput(attrs={'class':'form-control'}),
             'transfer_date':DateInput(attrs={'class':'form-control'}),
             'reason':forms.TextInput(attrs={'class':'form-control'}),
+            'expense':forms.NumberInput(attrs={'class':'form-control'})
         }
 
 class PurchaseForm(forms.ModelForm):

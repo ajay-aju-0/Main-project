@@ -130,6 +130,7 @@ class TransferDetails(models.Model):
     transfer_to = models.CharField(max_length=25)
     transfer_date = models.DateField()
     reason = models.CharField(max_length=150,verbose_name="transfer reason")
+    expense = models.BigIntegerField(default=0)
 
 class Animal_of_the_week(models.Model):
     animal = models.ForeignKey(to=Animals,on_delete=models.CASCADE)
@@ -195,15 +196,15 @@ class SponserDetails(models.Model):
     phone = models.BigIntegerField(default=0)
     email = models.EmailField()
     stype = models.CharField(max_length=15,choices=stype_choice)
-    amount = models.BigIntegerField(default=0)
-    sdate = models.DateField(verbose_name="Start date")
-    edate = models.DateField(verbose_name="End date")
     joined_date = models.DateField(auto_now_add=True)
     notes = models.CharField(max_length=100,verbose_name="Notes")
 
 class SponseredAnimals(models.Model):
     sponser = models.ForeignKey(to=SponserDetails,on_delete=models.CASCADE)
     animal = models.ForeignKey(to=Animals,on_delete=models.CASCADE)
+    amount = models.BigIntegerField(default=0)
+    sdate = models.DateField(verbose_name="Start date")
+    edate = models.DateField(verbose_name="End date")
 
 class ZooDetails(models.Model):
     name = models.CharField(max_length=30,verbose_name="zoo name")

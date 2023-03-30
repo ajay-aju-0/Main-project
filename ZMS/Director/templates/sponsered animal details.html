@@ -20,7 +20,7 @@
         <table class="table table-stripped" style="border: black;">
             <thead>
                 <tr class="text-center fw-bold fs-5">
-                <th colspan="2" style="width: 100%;border-bottom: 2px solid black;">{{animal.animal.given_name}}</th>
+                <th colspan="2" style="width: 100%;border-bottom: 2px solid black;">{{animal.animal.given_name}}  [{{animal.sdate}} - {{animal.edate}}]</th>
               </tr>
             </thead>
             <tbody>
@@ -35,6 +35,10 @@
                     <img src="{{animal.animal.image3.url}}" alt="" height="80px" width="100px">    
                     {% endif %}
                 </td>
+              </tr>
+              <tr>
+                <td class="fw-bold">Sponsered Amount</td>
+                <td class="fw-bold" style="font-size: large;"> {{animal.amount}} </td>
               </tr>
               <tr>
                 <td class="fw-bold">General Name</td>

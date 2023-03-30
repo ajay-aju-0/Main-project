@@ -1,0 +1,48 @@
+{% extends 'shared/directorpanel.html' %}
+
+{% block pagetitle %}
+{% include 'shared/messages.html' %}
+
+<div class="d-flex justify-content-between">
+    <h1>View Report</h1>
+</div>
+
+<br>
+{% endblock pagetitle %}
+
+
+{% block display %}
+<div class="col-sm-12 bg-light w-100 p-3">
+    <form method="post" class="form-inline">
+        {% csrf_token %}
+        <table>
+            <tr>
+                <th>
+                    <div class="form-group px-4 mx-4">
+                        <label for="from">From:</label>&nbsp;&nbsp;
+                        <input type="date" name="from" id="from">
+                    </div>
+                </th>
+                
+                <th>
+                    <div class="form-group px-4 mx-4">
+                        <label for="to">To:</label>&nbsp;&nbsp;
+                        <input type="date" name="to" id="to" class="">
+                    </div>
+                </th>
+                <th>
+                    <div class="px-5 mx-5">
+                        <button type="submit" class="btn btn-success">Generate Report</button>
+                    </div>
+                </th>  
+            </tr>
+        </table>        
+    </form>
+</div>
+
+
+
+{% endblock display %}
+
+
+    

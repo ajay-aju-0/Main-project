@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect
 from django.http import HttpResponse,JsonResponse
 from django.contrib import messages
-from django.db.models import Count
+from django.db.models import Count,Q
 from accounts.forms import *
 from accounts.models import *
 from .forms import *
@@ -311,11 +311,11 @@ def addSponser(request):
         form2 = SponseredAnimalForm(request.POST)
 
         if form1.is_valid() and form2.is_valid():
-            if SponserDetails.objects.filter(name=request.POST['name'],address=request.POST['address'],phone=request.POST['phone'],email=request.POST['email'],stype=request.POST['stype'],amount=request.POST['amount'],sdate=request.POST['sdate'],edate=request.POST['edate']).exists():
-                sponserObj = SponserDetails.objects.get(name=request.POST['name'],address=request.POST['address'],phone=request.POST['phone'],email=request.POST['email'],stype=request.POST['stype'],amount=request.POST['amount'],sdate=request.POST['sdate'],edate=request.POST['edate'])
+            if SponserDetails.objects.filter(name=request.POST['name'],address=request.POST['address'],phone=request.POST['phone'],email=request.POST['email'],stype=request.POST['stype']).exists():
+                sponserObj = SponserDetails.objects.get(name=request.POST['name'],address=request.POST['address'],phone=request.POST['phone'],email=request.POST['email'],stype=request.POST['stype'])
             else: 
                 form1.save()
-                sponserObj = SponserDetails.objects.get(name=request.POST['name'],address=request.POST['address'],phone=request.POST['phone'],email=request.POST['email'],stype=request.POST['stype'],amount=request.POST['amount'],sdate=request.POST['sdate'],edate=request.POST['edate'])
+                sponserObj = SponserDetails.objects.get(name=request.POST['name'],address=request.POST['address'],phone=request.POST['phone'],email=request.POST['email'],stype=request.POST['stype'])
                 
             obj = form2.save(commit=False)
             obj.sponser = sponserObj
@@ -441,4 +441,74 @@ def changePassword(request):
     else:
         messages.error(request,'current password is wrong!')
         return redirect('director_view_profile')
+
+
+def viewReport(request):
+    
+    if request.method == 'GET':
+        return render(request,'view report.html')
+
+    elif request.method == 'POST':
+        from_date = request.POST['from']
+        to_date = request.POST['to']
+        # print(from_date)
+        # print(to_date)
+        # obj = Applications.objects.filter(date__range = [from_date,to_date],status= 'rejected')
+        # print(obj.count())
+        
+        # obj = sum(SponseredAnimals.objects.filter(Q(sdate__gte = from_date) | Q(edate__gte = to_date)).values_list('amount',flat=True))
+        # print(obj)
+
+        try:
+
+            context = {
+                'report':True,
+                'visitors':Users.objects.filter(date_joined__range = [from_date,to_date],usertype = 'visitor').count(),
+                'total_visitors':Users.objects.filter(usertype = 'visitor').count(),
+                'total_staff':Users.objects.filter(usertype = ['curator','doctor','keeper']).count(),
+                'staffs':Users.objects.filter(date_joined__range = [from_date,to_date],usertype = ['curator','doctor','keeper']).count(),
+                'ticket':Ticket.objects.filter(tdate__range = [from_date,to_date]).count(),
+                'ticket_revenue':sum(Ticket.objects.filter(tdate__range = [from_date,to_date]).values_list('total',flat=True)),
+                'enclosure_count':Enclosures.objects.all().count(),
+                'enclosure_name':Enclosures.objects.all().values_list('name',flat=True),
+                'archived_count':Enclosures.objects.filter(archieved = True).count(),
+                'animals':Animals.objects.filter(date_joined__range = [from_date,to_date], status =1).count(),
+                'total_animals':Animals.objects.filter(status = 1).count(),
+                'transfer_from':TransferDetails.objects.filter(transfer_date__range = [from_date,to_date],transfer_from = ZooDetails.objects.all().values_list('name',flat=True)[0]).count(),
+                'transfer_to':TransferDetails.objects.filter(transfer_date__range = [from_date,to_date],transfer_to = ZooDetails.objects.all().values_list('name',flat=True)[0]).count(),
+                'transfer_expenditure':sum(TransferDetails.objects.filter(transfer_date__range = [from_date,to_date]).values_list('expense',flat=True)),
+                'total_medicines':Medicines.objects.all().count(),
+                'stock_medicines':Medicines.objects.exclude(stock = 0).count(),
+                'out_of_stock_nedicines':Medicines.objects.filter(stock = 0).count(),
+                'sickness_count':sickness_details.objects.filter(sdate__range = [from_date,to_date]).count(),
+                'cured':sickness_details.objects.filter(sdate__range = [from_date,to_date], status = 'cured').count(),
+                'sick':sickness_details.objects.filter(sdate__range = [from_date,to_date], status = 'sock').count(),
+                'purchase':Purchase.objects.filter(pdate__range = [from_date,to_date]).count(),
+                'purchase_expenditure':sum(Purchase.objects.filter(pdate__range = [from_date,to_date]).values_list('price',flat=True)),
+                'events':Events.objects.filter(estart__range = [from_date,to_date]).count(),
+                'event_names':Events.objects.filter(estart__range = [from_date,to_date]).values_list('ename',flat=True),
+                'vacancy':JobVacancy.objects.filter(Q(vstart__gte = from_date) | Q(vend__gte = to_date)).count(),
+                'application_recieved':Applications.objects.filter(date__range = [from_date,to_date]).count(),
+                'application_accepted':Applications.objects.filter(date__range = [from_date,to_date],status = 'accepted').count(),
+                'application_rejected':Applications.objects.filter(date__range = [from_date,to_date],status = 'rejected').count(),
+                'feedback':Feedback.objects.filter(fdate__range = [from_date,to_date]).count(),
+                'feedback_replied':Feedback.objects.filter(fdate__range = [from_date,to_date]).exclude(reply = 'NULL').count(),
+                'complaint':Complaints.objects.filter(cdate__range = [from_date,to_date]).count(),
+                'complaint_replied':Complaints.objects.filter(cdate__range = [from_date,to_date]).exclude(reply = 'NULL').count(),
+                'sponser':SponserDetails.objects.filter(joined_date__range = [from_date,to_date]).count(),
+                'sponsered_animals':SponseredAnimals.objects.filter(Q(sdate__gte = from_date) | Q(edate__gte = to_date)).count(),
+                'sponser_revenue':sum(SponseredAnimals.objects.filter(Q(sdate__gte = from_date) | Q(edate__gte = to_date)).values_list('amount',flat=True)),
+            }
+
+            total_revenue = context['ticket_revenue'] + context['sponser_revenue']
+            total_expense = context['transfer_expenditure'] + context['purchase_expenditure']
+
+            # print(total_revenue)
+            # print(total_expense)
+
+        except Exception as e:
+            pass
+
+
+        return HttpResponse('')
     

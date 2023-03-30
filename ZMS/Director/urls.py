@@ -38,6 +38,7 @@ urlpatterns = [
    path('upload profile image/',updateProfileImage,name='director_upload_profile_image'),
    path('delete profile/',deleteProfileImage,name='director_delete_profile_photo'),
    path('change password/',changePassword,name='director_change_password'),
+   path('view report/',viewReport,name='director_view_report'),
 
 
 ]
