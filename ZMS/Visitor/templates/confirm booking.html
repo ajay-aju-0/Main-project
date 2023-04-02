@@ -8,33 +8,33 @@
 
 
 {% block display %}
-    
-    <table>      
-            <tr>
-            <th>Booking Date:</th>
-            <td>{{ticket.reporting_date}}</td>
-            </tr>
-            <tr>
-                <th>Booking Slot:</th>
-                <td>{{ticket.reporting_time}}</td>
-            </tr>
-            <tr>
-                <th>Total Person:</th>
-                <td>{{ticket.total_person}}</td>
-            </tr>
-            <tr>
-                <th>Total:</th>
-                <td>{{ticket.total}}</td>
-            </tr>
-            <tr colspan="2" class="text-center">
-                <td>
-                    <a href="{% url 'visitor_decline_payment' ticket.id %}" class="btn btn-danger">Decline</a>
-                    <a href="{% url 'visitor_accept_payment' ticket.id %}" class="btn btn-success">Pay</a>
-                </td>
-            </tr>
-                  
-        
-    </table>
+    <div class="row">
+        <div class="col-sm-6 offset-2 bg-info shadow rounded">
+            <table class="table table-stripped" style="border: black;">      
+                <tr>
+                    <th>Booking Date:</th>
+                    <td>{{ticket.reporting_date}}</td>
+                </tr>
+                <tr>
+                    <th>Booking Slot:</th>
+                    <td>{{ticket.reporting_time}}</td>
+                </tr>
+                <tr>
+                    <th>Total Person:</th>
+                    <td>{{ticket.total_person}}</td>
+                </tr>
+                <tr>
+                    <th>Total:</th>
+                    <td>{{ticket.total}}</td>
+                </tr> 
+        </table>
+        <div class="w-100 text-center">
+            <a href="{% url 'visitor_decline_payment' ticket.id %}" class="btn btn-danger">Decline</a>
+            <a href="{% url 'visitor_accept_payment' ticket.id %}" class="btn btn-success">Pay</a>
+        </div>
+        <br>
+        </div>
+    </div>
 
 
 {% endblock display %}

@@ -41,6 +41,465 @@
 </div>
 
 
+{% if report %}
+<div class="container my-5">
+    <table class="table table-borderless">
+        <tr>
+            <th colspan="2">
+            <h2 class="text-center fw-bold">Zoo Report</h2>
+            <h3 class="text-center fw-bold">[{{from}} &nbsp;&nbsp; To &nbsp;&nbsp; {{to}} ]</h3>
+            <div style="width:100%;border-bottom: 2px solid black;"></div>
+            </th>
+        </tr>
+
+        <tr>
+            <th colspan="2">
+                <h4 style="border-bottom: 1px solid black;width: fit-content;font-weight: bold;">Staff details</h4>
+            </th>
+        </tr>
+        <tr>
+            <th>
+                No. of staffs added
+            </th>
+            <td>
+                {% if staffs != 0 %}
+                    {{staffs}}
+                {% else %}
+                    None
+                {% endif %}     
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Total staffs
+            </th>
+            <td>
+                {{total_staffs}}  
+            </td>
+            
+        </tr>
+       
+        <tr>
+            <th colspan="2">
+                <h4 style="border-bottom: 1px solid black;width: fit-content;font-weight: bold;">Visitor details</h4>
+            </th>
+        </tr>
+        <tr>
+            <th>
+                No. of visitors registered
+            </th>
+            <td>
+                {% if visitors != 0 %}
+                    {{visitors}}
+                {% else %}
+                    None
+                {% endif %}     
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Total visitors
+            </th>
+            <td>
+                {{total_visitors}}  
+            </td>
+        </tr>
+
+        <tr>
+            <th colspan="2">
+                <h4 style="border-bottom: 1px solid black;width: fit-content;font-weight: bold;">Feedback details</h4>
+            </th>
+        </tr>
+        <tr>
+            <th>
+                No. of feedbacks recieved
+            </th>
+            <td>
+                {% if feedback != 0 %}
+                    {{feedback}}
+                {% else %}
+                    None
+                {% endif %}     
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Replied
+            </th>
+            <td>
+                {% if feedback_replied != 0 %}
+                    {{feedback_replied}}  
+                {% else %}
+                    None
+                {% endif %}    
+            </td>
+        </tr>
+
+        <tr>
+            <th colspan="2">
+                <h4 style="border-bottom: 1px solid black;width: fit-content;font-weight: bold;">Complaint details</h4>
+            </th>
+        </tr>
+        <tr>
+            <th>
+                No. of complaints recieved
+            </th>
+            <td>
+                {% if complaint != 0 %}
+                    {{complaint}}
+                {% else %}
+                    None
+                {% endif %}     
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Replied
+            </th>
+            <td>
+                {% if complaint_replied != 0 %}
+                    {{complaint_replied}}  
+                {% else %}
+                    None
+                {% endif %}    
+            </td>
+        </tr>
+
+        <tr>
+            <th colspan="2">
+                <h4 style="border-bottom: 1px solid black;width: fit-content;font-weight: bold;">Ticket details</h4>
+            </th>
+        </tr>
+        <tr>
+            <th>
+                No. of tickets sold
+            </th>
+            <td>
+                {% if ticket != 0 %}
+                    {{ticket}}
+                {% else %}
+                    None
+                {% endif %}     
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Ticket revenue
+            </th>
+            <td>
+                {{ticket_revenue}}                
+            </td>
+        </tr>
+
+        <tr>
+            <th colspan="2">
+                <h4 style="border-bottom: 1px solid black;width: fit-content;font-weight: bold;">Enclosure details</h4>
+            </th>
+        </tr>
+        <tr>
+            <th>
+                No. of enclosures
+            </th>
+            <td>
+                {{enclosure_count}}     
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Enclosures
+            </th>
+            <td>
+                {% for enclosure in enclosure_name %}
+                    {{enclosure}} |
+                {% endfor %}  
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Archived
+            </th>
+            <td>
+                {{archived_count}} 
+                
+                {% if archived_count != 0 %}
+                    
+                    {% for a in archived %}
+                        [{{a.name}},]
+                    {% endfor %}
+                        
+                {% endif %}
+            </td>
+        </tr>
+
+        <tr>
+            <th colspan="2">
+                <h4 style="border-bottom: 1px solid black;width: fit-content;font-weight: bold;">Animal details</h4>
+            </th>
+        </tr>
+        <tr>
+            <th>
+                No. of animals added
+            </th>
+            <td>
+                {% if animals != 0 %}
+                    {{animals}}
+                {% else %}
+                    None
+                {% endif %}     
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Total animals
+            </th>
+            <td>
+                {{total_animals}}                
+            </td>
+        </tr>
+
+        <tr>
+            <th colspan="2">
+                <h4 style="border-bottom: 1px solid black;width: fit-content;font-weight: bold;">Transfer details</h4>
+            </th>
+        </tr>
+        <tr>
+            <th>
+                No. of animals transffered from the zoo
+            </th>
+            <td>
+                {{transfer_from}}     
+            </td>
+        </tr>
+        <tr>
+            <th>
+                No. of animals transffered to the zoo
+            </th>
+            <td>
+                {{transfer_to}}                
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Total Expense
+            </th>
+            <td>
+                {{transfer_expenditure}}                
+            </td>
+        </tr>
+
+        <tr>
+            <th colspan="2">
+                <h4 style="border-bottom: 1px solid black;width: fit-content;font-weight: bold;">Medicine details</h4>
+            </th>
+        </tr>
+        <tr>
+            <th>
+                Total no. of medicines
+            </th>
+            <td>
+                {{total_medicines}}     
+            </td>
+        </tr>
+        <tr>
+            <th>
+                No. of medicines in stock
+            </th>
+            <td>
+                {{stock_medicines}}                
+            </td>
+        </tr>
+        <tr>
+            <th>
+                No. of medicines out of stock
+            </th>
+            <td>
+                {{out_of_stock_nedicines}}                
+            </td>
+        </tr>
+
+        <tr>
+            <th colspan="2">
+                <h4 style="border-bottom: 1px solid black;width: fit-content;font-weight: bold;">Sickness details</h4>
+            </th>
+        </tr>
+        <tr>
+            <th>
+                No. of animals got sickness
+            </th>
+            <td>
+                {{sickness_count}}     
+            </td>
+        </tr>
+        <tr>
+            <th>
+                No. of animals cured
+            </th>
+            <td>
+                {{cured}}                
+            </td>
+        </tr>
+        <tr>
+            <th>
+                No. of animals still sick
+            </th>
+            <td>
+                {{sick}}                
+            </td>
+        </tr>
+
+        <tr>
+            <th colspan="2">
+                <h4 style="border-bottom: 1px solid black;width: fit-content;font-weight: bold;">Purchase details</h4>
+            </th>
+        </tr>
+        <tr>
+            <th>
+                No. of items purchased
+            </th>
+            <td>
+                {{purchase}}     
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Purchase expenditure
+            </th>
+            <td>
+                {{purchase_expenditure}}                
+            </td>
+        </tr>
+
+        <tr>
+            <th colspan="2">
+                <h4 style="border-bottom: 1px solid black;width: fit-content;font-weight: bold;">Events details</h4>
+            </th>
+        </tr>
+        <tr>
+            <th>
+                No. of events occured
+            </th>
+            <td>
+                {{events}}     
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Event names
+            </th>
+            <td>
+                {% for event in event_names %}
+                    {{event.name}} |                
+                {% empty %}
+                None
+                {% endfor %}
+            </td>
+        </tr>
+        
+        <tr>
+            <th colspan="2">
+                <h4 style="border-bottom: 1px solid black;width: fit-content;font-weight: bold;">Vacancy details</h4>
+            </th>
+        </tr>
+        <tr>
+            <th>
+                No. of vacancy issued
+            </th>
+            <td>
+                {{vacancy}}     
+            </td>
+        </tr>
+        <tr>
+            <th>
+                No. of applications recieved (in this period)
+            </th>
+            <td>
+                {{application_recieved}}  
+            </td>
+        </tr>
+        <tr>
+            <th>
+                No. of total applications accepted (in this period)
+            </th>
+            <td>
+                {{application_accepted}}  
+            </td>
+        </tr>
+        <tr>
+            <th>
+                No. of total applications rejected (in this period)
+            </th>
+            <td>
+                {{application_rejected}}  
+            </td>
+        </tr>
+        
+        <tr>
+            <th colspan="2">
+                <h4 style="border-bottom: 1px solid black;width: fit-content;font-weight: bold;">Sponser details</h4>
+            </th>
+        </tr>
+        <tr>
+            <th>
+                No. of sponsers registered
+            </th>
+            <td>
+                {{sponser}}     
+            </td>
+        </tr>
+        <tr>
+            <th>
+                No. of animals sponsered
+            </th>
+            <td>
+                {{sponsered_animals}}  
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Total sponsership revenue
+            </th>
+            <td>
+                {{sponser_revenue}}  
+            </td>
+        </tr>
+
+        <tr>
+            <th colspan="2">
+                <div style="width:100%;border-bottom: 2px solid black;"></div>
+            </th>
+        </tr>
+
+        <tr>
+            <th>
+                Total Expense
+            </th>
+            <td>
+                {{total_expense}}
+            </td>
+        </tr>
+
+        <tr>
+            <th>
+                Total Revenue
+            </th>
+            <td>
+                {{total_revenue}}
+            </td>
+        </tr>
+
+        <tr>
+            <th colspan="2">
+                <div style="width:100%;border-bottom: 2px solid black;"></div>
+            </th>
+        </tr>
+        
+        
+    </table>
+</div>
+{% endif %}
+    
+
+
 
 {% endblock display %}
 

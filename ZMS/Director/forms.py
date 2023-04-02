@@ -59,20 +59,8 @@ class TicketRateForm(forms.ModelForm):
         if isNum(catagory):
                 self._errors['type'] = self.error_class(['catagory cannot be integer'])
             
-
-
         return self.cleaned_data
 
-
-class UpdateTicketRateForm(forms.ModelForm):
-
-    class Meta:
-        model = TicketRate
-        fields = '__all__'
-        widgets = {
-            'type' : forms.TextInput(attrs={"class":"form-control"}),
-            'rate' : forms.NumberInput(attrs={"class":"form-control"}),
-        }
 
 class ZooTimeForm(forms.ModelForm):
 

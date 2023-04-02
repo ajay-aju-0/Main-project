@@ -14,6 +14,7 @@ from django.views.decorators.cache import cache_control
 def loadHome(request):
     return render(request,'index.html')
 
+
 def visitorRegistration(request):
     form = RegistrationForm(initial={"usertype":"visitor"})
     if request.method == 'GET':
@@ -32,6 +33,7 @@ def visitorRegistration(request):
             return render(request,'visitor registration.html',{'form':regForm})
     else:
         return render(request,'visitor registration.html',{'form':form})
+
 
 def loginUser(request):
     if request.method == 'POST':
@@ -61,6 +63,26 @@ def loginUser(request):
             return render(request,'index.html',{'error':True})
     else:
         return render(request,'index.html')
+
+
+def authenticatedUser(request):
+    user_type = request.user.usertype
+    login(request,request.user)
+    if user_type == 'admin':
+        return redirect('/admin/')
+    elif user_type == 'director':
+        return redirect('director_home')
+    elif user_type == 'curator':
+        return redirect('curator_home')
+    elif user_type == 'keeper':
+        return redirect('keeper_home')
+    elif user_type == 'doctor':
+        return redirect('doctor_home')
+    elif user_type == 'visitor':
+        return redirect('visitor_home')
+    else:
+        return HttpResponse('requested page unavailable')
+ 
 
 def logoutUser(request):
     logout(request)

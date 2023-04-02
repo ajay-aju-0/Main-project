@@ -33,6 +33,10 @@
                     <label for="catagory_type" value="{{catagory.type}}" name="catagory_type">{{catagory.type}}:</label>
                     <input class="form-control" type="number" value = '0' id="catagory" name="catagory">
                 </p>
+                {% empty %}
+                <p>
+                    No catagory available
+                </p>
                 {% endfor %}
                     
                 {{form.as_p}}

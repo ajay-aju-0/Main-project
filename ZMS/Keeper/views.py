@@ -4,6 +4,7 @@ from Visitor.forms import *
 from Director.forms import *
 from django.contrib import messages
 from django.contrib.auth import authenticate
+from datetime import datetime
 # Create your views here.
 
 def loadKeeperHome(request):
@@ -27,6 +28,11 @@ def changeAnimalHealthStatus(request,id):
     
     animal.save()
     return redirect('keeper_view_animal_health_status')
+
+def viewGuidingSlots(request):
+    guiding_slots = Ticket.objects.filter(Guide = request.user.id)
+    current_date = datetime.today().date()
+    return render(request,'guiding slots.html',{'slots':guiding_slots,'current':current_date})
 
 
 def viewComplaints(request):

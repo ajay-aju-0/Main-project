@@ -5,7 +5,7 @@ from django.db.models import Count,Q
 from accounts.forms import *
 from accounts.models import *
 from .forms import *
-from datetime import date
+from datetime import date,datetime
 from django.contrib.auth import authenticate
 
 
@@ -37,7 +37,7 @@ def viewZooDetails(request):
 
 
 def staffList(request):
-    staffObj = Staffs.objects.all()
+    staffObj = Staffs.objects.exclude(desig = 'director')
     return render(request,'view staffs.html',{'staffs':staffObj})
 
 
@@ -125,32 +125,16 @@ def deleteTicketCatagory(request,id):
     catagory.delete()
     return redirect('director_manage_ticket_rate')
 
+
 def UpdateTicketCatagory(request,id):
-    rate = TicketRate.objects.get(pk=id)
-    rates = TicketRate.objects.all()
-    # catagory = TicketRateForm(instance=rate)
-    rateForm = UpdateTicketRateForm()
-    # print(rate,catagory)
-    if request.method == 'POST':
-        ttype = request.POST.get('type')
-        # print(ttype,trate) 
-        # print(ttype.isdigit())
-        form = UpdateTicketRateForm(request.POST,instance=rate)
-        if form.is_valid():
-            form.save()
-            messages.success(request,"Ticket catagory Updated successfully")
-            return redirect('director_manage_ticket_rate')
-        else:
-            # messages.error(request,'error while updating form')
-            return render(request,'manageticketrates.html',{'update_form':form,'form':rateForm,'rates':rates,'error':True})
-    else:
-        return render(request,'manageticketrates.html',{'form':rateForm,'rates':rates})
+    rateObj = TicketRate.objects.get(pk=id)
+    rateObj.rate = request.POST['rate']
+    rateObj.save()
+    return redirect('director_manage_ticket_rate')
 
 
 def viewTicketSales(request):
     tickets = Ticket.objects.values('tdate').annotate(tcount=Count('tdate')).order_by()
-    for i in tickets:
-        print(i.get('tdate'),i.get('tcount'))
     return render(request,'view ticket sales.html',{'tickets':tickets})
 
 
@@ -451,13 +435,6 @@ def viewReport(request):
     elif request.method == 'POST':
         from_date = request.POST['from']
         to_date = request.POST['to']
-        # print(from_date)
-        # print(to_date)
-        # obj = Applications.objects.filter(date__range = [from_date,to_date],status= 'rejected')
-        # print(obj.count())
-        
-        # obj = sum(SponseredAnimals.objects.filter(Q(sdate__gte = from_date) | Q(edate__gte = to_date)).values_list('amount',flat=True))
-        # print(obj)
 
         try:
 
@@ -465,13 +442,14 @@ def viewReport(request):
                 'report':True,
                 'visitors':Users.objects.filter(date_joined__range = [from_date,to_date],usertype = 'visitor').count(),
                 'total_visitors':Users.objects.filter(usertype = 'visitor').count(),
-                'total_staff':Users.objects.filter(usertype = ['curator','doctor','keeper']).count(),
+                'total_staffs':Users.objects.filter(Q(usertype = 'curator') | Q(usertype = 'doctor') | Q(usertype = 'keeper')).count(),
                 'staffs':Users.objects.filter(date_joined__range = [from_date,to_date],usertype = ['curator','doctor','keeper']).count(),
                 'ticket':Ticket.objects.filter(tdate__range = [from_date,to_date]).count(),
                 'ticket_revenue':sum(Ticket.objects.filter(tdate__range = [from_date,to_date]).values_list('total',flat=True)),
                 'enclosure_count':Enclosures.objects.all().count(),
                 'enclosure_name':Enclosures.objects.all().values_list('name',flat=True),
                 'archived_count':Enclosures.objects.filter(archieved = True).count(),
+                'archived':Enclosures.objects.filter(archieved = True),
                 'animals':Animals.objects.filter(date_joined__range = [from_date,to_date], status =1).count(),
                 'total_animals':Animals.objects.filter(status = 1).count(),
                 'transfer_from':TransferDetails.objects.filter(transfer_date__range = [from_date,to_date],transfer_from = ZooDetails.objects.all().values_list('name',flat=True)[0]).count(),
@@ -482,7 +460,7 @@ def viewReport(request):
                 'out_of_stock_nedicines':Medicines.objects.filter(stock = 0).count(),
                 'sickness_count':sickness_details.objects.filter(sdate__range = [from_date,to_date]).count(),
                 'cured':sickness_details.objects.filter(sdate__range = [from_date,to_date], status = 'cured').count(),
-                'sick':sickness_details.objects.filter(sdate__range = [from_date,to_date], status = 'sock').count(),
+                'sick':sickness_details.objects.filter(sdate__range = [from_date,to_date], status = 'sick').count(),
                 'purchase':Purchase.objects.filter(pdate__range = [from_date,to_date]).count(),
                 'purchase_expenditure':sum(Purchase.objects.filter(pdate__range = [from_date,to_date]).values_list('price',flat=True)),
                 'events':Events.objects.filter(estart__range = [from_date,to_date]).count(),
@@ -497,18 +475,19 @@ def viewReport(request):
                 'complaint_replied':Complaints.objects.filter(cdate__range = [from_date,to_date]).exclude(reply = 'NULL').count(),
                 'sponser':SponserDetails.objects.filter(joined_date__range = [from_date,to_date]).count(),
                 'sponsered_animals':SponseredAnimals.objects.filter(Q(sdate__gte = from_date) | Q(edate__gte = to_date)).count(),
-                'sponser_revenue':sum(SponseredAnimals.objects.filter(Q(sdate__gte = from_date) | Q(edate__gte = to_date)).values_list('amount',flat=True)),
+                'sponser_revenue':sum(SponseredAnimals.objects.filter(Q(sdate__gte = from_date) | Q(edate__lte = to_date)).values_list('amount',flat=True)),
             }
 
-            total_revenue = context['ticket_revenue'] + context['sponser_revenue']
-            total_expense = context['transfer_expenditure'] + context['purchase_expenditure']
-
-            # print(total_revenue)
-            # print(total_expense)
+            context['total_revenue'] = context['ticket_revenue'] + context['sponser_revenue']
+            context['total_expense'] = context['transfer_expenditure'] + context['purchase_expenditure']
+            
+            context['from'] = from_date
+            context['to'] = to_date
+            
 
         except Exception as e:
             pass
 
 
-        return HttpResponse('')
+        return render(request,'view report.html',context)
     

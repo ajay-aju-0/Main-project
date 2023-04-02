@@ -1,0 +1,48 @@
+{% extends 'shared/keeperpanel.html' %}
+
+
+{% block pagetitle %}
+<div class="d-flex justify-content-between">
+    <h1>Guiding Slots</h1>
+</div>
+{% endblock pagetitle %}
+
+{% block display %}
+
+    <div class="row">
+        <div class="col-sm-12">
+            <table class="table table-stripped datatable" style="height: inherit;">
+                <thead>
+                    <tr>
+                        <th>Booking Person</th>
+                        <th>Booking Date</th>
+                        <th>Booking Slot</th>
+                        <th>No. of person</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                
+                <tbody>
+                    {% for slot in slots %}
+                    <tr>
+                        <td>{{slot.uid.first_name}} {{slot.uid.last_name}}</td>
+                        <td>{{slot.reporting_date}}</td>
+                        <td>{{slot.reporting_time}}</td>
+                        <td>{{slot.total_person}}</td>
+                        <td>
+                            {% if slot.reporting_date < current %}
+                                <i>Ended</i>
+                            {% else %}
+                                <i>Up coming</i>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                    
+            </table>
+        </div>
+    </div>
+  
+{% endblock display %}
+    

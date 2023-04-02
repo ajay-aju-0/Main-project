@@ -25,8 +25,8 @@
                 <form action="{% url 'director_update_ticket_rate' i.id %}" method="post" class="font-weight-bold">
                     
                 {% csrf_token %}
-                Catagory: <input type="text" class="form-control" value="{{i.type}}" name="type" disabled> 
-                {{form.rate.label}}: <input type="number" class="form-control" value="{{i.rate}}" name="rate">
+                Catagory: <input type="text" class="form-control" value="{{i.type}}" name="type" disabled> <br>
+                Rate: <input type="number" class="form-control" value="{{i.rate}}" name="rate">
                 <br>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-success btn-block">Update</button>
@@ -39,11 +39,3 @@
     </div>
   </div>
   
-  <script>
-    $('#exampleModal').on('show.bs.modal', event => {
-        var button = $(event.relatedTarget);
-        var modal = $(this);
-        // Use above variables to manipulate the DOM
-        
-    });
-  </script>
