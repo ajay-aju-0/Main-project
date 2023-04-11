@@ -1,12 +1,17 @@
 {% extends 'shared/doctorpanel.html' %}
 
+{% block title %}
+<title>Death details</title>
+{% endblock title %}
+
 {% block pagetitle %}
-{% include 'shared/messages.html' %}
 
 <div class="d-flex justify-content-between">
     <h1>Manage Death Details</h1>
 </div>
-<br>
+
+{% include 'shared/messages.html' %}
+
 {% endblock pagetitle %}
 
 {% block display %}

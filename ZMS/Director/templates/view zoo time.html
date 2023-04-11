@@ -62,7 +62,6 @@
                                             <form method="post" class="font-weight-bold">
                                                 
                                             {% csrf_token %}
-                                            {{time.open_time}}
                                             <input type="hidden" name="id" id="id" value="{{time.id}}">
                                             {{timeform.day.label}} &nbsp;&nbsp;&nbsp;
                                             <input class="form-control" type="text" name="day" id="day" value="{{time.day}}" disabled>

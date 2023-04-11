@@ -1,5 +1,8 @@
 {% extends 'shared/curatorpanel.html' %}
 
+{% block title %}
+  <title>View Applications</title>
+{% endblock title %}
 
 {% block pagetitle %}
     
@@ -8,7 +11,8 @@
     <h1>View Applications</h1>
 </div>
 
-<br>
+{% include 'shared/messages.html' %}
+
 {% endblock pagetitle %}
 
 {% block display %}
@@ -53,10 +57,7 @@
                 </table>
             </div>
         </div>
-    </div>
-        
-
-    
+    </div>    
 
 {% endblock display %}
     

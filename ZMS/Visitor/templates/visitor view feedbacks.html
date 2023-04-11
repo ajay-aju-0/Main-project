@@ -1,5 +1,9 @@
 {% extends 'shared/visitorpanel.html' %}
 
+{% block title %}
+<title>My feedbacks</title>
+{% endblock title %}
+
 {% block pagetitle %}
 
 <div class="d-flex justify-content-between">
@@ -7,7 +11,7 @@
     <button data-toggle="modal" data-target="#feedbackmodal" class="btn btn-success text-white" style="width:max-content;"> <b>+ Give Feedback</b> </button>
 </div>
 
-<br>
+{% include 'shared/messages.html' %}
 {% endblock pagetitle %}
 
 {% block display %}

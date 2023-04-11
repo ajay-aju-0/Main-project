@@ -1,7 +1,10 @@
 {% extends 'shared/curatorpanel.html' %}
 
+{% block title %}
+  <title>Remove participants</title>
+{% endblock title %}
+
 {% block pagetitle %}
-{% include 'shared/messages.html' %}
 
 <div class="d-flex justify-content-between">
     <h1>Remove Participant</h1>
@@ -12,7 +15,9 @@
       <li class="breadcrumb-item active">Remove participant</li>
     </ol>
 </nav>
-<br>
+
+{% include 'shared/messages.html' %}
+
 {% endblock pagetitle %}
 
 {% block display %}    

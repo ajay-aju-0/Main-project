@@ -1,14 +1,17 @@
 {% extends 'shared/visitorpanel.html' %}
 
+{% block title %}
+<title>View vacancy</title>
+{% endblock title %}
 
 {% block pagetitle %}
-    
 
 <div class="d-flex justify-content-between">
     <h1>View vacancy</h1>
 </div>
 
-<br>
+{% include 'shared/messages.html' %}
+
 {% endblock pagetitle %}
 
 {% block display %}

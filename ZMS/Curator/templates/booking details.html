@@ -1,5 +1,8 @@
 {% extends 'shared/curatorpanel.html' %}
 
+{% block title %}
+  <title>Booking details</title>
+{% endblock title %}
 
 {% block pagetitle %}
 
@@ -14,14 +17,12 @@
     </ol>
 </nav>
 
-<br>
+{% include 'shared/messages.html' %}
 {% endblock pagetitle %}
+
 
 {% block display %}
 
-    
-
-    
 <div class="row">
     <div class="col-sm-8 offset-2 bg-info opacity-0.2 shadow rounded">
         <table class="table table-stripped" style="border: black;">

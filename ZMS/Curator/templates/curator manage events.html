@@ -1,19 +1,22 @@
 {% extends 'shared/curatorpanel.html' %}
 }{% load static %}
 
+{% block title %}
+  <title>Manage events</title>
+{% endblock title %}
+
 {% block pagetitle %}
-{% include 'shared/messages.html' %}
 
 <div class="d-flex justify-content-between">
     <h1>Manage Events</h1>
 </div>
 
-<br>
+{% include 'shared/messages.html' %}
+
 {% endblock pagetitle %}
 
 
 {% block display %}
-
 
     <div class="row">
         <div class="col-sm-12">
@@ -71,8 +74,5 @@
         </div>
     </div>
 
-  
-  
-        
 {% endblock display %}
     

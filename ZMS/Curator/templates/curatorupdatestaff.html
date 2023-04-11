@@ -1,8 +1,10 @@
 {% extends 'shared/curatorpanel.html' %}
 
+{% block title %}
+  <title>Update staff</title>
+{% endblock title %}
 
 {% block pagetitle %}
-{% include 'shared/messages.html' %}
 <div class="d-flex justify-content-between">
     <h1>Update staff</h1>
 </div>
@@ -12,6 +14,8 @@
       <li class="breadcrumb-item active">Update Staff / {{uname}}</li>
     </ol>
 </nav>
+
+{% include 'shared/messages.html' %}
 
 {% endblock pagetitle %}
 

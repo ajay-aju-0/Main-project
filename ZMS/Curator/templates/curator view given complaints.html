@@ -1,5 +1,9 @@
 {% extends 'shared/curatorpanel.html' %}
 
+{% block title %}
+  <title>My complaints</title>
+{% endblock title %}
+
 {% block pagetitle %}
 
 <div class="d-flex justify-content-between">
@@ -7,7 +11,8 @@
     <button data-toggle="modal" data-target="#complaintmodal" class="btn btn-success text-white" style="width:max-content;"> <b>+ Give Complaint</b> </button>
 </div>
 
-<br>
+{% include 'shared/messages.html' %}
+
 {% endblock pagetitle %}
 
 {% block display %}

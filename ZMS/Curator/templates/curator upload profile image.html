@@ -16,7 +16,8 @@
                     
                 <form action="{% url 'curator_upload_profile_image' %}" method="post" enctype="multipart/form-data" class="font-weight-bold">      
                 
-                    {{imageform.as_p}}
+                {{imageform.as_p}}
+                
                 {% csrf_token %}
                 
                 <div class="modal-footer">

@@ -1,7 +1,10 @@
 {% extends 'shared/doctorpanel.html' %}
 
+{% block title %}
+<title>Add death details</title>
+{% endblock title %}
+
 {% block pagetitle %}
-{% include 'shared/messages.html' %}
 
 <div class="d-flex justify-content-between">
     <h1>Add Death Details</h1>
@@ -12,7 +15,8 @@
       <li class="breadcrumb-item active">{{animal.given_name}}</li>
     </ol>
 </nav>
-<br>
+{% include 'shared/messages.html' %}
+
 {% endblock pagetitle %}
 
 {% block display %}

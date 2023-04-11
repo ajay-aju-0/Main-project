@@ -1,14 +1,18 @@
 {% extends 'shared/curatorpanel.html' %}
 {% load static %}
 
+{% block title %}
+  <title>View bookings</title>
+{% endblock title %}
+
 {% block pagetitle %}
-{% include 'shared/messages.html' %}
 
 <div class="d-flex justify-content-between">
     <h1>View Bookings</h1>
 </div>
 
-<br>
+{% include 'shared/messages.html' %}
+
 {% endblock pagetitle %}
 
 

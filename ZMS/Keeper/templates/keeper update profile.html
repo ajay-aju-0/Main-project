@@ -1,8 +1,11 @@
 {% extends 'shared/keeperpanel.html' %}
 {% load static %}
 
+{% block title %}
+<title>Update profile</title>
+{% endblock title %}
+
 {% block pagetitle %}
-{% include 'shared/messages.html' %}
 <div class="d-flex justify-content-between">
     <h1>My Profile</h1>
 </div>
@@ -12,6 +15,8 @@
       <li class="breadcrumb-item active">My profile</li>
     </ol>
 </nav>
+{% include 'shared/messages.html' %}
+
 {% endblock pagetitle %}
 
 

@@ -1,16 +1,19 @@
 {% extends 'shared/curatorpanel.html' %}
 {% load static %}
 
+{% block title %}
+  <title>Manage staffs</title>
+{% endblock title %}
 
 {% block pagetitle %}
-{% include 'shared/messages.html' %}    
 
 <div class="d-flex justify-content-between">
     <h1>Manage staffs</h1>
     <a href="{% url 'curator_add_staffs' %}" class="btn btn-success text-white" style="width:max-content;"> <b>+ Add Staff</b> </a>
 </div>
 
-<br>
+{% include 'shared/messages.html' %}    
+
 {% endblock pagetitle %}
 
 

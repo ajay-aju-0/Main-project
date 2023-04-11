@@ -1,15 +1,18 @@
 {% extends 'shared/curatorpanel.html' %}
 
-{% block pagetitle %}
-{% include 'shared/messages.html' %}
-    
+{% block title %}
+  <title>Animal of the week</title>
+{% endblock title %}
+
+{% block pagetitle %}    
 
 <div class="d-flex justify-content-between">
     <h1>Animal of the week</h1>
     <button class="btn btn-success text-white" style="width:max-content;" data-toggle="modal" data-target="#performancemodal" data-backdrop="static"> <b>+ Upload</b> </button>
 </div>
 
-<br>
+{% include 'shared/messages.html' %}
+
 {% endblock pagetitle %}
 
 {% block display %}

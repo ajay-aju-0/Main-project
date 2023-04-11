@@ -1,14 +1,17 @@
 {% extends 'shared/keeperpanel.html' %}
 
-{% block pagetitle %}
-{% include 'shared/messages.html' %}
-    
+{% block title %}
+<title>Animal health status</title>
+{% endblock title %}
+
+{% block pagetitle %}    
 
 <div class="d-flex justify-content-between">
     <h1>Health Status</h1>
 </div>
 
-<br>
+{% include 'shared/messages.html' %}
+
 {% endblock pagetitle %}
 
 {% block display %}

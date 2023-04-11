@@ -1,15 +1,18 @@
 {% extends 'shared/visitorpanel.html' %}
 }
+{% block title %}
+<title>My tickets</title>
+{% endblock title %}
 
 {% block pagetitle %}
-{% include 'shared/messages.html' %}
 
 <div class="d-flex justify-content-between">
     <h1>My Tickets</h1>
     <a href="{% url 'visitor_book_ticket' %}" class="btn btn-success text-white" style="width:max-content;"> <b>+ Book Ticket</b> </a>
 </div>
 
-<br>
+{% include 'shared/messages.html' %}
+
 {% endblock pagetitle %}
 
 

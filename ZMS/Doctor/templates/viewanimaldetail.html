@@ -1,8 +1,11 @@
 {% extends 'shared/doctorpanel.html' %}
 
+{% block title %}
+<title>Animal details</title>
+{% endblock title %}
+
 
 {% block pagetitle %}
-{% include 'shared/messages.html' %}
 
 <div class="d-flex justify-content-between">
     <h1>View Animal Details</h1>
@@ -14,7 +17,8 @@
     </ol>
 </nav>
 
-<br>
+{% include 'shared/messages.html' %}
+
 {% endblock pagetitle %}
 
 {% block display %}

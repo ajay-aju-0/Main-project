@@ -1,14 +1,17 @@
 {% extends 'shared/curatorpanel.html' %}
 
-{% block pagetitle %}
-{% include 'shared/messages.html' %}
-    
+{% block title %}
+  <title>View feedbacks</title>
+{% endblock title %}
+
+{% block pagetitle %}    
 
 <div class="d-flex justify-content-between">
     <h1>View Feedbacks</h1>
 </div>
 
-<br>
+{% include 'shared/messages.html' %}
+
 {% endblock pagetitle %}
 
 
