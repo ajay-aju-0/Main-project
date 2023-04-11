@@ -1,7 +1,10 @@
 {% extends 'shared/directorpanel.html' %}
 
+{% block title %}
+    <title>Add Events</title>
+{% endblock title %}
+
 {% block pagetitle %}
-{% include 'shared/messages.html' %}
 
 <div class="d-flex justify-content-between">
     <h1>Add Event</h1>
@@ -13,7 +16,8 @@
     </ol>
 </nav>
 
-<br>
+{% include 'shared/messages.html' %}
+
 {% endblock pagetitle %}
 
 

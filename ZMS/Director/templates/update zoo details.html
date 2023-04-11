@@ -16,16 +16,7 @@
                 {% if error %}
                 {% include 'shared/messages.html' %}
                 {% endif %}
-                {% if error %}
-                <div class="bg-danger bg-opacity-50 text-white">
-                    {{form.errors.name}}
-                    {{form.errors.location}}
-                    {{form.errors.total_animal_capacity}}
-                    {{form.errors.visitor_capacity}}
-                    {{form.errors.total_area}}
-
-                </div>
-                {% endif %}
+        
                 <form action="" method="post" class="font-weight-bold">
                     
                 {% csrf_token %}

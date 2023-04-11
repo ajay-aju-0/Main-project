@@ -1,19 +1,18 @@
 {% extends 'shared/directorpanel.html' %}
 
+{% block title %}
+    <title>Manage Vacancy</title>
+{% endblock title %}
 
-{% block pagetitle %}
-
-{% if vacancy %}
-{% include 'shared/messages.html' %}
-{% endif %}
-    
+{% block pagetitle %}    
 
 <div class="d-flex justify-content-between">
     <h1>Manage vacancy</h1>
     <a href="{% url 'director_add_vacancy' %}" class="btn btn-success text-white" style="width:max-content;"> <b>+ Add Vacancy</b> </a>
 </div>
 
-<br>
+{% include 'shared/messages.html' %}
+
 {% endblock pagetitle %}
 
 {% block display %}

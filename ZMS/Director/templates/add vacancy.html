@@ -1,6 +1,8 @@
 {% extends 'shared/directorpanel.html' %}
-{% include 'shared/messages.html' %}
 
+{% block title %}
+    <title>Add Vacancy</title>
+{% endblock title %}
 
 {% block pagetitle %}
 <div class="d-flex justify-content-between">
@@ -12,6 +14,9 @@
       <li class="breadcrumb-item active">Add vacancy</li>
     </ol>
 </nav>
+
+{% include 'shared/messages.html' %}
+
 {% endblock pagetitle %}
 
 {% block display %}

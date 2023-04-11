@@ -1,5 +1,4 @@
 {% extends 'shared/curatorpanel.html' %}
-{% include 'shared/messages.html' %}
 
 {% block pagetitle %}
 <div class="d-flex justify-content-between">
@@ -7,10 +6,12 @@
 </div>
 <nav>
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="{% url 'curator_manage_animals' %}">Manage animals</a></li>
-      <li class="breadcrumb-item active">Add animal</li>
+        <li class="breadcrumb-item"><a href="{% url 'curator_manage_animals' %}">Manage animals</a></li>
+        <li class="breadcrumb-item active">Add animal</li>
     </ol>
 </nav>
+
+{% include 'shared/messages.html' %}
 {% endblock pagetitle %}
 
 {% block display %}    
@@ -27,7 +28,7 @@
                 {{form1.as_p}}
                 <label for="caretaker">Caretaker:</label>
                 <select class="form-control" name="caretaker" id="caretaker" required>
-                    <option>-------------</option>
+                    <option value="none">-------------</option>
                     {% for keeper in keepers %}
                     <option value="{{keeper.id}}">{{keeper.username}}</option>
                     {% endfor %}

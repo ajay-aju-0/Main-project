@@ -1,14 +1,17 @@
 {% extends 'shared/directorpanel.html' %}
 
+{% block title %}
+    <title>Sponsered Animal Details</title>
+{% endblock title %}
 
 {% block pagetitle %}
-{% include 'shared/messages.html' %}
 
 <div class="d-flex justify-content-between">
     <h1>Sponsered Animals</h1>
 </div>
 
-<br>
+{% include 'shared/messages.html' %}
+
 {% endblock pagetitle %}
 
 {% block display %}

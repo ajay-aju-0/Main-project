@@ -12,7 +12,7 @@ from django.views.decorators.cache import cache_control
 # Create your views here.
 
 def loadHome(request):
-    return render(request,'index.html')
+    return render(request,'index.html')    
 
 
 def visitorRegistration(request):

@@ -1,14 +1,18 @@
 {% extends 'shared/directorpanel.html' %}
 {% load static %}
-{% include 'shared/messages.html' %}
 
+{% block title %}
+    <title>Manage Ticket Rates</title>
+{% endblock title %}
 
 {% block pagetitle %}
 <div class="d-flex justify-content-between">
     <h1>Manage ticket rates</h1>
-    <button class="btn btn-primary text-dark fw-bold" data-toggle="modal" data-target="#catagorymodal" data-backdrop="static">+ Add Catagory</button>
+    <button class="btn btn-success fw-bold" data-toggle="modal" data-target="#catagorymodal" data-backdrop="static">+ Add Catagory</button>
 </div>
-<br>
+
+{% include 'shared/messages.html' %}
+
 {% endblock pagetitle %}
     
 
@@ -34,7 +38,17 @@
                         <td>{{i.rate}}</td>
                         <td>
                             <button data-toggle="modal" data-target="#updatemodal{{i.id}}" data-backdrop="static" class="btn btn-block btn-success text-white">Update</button>
-                            {% include 'updateticketcatagory.html' %}         
+                            {% include 'updateticketcatagory.html' %} 
+                                {% if update_error %}
+                                    <script src="{% static 'assets/js/jquery-3.6.3.slim.min.js' %}"></script>
+                                    <script src="{% static 'assets/js/jquery-3.6.4.min.js' %}"></script>
+                                    <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+                                    <script>
+                                        $(document).ready(function() {
+                                            $('#updatemodal{{i.id}}').modal('show');
+                                        })
+                                    </script>
+                                {% endif %}        
                         </td>
                         <td>
                             <a href="{% url 'director_delete_ticket_catagory' i.id %}" onclick="return confirm('Sure to delete')" class="btn btn-block btn-danger text-white btn-del">Delete</a>
@@ -58,17 +72,6 @@
     </script>
 {% endif %}
 
-
-{% if update_error %}
-<script src="{% static 'assets/js/jquery-3.6.3.slim.min.js' %}"></script>
-<script src="{% static 'assets/js/jquery-3.6.4.min.js' %}"></script>
-<script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-<script>
-    $(document).ready(function() {
-        $('#updatemodal').modal('show');
-    })
-</script>
-{% endif %}
     
 
     

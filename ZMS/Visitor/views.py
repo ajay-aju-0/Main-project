@@ -5,6 +5,7 @@ from datetime import date
 from Director.forms import *
 from django.contrib.auth import authenticate
 from django.contrib import messages
+import time
 # Create your views here.
 
 def loadVisitorHome(request):
@@ -23,12 +24,23 @@ def showTicketDetails(request,id):
     return render(request,'ticket details.html',{'catagories':catagories})
 
 
+def current_date_slot_check(book_date,book_slot):
+    if date.today().__eq__(book_date):
+        # print(book_slot == 'morning' and time.strftime("%H:%M:%S",time.localtime()).__gt__('12:00:00 PM'))
+        if book_slot == 'morning' and time.strftime("%H:%M:%S",time.localtime()).__gt__('12:00:00 PM'):
+            return False
+        elif book_slot == 'noon' and time.strftime("%H:%M:%S",time.localtime()).__gt__('15:00:00 PM'):
+            return False
+        return True
+
+
 def bookTicket(request):
     ticketform = TicketForm()
     catagories = TicketRate.objects.all()
     capacity = ZooDetails.objects.get(pk=1).visitor_capacity
 
     if request.method == 'GET':
+        # print(time.strftime("%H:%M:%S",time.localtime()))
         return render(request,'book ticket.html',{'form':ticketform,'catagories':catagories})
 
     elif request.method == 'POST':
@@ -37,44 +49,58 @@ def bookTicket(request):
 
         book_date = request.POST['reporting_date']
         book_slot = request.POST['reporting_time']
+        # print(book_slot)
 
         current_count = Ticket.objects.filter(reporting_date = book_date, reporting_time = book_slot).count()
 
         if form.is_valid():
-            obj = form.save(commit=False)
-            count_list = request.POST.getlist('catagory')
-            booked_count = sum(count_list)
+            # c = current_date_slot_check(book_date,book_slot)
+            # print(c)
+            if current_date_slot_check(book_date,book_slot) == True:
+                obj = form.save(commit=False)
+                count_list = request.POST.getlist('catagory')
+                booked_count = sum([int(i) for i in count_list])
 
-            if current_count + booked_count < capacity:
-                i = 0
-                total = 0
-                total_count = 0
-                for rate in tRate:
+                if booked_count != 0:
 
-                    if int(count_list[i]) != 0:
-                        catagory_rate = TicketRate.objects.get(type=rate.type)
-                        total += int(count_list[i]) * catagory_rate.rate
-                        total_count += int(count_list[i]) 
+                    if current_count + booked_count < capacity:
+                        i = 0
+                        total = 0
+                        total_count = 0
+                        for rate in tRate:
 
-                    i = i+1
+                            if int(count_list[i]) != 0:
+                                catagory_rate = TicketRate.objects.get(type=rate.type)
+                                total += int(count_list[i]) * catagory_rate.rate
+                                total_count += int(count_list[i]) 
 
-                obj.total = total
-                obj.total_person = total_count
-                obj.uid = request.user
-                obj.save()
+                            i = i+1
 
-                j=0
-                for rate in tRate:
-                    if int(count_list[j]) != 0:
-                        BookedCatagory.objects.create(catagory = TicketRate.objects.get(type=rate.type).type,count = count_list[j],rate = TicketRate.objects.get(type=rate.type).rate,ticket = obj)
-                    j=j+1
+                        obj.total = total
+                        obj.total_person = total_count
+                        obj.uid = request.user
+                        obj.save()
+
+                        j=0
+                        for rate in tRate:
+                            if int(count_list[j]) != 0:
+                                BookedCatagory.objects.create(catagory = TicketRate.objects.get(type=rate.type).type,count = count_list[j],rate = TicketRate.objects.get(type=rate.type).rate,ticket = obj)
+                            j=j+1
+                    
+                        return redirect('visitor_confirm_booking')
+                    else:
+                        messages.error(request,'visitor capacity exceeded for this booking slot, Please choose another slot for proceed booking!')
+                        return render(request,'book ticket.html',{'form':form,'catagories':catagories})
             
-                return redirect('visitor_confirm_booking')
+                else:
+                    messages.error(request,'You are booking ticket with ZERO visitors please provide valid no. of visitors in available catagories')
+                    return render(request,'book ticket.html',{'form':form,'catagories':catagories})
             else:
-                messages.error(request,'visitor capacity exceeded for this booking slot, Please choose another slot for proceed booking!')
+                messages.error(request,'You are booking ticket for a past time please provide future date and slot for booking')
                 return render(request,'book ticket.html',{'form':form,'catagories':catagories})
         else:
             return render(request,'book ticket.html',{'form':form,'catagories':catagories})
+    
     else:
         return render(request,'book ticket.html',{'form':ticketform,'catagories':catagories})    
 

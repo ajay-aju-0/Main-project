@@ -2,15 +2,14 @@
 {% load static %}
 
 {% block pagetitle %}
-{% include 'shared/messages.html' %}
-    
+
 
 <div class="d-flex justify-content-between">
     <h1>Manage Purchases</h1>
     <button data-toggle="modal" data-target="#purchasemodal" data-backdrop="static" class="btn btn-success text-white fw-bold" style="width:max-content;">+ Add Purchase </button>
 </div>
 
-<br>
+{% include 'shared/messages.html' %}
 {% endblock pagetitle %}
 
 {% block display %}
@@ -60,7 +59,7 @@
     <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
     <script>
         $(document).ready(function() {
-            $('#enclosuremodal').modal('show');
+            $('#purchasemodal').modal('show');
         })
     </script>
 {% endif %}

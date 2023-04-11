@@ -1,15 +1,18 @@
 {% extends 'shared/directorpanel.html' %}
 {% load static %}
 
-{% block pagetitle %}
-{% include 'shared/messages.html' %}
-    
+{% block title %}
+    <title>View Enclosures</title>
+{% endblock title %}
+
+{% block pagetitle %}    
 
 <div class="d-flex justify-content-between">
     <h1>View enclosures</h1>
 </div>
 
-<br>
+{% include 'shared/messages.html' %}
+
 {% endblock pagetitle %}
 
 

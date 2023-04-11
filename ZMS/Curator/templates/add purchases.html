@@ -18,12 +18,6 @@
                     
                 <form action="{% url 'curator_manage_purchases' %}" method="post" class="font-weight-bold">      
                 
-                {% if error %}
-                <div class="bg-danger bg-opacity-50 text-white">
-                    {{form.errors.name}}
-                </div>
-                
-                {% endif %}
                 {% csrf_token %}
                 {{form.as_p}}
                 <br>

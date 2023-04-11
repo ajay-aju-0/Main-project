@@ -25,13 +25,18 @@ def verifyAnimal(request,id):
     return redirect('doctor_verify_animals')
 
 def rejectAnimal(request):
+    unverified_animals_count = Animals.objects.filter(status = -1).count()
     if request.method == 'POST':
         id = request.POST['id']
         animal = Animals.objects.get(pk=id)
-        animal.reason = request.POST['reason']
-        animal.status = -2
-        animal.save()
-    return redirect('doctor_verify_animals')
+        reason = request.POST['reason']
+
+        if reason.isdigit():
+            return render(request,'verify animals.html',{'error':True,'unverified_animals':unverified_animals_count})
+        else:
+            animal.status = -2
+            animal.save()
+            return redirect('doctor_verify_animals')
 
 def viewAnimalHealth(request):
     animals = Animals.objects.filter(status=1)
@@ -74,6 +79,7 @@ def addSickness(request):
     else:
         return render(request,'add sickness details.html',{'form':sicknessForm,'unverified_animals':unverified_animals_count})
 
+
 def markCured(request,id):
     animal = sickness_details.objects.get(pk=id)
     animal.status = 'cured'
@@ -93,18 +99,26 @@ def medicineList(request):
         if form.is_valid():
             form.save()
             messages.success(request,'Medicine added successfully')
-            return render(request,'view medicines.html',{'form':medicineForm,'medicines':medicines,'unverified_animals':unverified_animals_count})
+            return redirect('doctor_manage_medicines')
         else:
-            return render(request,"view medicines.html",{'form':medicineForm,'medicines':medicines,'error':True,'unverified_animals':unverified_animals_count})
+            return render(request,"view medicines.html",{'form':form,'medicines':medicines,'error':True,'unverified_animals':unverified_animals_count})
     else:
         return render(request,'view medicines.html',{'form':medicineForm,'medicines':medicines,'unverified_animals':unverified_animals_count})
 
             
 def updateStock(request,id):
+    medicines = Medicines.objects.all()
+    medicineForm = MedicineForm()
+    unverified_animals_count = Animals.objects.filter(status = -1).count()
     medicine = Medicines.objects.get(pk=id)
-    medicine.stock = request.POST['stock']
-    medicine.save()
-    return redirect('doctor_manage_medicines')
+    medicine_stock = request.POST['stock']
+    if int(medicine_stock) < 0:
+        messages.error(request,'Invalid stock entered')
+        return render(request,"view medicines.html",{'form':medicineForm,'medicines':medicines,'update_error':True,'unverified_animals':unverified_animals_count})
+    else:
+        medicine.stock = medicine_stock
+        medicine.save()
+        return redirect('doctor_manage_medicines')
 
 def deleteMedicine(request,id):
     medicine = Medicines.objects.get(pk=id)

@@ -2,15 +2,13 @@
 {% load static %}
 
 {% block pagetitle %}
-{% include 'shared/messages.html' %}
-    
 
 <div class="d-flex justify-content-between">
     <h1>Manage medicines</h1>
     <button data-toggle="modal" data-target="#medicinemodal" data-backdrop="static" class="btn btn-success text-white fw-bold" style="width:max-content;">+ Add Medicine </button>
 </div>
+{% include 'shared/messages.html' %}
 
-<br>
 {% endblock pagetitle %}
 
 
@@ -45,7 +43,16 @@
                             {% include 'updatemedicinestocks.html' %}
                     <a href="{% url 'doctor_delete_medicine' medicine.id %}" onclick="return confirm('do you want to delete?')" class="btn btn-danger text-white mx-2">Delete</a>
                 </td>
-                    
+                        {% if update_error %}
+                            <script src="{% static 'assets/js/jquery-3.6.3.slim.min.js' %}"></script>
+                            <script src="{% static 'assets/js/jquery-3.6.4.min.js' %}"></script>
+                            <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+                            <script>
+                                $(document).ready(function() {
+                                    $('#updatemedicinemodal{{medicine.id}}').modal('show');
+                                })
+                            </script>
+                        {% endif %}
             </tr>
             {% endfor %}
                 

@@ -65,7 +65,7 @@ def addAnimal(request):
         enclosureobj = request.POST['location']
         enclosure = Enclosures.objects.get(id = enclosureobj)
         caretakerobj = request.POST['caretaker']
-        caretaker = Staffs.objects.get(user=caretakerobj)
+        
         
         form1 = AnimalForm(request.POST,request.FILES)
         form2 = AnimalKindForm(request.POST)
@@ -73,47 +73,54 @@ def addAnimal(request):
 
         if form1.is_valid() and form2.is_valid() and form3.is_valid():
 
-            obj1 = form1.save(commit=False)
-            obj1.location = enclosure
-            obj1.caretaker = caretaker
-            obj1.status = -1
+            if caretakerobj != 'none':
 
-            AclassCheck = Taxonomy.objects.filter(Aclass = request.POST['Aclass']).exists()
-            AkindCheck = AnimalKind.objects.filter(general_name = request.POST['general_name'],species = request.POST['species'],Aorder = request.POST['Aorder']).exists()
-            # print(AclassCheck,AkindCheck)
+                caretaker = Staffs.objects.get(user=caretakerobj)
 
-            if AclassCheck:
-                obj2 = Taxonomy.objects.get(Aclass = request.POST['Aclass'])
-                if AkindCheck:
-                    obj3 = AnimalKind.objects.get(general_name = request.POST['general_name'],species = request.POST['species'],Aorder = request.POST['Aorder'])
-                    obj1.akind = obj3
-                    obj2.save()
-                    obj3.save()
-                    obj1.save()
+                obj1 = form1.save(commit=False)
+                obj1.location = enclosure
+                obj1.caretaker = caretaker
+                obj1.status = -1
+
+                AclassCheck = Taxonomy.objects.filter(Aclass = request.POST['Aclass']).exists()
+                AkindCheck = AnimalKind.objects.filter(general_name = request.POST['general_name'],species = request.POST['species'],Aorder = request.POST['Aorder']).exists()
+                # print(AclassCheck,AkindCheck)
+
+                if AclassCheck:
+                    obj2 = Taxonomy.objects.get(Aclass = request.POST['Aclass'])
+                    if AkindCheck:
+                        obj3 = AnimalKind.objects.get(general_name = request.POST['general_name'],species = request.POST['species'],Aorder = request.POST['Aorder'])
+                        obj1.akind = obj3
+                        obj2.save()
+                        obj3.save()
+                        obj1.save()
+                    else:
+                        obj3 = form2.save(commit=False)
+                        obj3.class_id = obj2
+                        obj1.akind = obj3
+                        obj2.save()
+                        obj3.save()
+                        obj1.save()
                 else:
-                    obj3 = form2.save(commit=False)
-                    obj3.class_id = obj2
-                    obj1.akind = obj3
-                    obj2.save()
-                    obj3.save()
-                    obj1.save()
+                    obj2 = form3.save(commit=False)
+                    if AkindCheck:
+                        obj3 = AnimalKind.objects.get(general_name = request.POST['general_name'],species = request.POST['species'],Aorder = request.POST['Aorder'])
+                        obj1.akind = obj3
+                        obj2.save()
+                        obj3.save()
+                        obj1.save()
+                    else:
+                        obj3 = form2.save(commit=False)
+                        obj3.class_id = obj2
+                        obj1.akind = obj3
+                        obj2.save()
+                        obj3.save()
+                        obj1.save()
+                messages.success(request,"Animal added successfully")
+                return redirect('curator_manage_animals')
             else:
-                obj2 = form3.save(commit=False)
-                if AkindCheck:
-                    obj3 = AnimalKind.objects.get(general_name = request.POST['general_name'],species = request.POST['species'],Aorder = request.POST['Aorder'])
-                    obj1.akind = obj3
-                    obj2.save()
-                    obj3.save()
-                    obj1.save()
-                else:
-                    obj3 = form2.save(commit=False)
-                    obj3.class_id = obj2
-                    obj1.akind = obj3
-                    obj2.save()
-                    obj3.save()
-                    obj1.save()
-            messages.success(request,"Animal added successfully")
-            return redirect('curator_manage_animals')
+                messages.error(request,'Please mention the caretaker of the animal')
+                return render(request,'add animal.html',{'form1':form1,'keepers':users,'form2':form2,'form3':form3})
         else:
             messages.error(request,"error while updating")
             return render(request,'add animal.html',{'form1':form1,'keepers':users,'form2':form2,'form3':form3})

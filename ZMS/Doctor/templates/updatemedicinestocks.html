@@ -13,15 +13,10 @@
                     </div>
             <div class="modal-body">
                 
-                {% if error %}
+                {% if update_error %}
                 {% include 'shared/messages.html' %}
                 {% endif %}
-                {% if error %}
-                <div class="bg-danger bg-opacity-50 text-white">
-                    {{form.errors.type}}
-                    {{form.errors.rate}}
-                </div>
-                {% endif %}
+                
                 <form action="{% url 'doctor_update_medicine_stock' medicine.id %}" method="post" class="font-weight-bold">
                     
                 {% csrf_token %}

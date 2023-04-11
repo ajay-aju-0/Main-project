@@ -15,12 +15,12 @@ class Users(AbstractUser):
         ('United Arab Emirates','United Arab Emirates'), ('United Kingdom','United Kingdom'), ('United States','United States'), ('Uruguay','Uruguay'), ('Uzbekistan','Uzbekistan'), ('Vanuatu','Vanuatu'), ('Vatican City','Vatican City'), ('Venezuela','Venezuela'), ('Vietnam','Vietnam'), ('Yemen','Yemen'), ('Zambia','Zambia'), ('Zimbabwe','Zimbabwe')
     )
     gender = models.CharField(max_length=1,choices=gen_choice)
-    dob = models.DateField(null=True)
+    dob = models.DateField(null=True,blank=True)
     country = models.CharField(max_length=32,choices=con_choice)
-    state =models.CharField(max_length=30)
+    state = models.CharField(max_length=30)
     city = models.CharField(max_length=20)
     street = models.CharField(max_length=20)
-    pincode = models.IntegerField()
+    pincode = models.IntegerField(null=True,blank=True)
     house_name = models.CharField(max_length=50)
     phone = models.BigIntegerField(default=0)
     usertype = models.CharField(max_length=15)
@@ -33,14 +33,15 @@ class Users(AbstractUser):
 class Staffs(models.Model):
     desig = models.CharField(max_length=20,verbose_name="Designation")
     salary = models.BigIntegerField()
-    bonus = models.IntegerField()
+    bonus = models.IntegerField(default=0)
     user = models.ForeignKey(to=Users,on_delete=models.CASCADE)
 
 class ZooTimings(models.Model):
     day_choice = [('sunday','Sunday'),('monday','Monday'),('tuesday','Tuesday'),('wednesday','Wednesday'),('thursday','Thursday'),('friday','Friday'),('saturday','Saturday')]
     day = models.CharField(max_length=10,choices=day_choice)
-    open_time = models.TimeField()
-    close_time = models.TimeField()
+    open_time = models.TimeField(default='00:00:00',blank=False)
+    close_time = models.TimeField(default='00:00:00',blank=False)
+    holiday = models.BooleanField(default=False)
 
 class TicketRate(models.Model):
     type = models.CharField(max_length=20,verbose_name="Ticket type")
@@ -129,7 +130,12 @@ class TransferDetails(models.Model):
     transfer_from = models.CharField(max_length=25)
     transfer_to = models.CharField(max_length=25)
     transfer_date = models.DateField()
+    transfer_time = models.TimeField(default=None)
+    transport_type = models.CharField(max_length=20,default=None)
     reason = models.CharField(max_length=150,verbose_name="transfer reason")
+    transport_company = models.CharField(max_length=30,default=None)
+    transporter_name = models.CharField(max_length=20,default=None)
+    transporter_contact = models.BigIntegerField(default=None)
     expense = models.BigIntegerField(default=0)
 
 class Animal_of_the_week(models.Model):
@@ -197,7 +203,7 @@ class SponserDetails(models.Model):
     email = models.EmailField()
     stype = models.CharField(max_length=15,choices=stype_choice)
     joined_date = models.DateField(auto_now_add=True)
-    notes = models.CharField(max_length=100,verbose_name="Notes")
+    notes = models.CharField(max_length=100,verbose_name="Notes",null=True,blank=True)
 
 class SponseredAnimals(models.Model):
     sponser = models.ForeignKey(to=SponserDetails,on_delete=models.CASCADE)
@@ -209,7 +215,7 @@ class SponseredAnimals(models.Model):
 class ZooDetails(models.Model):
     name = models.CharField(max_length=30,verbose_name="zoo name")
     location = models.CharField(max_length=20)
-    total_animal_capacity = models.IntegerField(default=0,verbose_name="Total animal capacity")
+    total_animal_capacity = models.IntegerField(default=0,verbose_name="Maximum animal capacity")
     current_animal_occupancy = models.IntegerField(default=0,verbose_name="Current animal occupancy")
     enclosure_types = models.IntegerField(default=0)
     visitor_capacity = models.IntegerField(default=0)

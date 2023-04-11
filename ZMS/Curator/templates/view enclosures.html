@@ -2,13 +2,12 @@
 {% load static %}
 
 {% block pagetitle %}
-{% include 'shared/messages.html' %}
     
-
 <div class="d-flex justify-content-between">
     <h1>Manage enclosures</h1>
     <button data-toggle="modal" data-target="#enclosuremodal" data-backdrop="static" class="btn btn-success text-white fw-bold" style="width:max-content;">+ Add Enclosure </button>
 </div>
+{% include 'shared/messages.html' %}
 
 <br>
 {% endblock pagetitle %}

@@ -1,17 +1,17 @@
 {% extends 'shared/directorpanel.html' %}
 
+{% block title %}
+    <title>Zoo Time</title>
+{% endblock title %}
+
 {% block pagetitle %}
-
-{% if staff %}
-{% include 'shared/messages.html' %}
-{% endif %}
     
-
 <div class="d-flex justify-content-between">
     <h1>Manage zoo time</h1>
 </div>
 
-<br>
+{% include 'shared/messages.html' %}
+
 {% endblock pagetitle %}
 
 {% block display %}
@@ -24,16 +24,30 @@
                         <th>Day</th>
                         <th>Open time</th>
                         <th>Close time</th>
-                        <th>Action</th>
+                        <th colspan="2">Action</th>
                     </tr>
                     
                     {% for time in time %}
                     <tr>
                         <td>{{time.day}}</td>
-                        <td>{{time.open_time}}</td>
-                        <td>{{time.close_time}}</td>
+                        <td>
+                            
+                            {% if time.holiday != True %}
+                                {{time.open_time}}
+                            {% else %}
+                                Holiday
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if time.holiday != True %}
+                                {{time.close_time}}
+                            {% else %}
+                                Holiday
+                            {% endif %}
+                        </td>
                         <td>
                             <button data-toggle="modal" data-target="#zootimemodal{{time.id}}" data-backdrop="static" class="btn btn-block btn-success text-white">Update</button>
+                           
                             <div class="modal fade" id="zootimemodal{{time.id}}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="false">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
@@ -48,15 +62,19 @@
                                             <form method="post" class="font-weight-bold">
                                                 
                                             {% csrf_token %}
+                                            {{time.open_time}}
                                             <input type="hidden" name="id" id="id" value="{{time.id}}">
                                             {{timeform.day.label}} &nbsp;&nbsp;&nbsp;
                                             <input class="form-control" type="text" name="day" id="day" value="{{time.day}}" disabled>
                                                 <br>
+                                                <p>Current opening time : {{time.open_time | time:"h:i"}}</p>
                                             {{timeform.open_time.label}} &nbsp;&nbsp;&nbsp;
-                                            <input class="form-control" type="time" name="open time" id="open time">
+                                            <input class="form-control" type="time" name="open time" id="open time" value="{{time.open_time}}" required>
                                                 <br>
+                                                <p>Current closing time : {{time.close_time | time:"h:i"}}</p>
                                             {{timeform.close_time.label}} &nbsp;&nbsp;&nbsp;
-                                            <input class="form-control" type="time" name="close time" id="close time">
+                                            <input class="form-control" type="time" name="close time" id="close time" value="{{time.close_time}}" required>
+                                            <!-- {{timeform.as_p}} -->
                                             <br>
                                             <div class="modal-footer">
                                                 <button type="submit" class="btn btn-success btn-block w-100">Update</button>
@@ -68,16 +86,14 @@
                                     </div>
                                 </div>
                               </div>
-                              
-                              <script>
-                                $('#exampleModal').on('show.bs.modal', event => {
-                                    var button = $(event.relatedTarget);
-                                    var modal = $(this);
-                                    // Use above variables to manipulate the DOM
-                                    
-                                });
-                              </script>
                             
+                        </td>
+                        <td>
+                            
+                            {% if time.holiday == False %}
+                                <a href="{% url 'director_mark_holiday' time.id %}" onclick="return confirm('Are you sure?')" class="btn btn-danger">Mark Holiday</a> 
+                            {% endif %}
+                                
                         </td>
                     </tr>
                     {% endfor %}

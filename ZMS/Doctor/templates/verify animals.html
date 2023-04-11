@@ -1,15 +1,14 @@
 {% extends 'shared/doctorpanel.html' %}
+{% load static %}
 
-
-{% block pagetitle %}
-{% include 'shared/messages.html' %}
-    
+{% block pagetitle %}    
 
 <div class="d-flex justify-content-between">
     <h1>Verify Animals</h1>
 </div>
 
-<br>
+{% include 'shared/messages.html' %}
+
 {% endblock pagetitle %}
 
 
@@ -36,7 +35,6 @@
                 
                 
                 {% for animal in animals %}
-                
                                        
                     <tr>
                         <td>{{forloop.counter}}</td>
@@ -60,6 +58,17 @@
                             <a href="{% url 'doctor_verified_animal' animal.id %}" onclick="return confirm('do you want to verify this animal?')" class="btn btn-success px-0 py-0"><i class="bi bi-check fw-bold" style="font-size: 25px;"></i></a>
                             <button data-toggle="modal" data-target="#reasonmodal{{animal.id}}" data-backdrop="static" class="btn btn-danger px-0 py-0"><i class="bi bi-x" style="font-size: 25px;font-weight: bolder;"></i></button> 
                             {% include 'reject reason.html' %}
+                            {% if error %}
+                                <script src="{% static 'assets/js/jquery-3.6.3.slim.min.js' %}"></script>
+                                <script src="{% static 'assets/js/jquery-3.6.4.min.js' %}"></script>
+                                <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+                                <script>
+                                    $(document).ready(function() {
+                                        $('#reasonmodal{{animal.id}}').modal('show');
+                                    })
+                                </script>
+                            {% endif %}
+
                         </td>
                     </tr>
                    

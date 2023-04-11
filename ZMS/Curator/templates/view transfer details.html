@@ -1,15 +1,15 @@
 {% extends 'shared/curatorpanel.html' %}
+{% load static %}
+
 
 {% block pagetitle %}
-{% include 'shared/messages.html' %}
-    
 
 <div class="d-flex justify-content-between">
     <h1>Transfer Details</h1>
-    <button class="btn btn-success text-white" style="width:max-content;" data-toggle="modal" data-target="#performancemodal" data-backdrop="static"> <b>+ Add</b> </button>
+    <button class="btn btn-success text-white" style="width:max-content;" data-toggle="modal" data-target="#transfermodal" data-backdrop="static"> <b>+ Add</b> </button>
 </div>
 
-<br>
+{% include 'shared/messages.html' %}
 {% endblock pagetitle %}
 
 {% block display %}
@@ -25,7 +25,13 @@
                         <th>Transfer from</th>
                         <th>Transfer to</th>
                         <th>Date</th>
+                        <th>Time</th>
                         <th>Reason</th>
+                        <th>Transport type</th>
+                        <th>Transport company</th>
+                        <th>Transporter name</th>
+                        <th>Contact</th>
+                        <th>Expense</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -38,7 +44,13 @@
                         <td>{{transfer.transfer_from}}</td>
                         <td>{{transfer.transfer_to}}</td>
                         <td>{{transfer.transfer_date}}</td>
-                        <td>{{transfer.reason}}</td>                            
+                        <td>{{transfer.transfer_time}}</td>
+                        <td>{{transfer.reason}}</td> 
+                        <td>{{transfer.transport_type}}</td>
+                        <td>{{transfer.transport_company}}</td>
+                        <td>{{transfer.transporter_name}}</td>
+                        <td>{{transfer.transporter_contact}}</td> 
+                        <td>{{transfer.expense}}</td>                  
                         <td>
                             <a href="{% url 'curator_remove_animal_transfer' transfer.id %}" onclick="return confirm('sure to delete?')" class="btn btn-danger">Delete</a>
                         </td>
@@ -49,5 +61,17 @@
             </table>
         </div>
     </div>
+
+    
+{% if error %}
+<script src="{% static 'assets/js/jquery-3.6.3.slim.min.js' %}"></script>
+<script src="{% static 'assets/js/jquery-3.6.4.min.js' %}"></script>
+<script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<script>
+    $(document).ready(function() {
+        $('#transfermodal').modal('show');
+    })
+</script>
+{% endif %}
   
 {% endblock display %}

@@ -4,8 +4,12 @@
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-
-  <title>Director panel</title>
+    
+    {% block title %}
+    <title>Director panel</title>
+    {% endblock title %}
+        
+  
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -25,6 +29,9 @@
   <link href="{% static 'assets/vendor/quill/quill.bubble.css' %}" rel="stylesheet">
   <link href="{% static 'assets/vendor/remixicon/remixicon.css' %}" rel="stylesheet">
   <link href="{% static 'assets/vendor/simple-datatables/style.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/css/buttons.dataTables.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/css/jquery.dataTables.min.css' %}" rel="stylesheet">
+
 
   <!-- Template Main CSS File -->
   <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
@@ -33,6 +40,11 @@
     <script src="{% static 'assets/js/jquery-3.6.3.slim.min.js' %}"></script>
     <script src="{% static 'assets/js/jquery-3.6.4.min.js' %}"></script>
     <script src="{% static 'assets/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'assets/js/jquery.dataTables.min.js' %}"></script>
+
+
+
+
 
   <!-- =======================================================
   * Template Name: NiceAdmin - v2.5.0
@@ -269,7 +281,7 @@
       <div class="row">
         
         {% block display %}
-            
+
         {% endblock display %}
 
       </div>
@@ -293,6 +305,7 @@
   <script src="{% static 'assets/vendor/simple-datatables/simple-datatables.js' %}"></script>
   <script src="{% static 'assets/vendor/tinymce/tinymce.min.js' %}"></script>
   <script src="{% static 'assets/vendor/php-email-form/validate.js' %}"></script>
+  <script src="{% static 'assets/js/buttons.print.min.js' %}"></script>
 
   <!-- Template Main JS File -->
   <script src="{% static 'assets/js/main.js' %}"></script>

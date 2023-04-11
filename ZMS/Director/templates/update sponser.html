@@ -1,8 +1,10 @@
 {% extends 'shared/directorpanel.html' %}
 
+{% block title %}
+    <title>Update Sponser</title>
+{% endblock title %}
 
 {% block pagetitle %}
-{% include 'shared/messages.html' %}
 <div class="d-flex justify-content-between">
     <h1>Update Sponser</h1>
 </div>
@@ -12,6 +14,8 @@
       <li class="breadcrumb-item active">Update Sponser / {{sponser.name}}</li>
     </ol>
 </nav>
+
+{% include 'shared/messages.html' %}
 
 {% endblock pagetitle %}
 

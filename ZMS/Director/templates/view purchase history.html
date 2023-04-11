@@ -1,9 +1,10 @@
 {% extends 'shared/directorpanel.html' %}
-{% load static %}
 
-{% block pagetitle %}
-{% include 'shared/messages.html' %}
-    
+{% block title %}
+    <title>Purchase History</title>
+{% endblock title %}
+
+{% block pagetitle %}    
 
 <div class="d-flex justify-content-between">
     <h1>View Purchases</h1>
@@ -46,18 +47,6 @@
         </table>
     </div>
 </div>
-    
-
-{% if error %}
-    <script src="{% static 'assets/js/jquery-3.6.3.slim.min.js' %}"></script>
-    <script src="{% static 'assets/js/jquery-3.6.4.min.js' %}"></script>
-    <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-    <script>
-        $(document).ready(function() {
-            $('#enclosuremodal').modal('show');
-        })
-    </script>
-{% endif %}
 
 
 {% endblock display %}

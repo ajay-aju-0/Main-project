@@ -1,13 +1,14 @@
 {% extends 'shared/directorpanel.html' %}
+{% load static %}
 
 {% block pagetitle %}
-    
 
 <div class="d-flex justify-content-between">
     <h1>Zoo Details</h1>
 </div>
 
-<br>
+{% include 'shared/messages.html' %}
+
 {% endblock pagetitle %}
 
 
@@ -58,6 +59,17 @@
             {% include 'update zoo details.html' %}
     </div>
 </div>
+
+{% if error %}
+    <script src="{% static 'assets/js/jquery-3.6.3.slim.min.js' %}"></script>
+    <script src="{% static 'assets/js/jquery-3.6.4.min.js' %}"></script>
+    <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script>
+        $(document).ready(function() {
+            $('#zoodetailmodal{{details.id}}').modal('show');
+        })
+    </script>
+{% endif %}
 
 {% endblock display %}
     
