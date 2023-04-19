@@ -214,6 +214,7 @@ class TransferDetailsForm(forms.ModelForm):
         )
 
         widgets = {
+            'order':forms.TextInput(attrs={'class':'form-control'}),
             'animal':forms.Select(attrs={'class':'form-control'}),
             'transfer_from':forms.TextInput(attrs={'class':'form-control'}),
             'transfer_to':forms.TextInput(attrs={'class':'form-control'}),
@@ -255,7 +256,7 @@ class TransferDetailsForm(forms.ModelForm):
         if tname.isdigit():
             self._errors['transporter_name'] = self.error_class(['enter a valid name'])
 
-        if str(contact).length < 10:
+        if len(str(contact)) < 10:
             self._errors['transporter_contact'] = self.error_class(['contact number will be minimum of 10 digit'])
 
         return self.cleaned_data

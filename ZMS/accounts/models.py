@@ -127,6 +127,7 @@ class Animals(models.Model):
 
 class TransferDetails(models.Model):
     animal = models.ForeignKey(to=Animals,on_delete=models.CASCADE)
+    order = models.CharField(max_length=30,verbose_name='Order No.')
     transfer_from = models.CharField(max_length=25)
     transfer_to = models.CharField(max_length=25)
     transfer_date = models.DateField()
@@ -155,7 +156,13 @@ class sickness_details(models.Model):
     sdate = models.DateField(verbose_name="Reported date")
     disease = models.CharField(max_length=50)
     medicine = models.ForeignKey(to=Medicines,on_delete=models.CASCADE)
+    consumption = models.CharField(max_length=50,default=None)
     status = models.CharField(max_length=20)
+
+class ConsumptionDetails(models.Model):
+    sick_animal = models.ForeignKey(to=sickness_details,on_delete=models.CASCADE)
+    date = models.DateField()
+    dose = models.IntegerField()
 
 class Purchase(models.Model):
     unit_choice = (('g','g'),('kg','kg'),('q','q'),('l','l'),('ml','ml'),('mm','mm'),('cm','cm'),('inch','inch'),('m','m'),('count','count'))
@@ -163,7 +170,7 @@ class Purchase(models.Model):
     quantity = models.FloatField()
     unit = models.CharField(max_length=5,choices=unit_choice)
     price = models.BigIntegerField()
-    pdate = models.DateField()
+    pdate = models.DateField(verbose_name='Purchase Date')
 
 class Events(models.Model):
     ename = models.CharField(max_length=30,verbose_name="Event name")

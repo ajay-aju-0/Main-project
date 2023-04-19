@@ -60,13 +60,15 @@ class SicknessForm(forms.ModelForm):
             'animal':forms.Select(attrs={'class':'form-control'}),
             'sdate':DateInput(attrs={'class':'form-control'}),
             'disease':forms.TextInput(attrs={'class':'form-control'}),
-            'medicine':forms.Select(attrs={'class':'form-control'})
+            'medicine':forms.Select(attrs={'class':'form-control'}),
+            'consumption':forms.TextInput(attrs={'class':'form-control'})
         }
 
     def clean(self):
         super(SicknessForm, self).clean()
         sdate = self.cleaned_data.get('sdate')
         disease = self.cleaned_data.get('disease')
+        consumption = self.cleaned_data.get('consumption')
         
         if sdate.__gt__(date.today()):
             self._errors['sdate'] = self.error_class(['Not permitted to enter future date'])
@@ -76,6 +78,9 @@ class SicknessForm(forms.ModelForm):
 
         if not re.findall('[a-z]',disease) and not re.findall('[A-Z]',disease):
             self._errors['disease'] = self.error_class(['Please enter a valid disease'])
+
+        if consumption.isdigit():
+            self._errors['consumption'] = self.error_class(['Enter valid consumption details'])
 
         return self.cleaned_data
 

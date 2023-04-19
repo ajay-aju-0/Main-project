@@ -22,6 +22,8 @@
                 <tr>
                     <th>Date</th>
                     <th>No.of tickets sold</th>   
+                    <th>Catagories</th>
+                    <th>Count</th>
                 </tr>
             </thead>
             
@@ -29,6 +31,30 @@
             <tr>
                 <td>{{ticket.tdate}}</td>
                 <td>{{ticket.tcount}}</td>
+
+                <td>
+                    {% for cat in catagory %}
+                    
+                        {% if cat.ticket.id == ticket.id %}
+                            {{cat.catagory}} <br>
+                        {% endif %}
+                        
+                    {% endfor %}
+                </td>
+
+                <td>
+                    {% for cat in catagory %}
+                    
+                        {% if cat.ticket.id == ticket.id %}
+                            {{cat.count}} <br>
+                        {% endif %}
+                        
+                    {% endfor %}
+                </td>
+
+               
+                    
+
                
             </tr>
             {% endfor %}

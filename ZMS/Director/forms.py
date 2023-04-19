@@ -145,7 +145,7 @@ class UpdateEventForm(forms.ModelForm):
         }
 
     def clean(self):
-        super(EventForm, self).clean()
+        super(UpdateEventForm, self).clean()
         event = self.cleaned_data.get('ename')
         start = self.cleaned_data.get('estart')
         end = self.cleaned_data.get('eend')

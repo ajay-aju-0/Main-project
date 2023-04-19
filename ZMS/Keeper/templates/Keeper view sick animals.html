@@ -1,0 +1,65 @@
+{% extends 'shared/keeperpanel.html' %}
+
+{% block title %}
+<title>Manage sick animals</title>
+{% endblock title %}
+
+{% block pagetitle %}    
+
+<div class="d-flex justify-content-between">
+    <h1>Manage Sick Animals</h1>
+</div>
+
+{% include 'shared/messages.html' %}
+
+{% endblock pagetitle %}
+
+{% block display %}
+
+    <div class="row">
+        <div class="col-sm-12">
+            <table class="table table-stripped datatable">
+                <thead>
+                    <tr>
+                        <th>SI No.</th>
+                        <th>Animal</th>
+                        <th>Reported date</th>
+                        <th>Disease</th>
+                        <th>Medicine</th>
+                        <th>Consumption</th>
+                        <th colspan="2">Action</th>
+                    </tr>
+                </thead>
+                
+                
+                {% for animal in sickAnimals %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{animal.animal.given_name}}</td>                            
+                        <td>{{animal.sdate}}</td>
+                        <td>{{animal.disease}}</td>
+                        <td>{{animal.medicine.medicine}}</td>
+                        <td>{{animal.consumption}}</td>
+                            
+                        <td>
+                           <a href="{% url 'keeper_view_given_medicine' animal.id %}" class="btn btn-secondary"><i class="bi bi-eye"></i></a> 
+                        </td>
+
+                        <td>
+                           
+                           {% if animal.status == 'sick' %}
+                            <a href="{% url 'keeper_update_medicine_consumption' animal.id animal.medicine.medicine %}" class="btn btn-success">Update</a>
+                           {% else %}
+                            <i>Animal cured</i>
+                           {% endif %}
+                            
+                        </td>
+                        
+                    </tr>
+                {% endfor %}
+               
+                    
+            </table>
+        </div>
+    </div>
+{% endblock display %}

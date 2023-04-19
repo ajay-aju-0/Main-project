@@ -27,8 +27,9 @@
                         <th>Reported date</th>
                         <th>Disease</th>
                         <th>Medicine</th>
+                        <th>Consumption</th>
                         <th>Status</th>
-                        <th colspan="3">Action</th>
+                        <th colspan="2">Action</th>
                     </tr>
                 </thead>
                 
@@ -40,8 +41,13 @@
                         <td>{{animal.sdate}}</td>
                         <td>{{animal.disease}}</td>
                         <td>{{animal.medicine.medicine}}</td>
+                        <td>{{animal.consumption}}</td>
                         <td>{{animal.status}}</td>
                             
+                        <td>
+                            <a href="{% url 'doctor_view_given_medicine' animal.id %}" class="btn btn-secondary"><i class="bi bi-eye"></i></a> 
+                         </td>
+
                         <td>
                             
                             {% if animal.status == 'sick' %}

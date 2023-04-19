@@ -32,6 +32,7 @@ urlpatterns = [
    path('sponsered animal/<id>',showSponseredAnimals,name='director_view_sponsered_animals'),
    path('delete sponsered animals/<id>',deleteSponseredAnimal,name='director_delete_sponsered_animals'),
    path('delete sponser/<id>',deleteSponser,name='director_delete_sponser'),
+   path('transfer details/',viewTransferDetails,name='director_view_transfer_details'),
    path('view feedback/',showFeedbacks,name='director_view_feedbacks'),
    path('ticket sales',viewTicketSales,name='director_view_ticket_sales'),
    path('view complaints/',viewComplaints,name='director_view_complaints'),

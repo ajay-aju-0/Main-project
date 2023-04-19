@@ -51,7 +51,10 @@
                         {% else %}
                            <h2>No participants</h2> 
                         {% endif %}
-                        {% endfor %}
+
+                    {% empty %}
+                        <i>No participants</i>
+                    {% endfor %}
                     </td>         
                         
                         
@@ -60,11 +63,11 @@
                             <i>Not available</i>
                         {% else %}
                         <a href="{% url 'curator_add_participants' event.id %}" class="btn btn-success text-white">
-                          Add Participants
+                            <i class="bi bi-person-plus-fill"></i>
                         </a>
                         <a href="{% url 'curator_remove_participants' event.id %}" class="btn btn-danger text-white">
-                            Remove Participants
-                          </a>
+                            <i class="bi bi-person-dash-fill"></i>
+                        </a>
                         {% endif %}
                     </td>
                 </tr>

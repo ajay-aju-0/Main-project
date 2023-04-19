@@ -1,0 +1,45 @@
+{% extends 'shared/keeperpanel.html' %}
+
+{% block title %}
+<title>View Consumption</title>
+{% endblock title %}
+
+{% block pagetitle %}    
+
+<div class="d-flex justify-content-between">
+    <h1>View Consumption</h1>
+</div>
+
+{% include 'shared/messages.html' %}
+
+{% endblock pagetitle %}
+
+{% block display %}
+
+    <div class="row">
+        <div class="col-sm-12">
+            <table class="table table-stripped datatable">
+                <thead>
+                    <tr>
+                        <th>SI No.</th>
+                        <th>Date</th>
+                        <th>Dose</th>
+                    </tr>
+                </thead>
+                
+                
+                {% for con in consumption %}
+                    <tr>
+                        
+                        <td>{{forloop.counter}}</td>
+                        <td>{{con.date}}</td>
+                        <td>{{con.dose}}</td>
+
+                    </tr>
+                {% endfor %}
+               
+                    
+            </table>
+        </div>
+    </div>
+{% endblock display %}

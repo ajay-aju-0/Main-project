@@ -5,25 +5,32 @@ from Visitor.forms import ComplaintForm
 from Director.forms import *
 from django.contrib import messages
 from django.contrib.auth import authenticate
+from django.contrib.auth.decorators import login_required
 
 
-# Create your views here.
-
+@login_required()
 def loadDoctorHome(request):
     unverified_animals_count = Animals.objects.filter(status = -1).count()
     return render(request,'doctorHome.html',{'unverified_animals':unverified_animals_count})
 
+
+@login_required()
 def animalVerification(request):
     unverified_animals_count = Animals.objects.filter(status = -1).count()
     animals = Animals.objects.filter(status = -1)
     return render(request,'verify animals.html',{'animals':animals,'unverified_animals':unverified_animals_count})
 
+
+@login_required()
 def verifyAnimal(request,id):
     animal = Animals.objects.get(pk=id)
     animal.status = 1
     animal.save()
+    messages.success(request,'Animal verified successfully')
     return redirect('doctor_verify_animals')
 
+
+@login_required()
 def rejectAnimal(request):
     unverified_animals_count = Animals.objects.filter(status = -1).count()
     if request.method == 'POST':
@@ -36,13 +43,18 @@ def rejectAnimal(request):
         else:
             animal.status = -2
             animal.save()
+            messages.success(request,'Animal rejected successfully')
             return redirect('doctor_verify_animals')
 
+
+@login_required()
 def viewAnimalHealth(request):
     animals = Animals.objects.filter(status=1)
     unverified_animals_count = Animals.objects.filter(status = -1).count()
     return render(request,'viewanimalhealth.html',{'animals':animals,'unverified_animals':unverified_animals_count})
 
+
+@login_required()
 def changeAnimalHealthStatus(request,id):
     animal = Animals.objects.get(pk=id)
     
@@ -52,16 +64,23 @@ def changeAnimalHealthStatus(request,id):
         animal.health_status = 'healthy'
     
     animal.save()
+
+    messages.success(request,'Animal health status changed successfully')
     return redirect('doctor_view_health_status')
 
+
+@login_required()
 def sickAnimalList(request):
     sick_animals = sickness_details.objects.all()
     unverified_animals_count = Animals.objects.filter(status = -1).count()
     return render(request,'sick animals.html',{'sickAnimals':sick_animals,'unverified_animals':unverified_animals_count})
 
+
+@login_required()
 def addSickness(request):
     sicknessForm = SicknessForm()
     unverified_animals_count = Animals.objects.filter(status = -1).count()
+
     if request.method == 'GET':
         return render(request,'add sickness details.html',{'form':sicknessForm,'unverified_animals':unverified_animals_count})
 
@@ -70,6 +89,10 @@ def addSickness(request):
         if form.is_valid():
             obj = form.save(commit=False)
             obj.status = 'sick'
+            animal = Animals.objects.get(pk=obj.animal.id)
+            animal.health_status = 'sick'
+            # print(animal.health_status)
+            animal.save()
             obj.save()
             messages.success(request,'Sickness added successfully')
             return redirect('doctor_manage_sick_animals')
@@ -80,13 +103,26 @@ def addSickness(request):
         return render(request,'add sickness details.html',{'form':sicknessForm,'unverified_animals':unverified_animals_count})
 
 
+@login_required()
 def markCured(request,id):
-    animal = sickness_details.objects.get(pk=id)
-    animal.status = 'cured'
+    sickAanimal = sickness_details.objects.get(pk=id)
+    sickAanimal.status = 'cured'
+    animal = Animals.objects.get(pk=sickAanimal.animal.id)
+    animal.health_status = 'healthy'
+    # print(animal)
     animal.save()
+    sickAanimal.save()
+    messages.success(request,'Animal marked as cured')
     return redirect('doctor_manage_sick_animals')
 
 
+@login_required()
+def viewMedicineConsumption(request,id):
+    consumptionObj = ConsumptionDetails.objects.filter(sick_animal=id)
+    return render(request,'doctor view consumption.html',{'consumption':consumptionObj})
+
+
+@login_required()
 def medicineList(request):
     medicines = Medicines.objects.all()
     medicineForm = MedicineForm()
@@ -105,7 +141,8 @@ def medicineList(request):
     else:
         return render(request,'view medicines.html',{'form':medicineForm,'medicines':medicines,'unverified_animals':unverified_animals_count})
 
-            
+
+@login_required()    
 def updateStock(request,id):
     medicines = Medicines.objects.all()
     medicineForm = MedicineForm()
@@ -118,23 +155,33 @@ def updateStock(request,id):
     else:
         medicine.stock = medicine_stock
         medicine.save()
+        messages.success(request,'Medicine stock updated successfully')
         return redirect('doctor_manage_medicines')
 
+
+@login_required()
 def deleteMedicine(request,id):
     medicine = Medicines.objects.get(pk=id)
     medicine.delete()
+    messages.success(request,'Medicine deleted successfully')
     return redirect('doctor_manage_medicines')
 
+
+@login_required()
 def viewAnimalDetails(request,id):
     animal = Animals.objects.get(pk=id)
     unverified_animals_count = Animals.objects.filter(status = -1).count()
     return render(request,'viewanimaldetail.html',{'animal':animal,'unverified_animals':unverified_animals_count})
 
+
+@login_required()
 def viewDeathDetails(request):
     animals = Animals.objects.all()
     unverified_animals_count = Animals.objects.filter(status = -1).count()
     return render(request,'death details.html',{'animals':animals,'unverified_animals':unverified_animals_count})
 
+
+@login_required()
 def updateDeathDetails(request,id):
     animal = Animals.objects.get(pk=id)
     deathForm = DeathForm(instance=animal)
@@ -155,6 +202,8 @@ def updateDeathDetails(request,id):
     else:
         return render(request,'add death details.html',{'form':deathForm,'animal':animal,'unverified_animals':unverified_animals_count})
 
+
+@login_required()
 def viewComplaints(request):
     complaints = Complaints.objects.filter(uid = request.user.id)
     recipient = Users.objects.filter(usertype__in = ['curator','director'])
@@ -175,17 +224,23 @@ def viewComplaints(request):
             obj.uid = Users.objects.get(pk=request.user.id)
             obj.rid = Staffs.objects.get(user=recipient)
             obj.save()
+            messages.success(request,'Complaint registered successfully')
             return redirect('doctor_view_complaints')
         else:
             return render(request,"doctor view complaints.html",{'complaints':complaints,'form':form,'recipients':recipient,'error':True,'unverified_animals':unverified_animals_count})
     else:
         return render(request,'doctor view complaints.html',{'complaints':complaints,'form':complaintForm,'recipients':recipient,'unverified_animals':unverified_animals_count})
 
+
+@login_required()
 def deleteComplaint(request,id):
     complaint = Complaints.objects.get(pk=id)
     complaint.delete()
+    messages.success(request,'Complaint deleted successfully')
     return redirect('doctor_view_complaints')
 
+
+@login_required()
 def viewProfile(request):
     profileForm = UpdateProfileForm(instance=request.user)
     profileImageForm = ProfileImageForm(instance=request.user)
@@ -207,6 +262,8 @@ def viewProfile(request):
     else:
         return render(request,'doctor update profile.html',{'form':profileForm,'unverified_animals':unverified_animals_count})
 
+
+@login_required()
 def updateProfileImage(request):
     profileImageForm = ProfileImageForm(instance=request.user)
     unverified_animals_count = Animals.objects.filter(status = -1).count()
@@ -220,6 +277,8 @@ def updateProfileImage(request):
         else:
             return render(request,'doctor update profile.html',{'form':form,'imageform':profileImageForm,'error':True,'unverified_animals':unverified_animals_count})
 
+
+@login_required()
 def deleteProfileImage(request):
     userObj = Users.objects.get(pk=request.user.id)
     userObj.profile = 'null'
@@ -227,6 +286,8 @@ def deleteProfileImage(request):
     messages.success(request,'profile photo deleted successfully!')
     return redirect('doctor_view_profile')
 
+
+@login_required()
 def changePassword(request):
     currentPassword = request.POST['password']
     newPassword = request.POST['newpassword']

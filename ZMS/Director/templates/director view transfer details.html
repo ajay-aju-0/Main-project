@@ -1,0 +1,61 @@
+{% extends 'shared/directorpanel.html' %}
+
+{% block title %}
+  <title>View transfers</title>
+{% endblock title %}
+
+{% block pagetitle %}
+
+<div class="d-flex justify-content-between">
+    <h1>Transfer Details</h1>
+</div>
+
+{% endblock pagetitle %}
+
+{% block display %}
+
+    <div class="row">
+        <div class="col-sm-12">
+            <table class="table table-stripped datatable">
+                <thead>
+                    <tr>
+                        <th>SI No.</th>
+                        <th>Animal</th>
+                        <th>Transfer from</th>
+                        <th>Transfer to</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Reason</th>
+                        <th>Transport type</th>
+                        <th>Transport company</th>
+                        <th>Transporter name</th>
+                        <th>Contact</th>
+                        <th>Expense</th>
+                    </tr>
+                </thead>
+                
+                
+                {% for transfer in transfers %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{transfer.animal.given_name}}</td>
+                        <td>{{transfer.transfer_from}}</td>
+                        <td>{{transfer.transfer_to}}</td>
+                        <td>{{transfer.transfer_date}}</td>
+                        <td>{{transfer.transfer_time}}</td>
+                        <td>{{transfer.reason}}</td> 
+                        <td>{{transfer.transport_type}}</td>
+                        <td>{{transfer.transport_company}}</td>
+                        <td>{{transfer.transporter_name}}</td>
+                        <td>{{transfer.transporter_contact}}</td> 
+                        <td>{{transfer.expense}}</td>                  
+                    </tr>
+                {% endfor %}
+               
+                    
+            </table>
+        </div>
+    </div>
+
+  
+{% endblock display %}

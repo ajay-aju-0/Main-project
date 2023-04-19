@@ -1,25 +1,26 @@
 from django.shortcuts import render,redirect
-from django.http import HttpResponse,JsonResponse
 from django.contrib import messages
 from django.db.models import Count,Q
 from accounts.forms import *
 from accounts.models import *
 from .forms import *
-from datetime import date,datetime
+from datetime import date
 from django.contrib.auth import authenticate
+from django.contrib.auth.decorators import login_required
 
 
+@login_required()
 def loadDirectorHome(request):
     visitor_obj = Users.objects.filter(usertype = 'visitor',is_active = True).values('date_joined')
-    staff_obj = Users.objects.filter(Q(usertype = 'curator') | Q(usertype = 'doctor') | Q(usertype = 'keeper'),is_active = True).values('date_joined')
+    staff_obj = Users.objects.exclude(Q(usertype = 'director') | Q(usertype ='visitor')).filter(is_active = True).values('date_joined')
     animal_obj = Animals.objects.filter(status = 1).values('date_joined')
     vacancy_obj = JobVacancy.objects.filter().values('issue_date')
     ticket_obj = Ticket.objects.filter().values('tdate')
     ticket_revenue_obj = Ticket.objects.filter().values('tdate','total')
     sponser_revenue_obj = SponseredAnimals.objects.filter().values('sdate','amount')
 
-
     # print(sponser_revenue_obj)
+
     visitors = []
     staffs = []
     animals = []
@@ -54,12 +55,8 @@ def loadDirectorHome(request):
 
     for p in sponser_revenue_obj:
         if p['sdate'].year == date.today().year:
-            sponser_revenue.append[p['amount']]
+            sponser_revenue.append(p['amount'])
 
-    
-
-    
-    
     # print(visitor_obj.values('date_joined')[0]['date_joined'].day)
     # print(len(visitors))
     # print(len(staffs))
@@ -78,6 +75,7 @@ def loadDirectorHome(request):
     return render(request,'directorHome.html',context)
 
 
+@login_required()
 def viewZooDetails(request):
     details = ZooDetails.objects.get(pk=1)
     detailsForm = ZooDetailsForm(instance=details)
@@ -101,11 +99,13 @@ def viewZooDetails(request):
         return render(request,'zoo details.html',{'form':detailsForm,'details':details})
 
 
+@login_required()
 def staffList(request):
     staffObj = Staffs.objects.exclude(desig = 'director')
     return render(request,'view staffs.html',{'staffs':staffObj})
 
 
+@login_required()
 def addCurator(request):
     userForm = RegistrationForm(initial={'usertype':'curator'})
     staffForm = CuratorForm() 
@@ -133,6 +133,7 @@ def addCurator(request):
         return render(request,'add curator.html',{'form1':userForm,'form2':staffForm})
 
 
+@login_required()
 def updateStaff(request,id):
     staff = Staffs.objects.get(user=id)
     uname = Users.objects.get(pk=id)
@@ -155,6 +156,7 @@ def updateStaff(request,id):
         return redirect('director_manage_staff')
 
 
+@login_required()
 def changeStaffStatus(request,id):
     staff = Users.objects.get(pk=id)
     if staff.is_active == 0:
@@ -165,101 +167,7 @@ def changeStaffStatus(request,id):
     return redirect('director_manage_staff')
 
 
-def manageTicketRates(request):
-    rateForm = TicketRateForm()
-    rates = TicketRate.objects.all()
-    if request.method == 'GET':
-        return render(request,'manageticketrates.html',{'form':rateForm,'rates':rates})
-
-    elif request.method == 'POST':
-        form = TicketRateForm(request.POST)
-        # ttype = request.POST.get('type')
-        if form.is_valid():
-            form.save()
-            messages.success(request,"Ticket catagory added successfully")
-            return render(request,'manageticketrates.html',{'form':rateForm,'rates':rates})
-        else:
-            # messages.error(request,"error while submitting form")
-            return render(request,"manageticketrates.html",{'form':form,'rates':rates,'error':True})
-    else:
-        return render(request,'manageticketrates.html',{'form':rateForm,'rates':rates})
-
-
-def deleteTicketCatagory(request,id):
-    catagory = TicketRate.objects.get(pk=id)
-    catagory.delete()
-    return redirect('director_manage_ticket_rate')
-
-
-def UpdateTicketCatagory(request,id):
-    rateObj = TicketRate.objects.get(pk=id)
-    rateObj.rate = request.POST['rate']
-    rateObj.save()
-    return redirect('director_manage_ticket_rate')
-
-
-def viewTicketSales(request):
-    tickets = Ticket.objects.values('tdate').annotate(tcount=Count('tdate')).order_by()
-    return render(request,'view ticket sales.html',{'tickets':tickets})
-
-
-def vacancyList(request):
-    vacancy = JobVacancy.objects.all()
-    return render(request,'manage vacancy.html',{'vacancies':vacancy})
-
-
-def addVacancy(request):
-    vacancyForm = VacancyForm()
-    if request.method == 'GET':
-        return render(request,'add vacancy.html',{'form':vacancyForm})
-
-    elif request.method == 'POST':
-        form = VacancyForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request,"Vacancy added successfully")
-            return redirect('director_manage_vacancy')
-        else:
-            messages.error(request,'error while submitting form')
-            return render(request,'add vacancy.html',{'form':form})
-    else:
-        return render(request,'add vacancy.html',{'form':vacancyForm})
-
-
-def updateVacancy(request,id):
-    vacancy = JobVacancy.objects.get(pk=id)
-
-    if request.method == 'GET':
-        vacancy_form = VacancyForm(instance=vacancy)
-        return render(request,'update vacancy.html',{'form':vacancy_form})
-
-    elif request.method == 'POST':
-        form = VacancyForm(request.POST,instance=vacancy)
-        if form.is_valid():
-            form.save()
-            messages.success(request,'Vacancy updated successfully')
-            return redirect('director_manage_vacancy')
-        else:
-            messages.error(request,"error while submitting form")
-            return render(request,'update vacancy.html',{'form':form})
-
-    else:
-        return redirect('director_manage_vacancy')
-
-
-def closeVacancy(request,id):
-    catagory = JobVacancy.objects.get(pk=id)
-    vacancy = JobVacancy.objects.all()
-    catagory.vstatus = "closed"
-    catagory.save()
-    return render(request,'manage vacancy.html',{'message':True,'vacancies':vacancy})
-
-
-def visitorList(request):
-    visitors = Users.objects.filter(usertype="visitor")
-    return render(request,"visitor list.html",{'visitors':visitors})
-
-
+@login_required()
 def showZooTime(request):
     zoo_time = ZooTimings.objects.all()
     timeForm = ZooTimeForm()
@@ -284,12 +192,119 @@ def showZooTime(request):
         return render(request,'view zoo time.html',{'time':zoo_time,'timeform':timeForm})
 
 
+@login_required()
 def markHoliday(request,id):
     zoo_time = ZooTimings.objects.get(pk=id)
     zoo_time.holiday = True
     zoo_time.save()
     return redirect('director_manage_zoo_time')
 
+
+@login_required()
+def visitorList(request):
+    visitors = Users.objects.filter(usertype="visitor")
+    return render(request,"visitor list.html",{'visitors':visitors})
+
+
+@login_required()
+def manageTicketRates(request):
+    rateForm = TicketRateForm()
+    rates = TicketRate.objects.all()
+    if request.method == 'GET':
+        return render(request,'manageticketrates.html',{'form':rateForm,'rates':rates})
+
+    elif request.method == 'POST':
+        form = TicketRateForm(request.POST)
+        # ttype = request.POST.get('type')
+        if form.is_valid():
+            form.save()
+            messages.success(request,"Ticket catagory added successfully")
+            return render(request,'manageticketrates.html',{'form':rateForm,'rates':rates})
+        else:
+            # messages.error(request,"error while submitting form")
+            return render(request,"manageticketrates.html",{'form':form,'rates':rates,'error':True})
+    else:
+        return render(request,'manageticketrates.html',{'form':rateForm,'rates':rates})
+
+
+@login_required()
+def deleteTicketCatagory(request,id):
+    catagory = TicketRate.objects.get(pk=id)
+    catagory.delete()
+    return redirect('director_manage_ticket_rate')
+
+
+@login_required()
+def UpdateTicketCatagory(request,id):
+    rateObj = TicketRate.objects.get(pk=id)
+    rateObj.rate = request.POST['rate']
+    rateObj.save()
+    return redirect('director_manage_ticket_rate')
+
+
+@login_required()
+def viewTicketSales(request):
+    tickets = Ticket.objects.values('tdate','id').annotate(tcount=Count('tdate')).order_by()
+    catagory = BookedCatagory.objects.all()
+    return render(request,'view ticket sales.html',{'tickets':tickets,'catagory':catagory})
+
+
+@login_required()
+def vacancyList(request):
+    vacancy = JobVacancy.objects.all()
+    return render(request,'manage vacancy.html',{'vacancies':vacancy})
+
+
+@login_required()
+def addVacancy(request):
+    vacancyForm = VacancyForm()
+    if request.method == 'GET':
+        return render(request,'add vacancy.html',{'form':vacancyForm})
+
+    elif request.method == 'POST':
+        form = VacancyForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request,"Vacancy added successfully")
+            return redirect('director_manage_vacancy')
+        else:
+            messages.error(request,'error while submitting form')
+            return render(request,'add vacancy.html',{'form':form})
+    else:
+        return render(request,'add vacancy.html',{'form':vacancyForm})
+
+
+@login_required()
+def updateVacancy(request,id):
+    vacancy = JobVacancy.objects.get(pk=id)
+
+    if request.method == 'GET':
+        vacancy_form = VacancyForm(instance=vacancy)
+        return render(request,'update vacancy.html',{'form':vacancy_form})
+
+    elif request.method == 'POST':
+        form = VacancyForm(request.POST,instance=vacancy)
+        if form.is_valid():
+            form.save()
+            messages.success(request,'Vacancy updated successfully')
+            return redirect('director_manage_vacancy')
+        else:
+            messages.error(request,"error while submitting form")
+            return render(request,'update vacancy.html',{'form':form})
+
+    else:
+        return redirect('director_manage_vacancy')
+
+@login_required()
+def closeVacancy(request,id):
+    catagory = JobVacancy.objects.get(pk=id)
+    vacancy = JobVacancy.objects.all()
+    catagory.vstatus = "closed"
+    catagory.save()
+    return render(request,'manage vacancy.html',{'message':True,'vacancies':vacancy})
+
+
+@login_required()
 def eventsList(request):
     events = Events.objects.all()
     current_date = date.today()
@@ -307,6 +322,7 @@ def eventsList(request):
     return render(request,'manage events.html',{'events':events})
 
 
+@login_required()
 def addEvents(request):
     eventForm = EventForm()
     
@@ -330,6 +346,7 @@ def addEvents(request):
         return render(request,'add events.html',{'form':eventForm})
 
 
+@login_required()
 def updateEvents(request,id):
     event = Events.objects.get(pk=id)
 
@@ -351,31 +368,43 @@ def updateEvents(request,id):
         return redirect('director_manage_events')
 
 
-def enclosureList(request):
-    enclosures = Enclosures.objects.all()
-    return render(request,"enclosures list.html",{'enclosures':enclosures})
-
-
+@login_required()
 def animalList(request):
     animals = Animals.objects.all()
     return render(request,'view animal.html',{'animals':animals})
 
 
+@login_required()
 def showAnimalDetails(request,id):
     animal = Animals.objects.get(pk=id)
     return render(request,'viewanimaldetails.html',{'animal':animal})
 
 
+@login_required()
+def enclosureList(request):
+    enclosures = Enclosures.objects.all()
+    return render(request,"enclosures list.html",{'enclosures':enclosures})
+
+
+@login_required()
 def showPurchases(request):
     purchase = Purchase.objects.all()
     return render(request,'view purchase history.html',{'purchase':purchase})
 
 
+@login_required()
+def viewTransferDetails(request):
+    transferDetails = TransferDetails.objects.all()
+    return render(request,'director view transfer details.html',{'transfers':transferDetails})
+
+
+@login_required()
 def sponserList(request):
     sponsers = SponserDetails.objects.all()
     return render(request,"manage sponsers.html",{'sponsers':sponsers})
 
 
+@login_required()
 def addSponser(request):
     sponserForm = SponserForm()
     sponseredAnimalsForm = SponseredAnimalForm()
@@ -408,6 +437,7 @@ def addSponser(request):
         return redirect('director_manage_sponsers')
 
 
+@login_required()
 def updateSponser(request,id):
     sponser = SponserDetails.objects.get(pk=id)
     sponserForm = SponserForm(instance=sponser)
@@ -430,11 +460,13 @@ def updateSponser(request,id):
         return redirect('director_manage_sponsers')
 
 
+@login_required()
 def showSponseredAnimals(request,id):
     animals = SponseredAnimals.objects.filter(sponser = id)
     return render(request,'sponsered animal details.html',{'animals':animals})
 
 
+@login_required()
 def deleteSponseredAnimal(request,id):
     animal = SponseredAnimals.objects.get(pk = id)
     animal.delete()
@@ -442,17 +474,20 @@ def deleteSponseredAnimal(request,id):
     return redirect('director_manage_sponsers')
 
 
+@login_required()
 def deleteSponser(request,id):
     sponser = SponserDetails.objects.get(pk=id)
     sponser.delete()
     return redirect('director_manage_sponsers')
 
 
+@login_required()
 def showFeedbacks(request):
     feedbacks = Feedback.objects.all()
     return render(request,'director view feedbacks.html',{'feedbacks':feedbacks})
 
 
+@login_required()
 def viewComplaints(request):
     complaints = Complaints.objects.filter(rid = Staffs.objects.get(user=request.user.id))
 
@@ -473,6 +508,7 @@ def viewComplaints(request):
         return render(request,'director view complaints.html',{'complaints':complaints})
 
 
+@login_required()
 def viewProfile(request):
     profileForm = UpdateProfileForm(instance=request.user)
     profileImageForm = ProfileImageForm(instance=request.user)
@@ -495,6 +531,7 @@ def viewProfile(request):
         return render(request,'director update profile.html',{'form':profileForm})
 
 
+@login_required()
 def updateProfileImage(request):
     profileImageForm = ProfileImageForm(instance=request.user)
 
@@ -508,6 +545,7 @@ def updateProfileImage(request):
             return render(request,'director update profile.html',{'form':form,'imageform':profileImageForm,'error':True})
 
 
+@login_required()
 def deleteProfileImage(request):
     userObj = Users.objects.get(pk=request.user.id)
     userObj.profile = 'null'
@@ -516,6 +554,7 @@ def deleteProfileImage(request):
     return redirect('director_view_profile')
 
 
+@login_required()
 def changePassword(request):
     currentPassword = request.POST['password']
     newPassword = request.POST['newpassword']
@@ -537,6 +576,7 @@ def changePassword(request):
         return redirect('director_view_profile')
 
 
+@login_required()
 def viewReport(request):
     
     if request.method == 'GET':
@@ -608,5 +648,3 @@ def viewReport(request):
 
     else:
         return render(request,'view report.html')
-
-    

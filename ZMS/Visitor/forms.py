@@ -1,6 +1,6 @@
 from django import forms
 from accounts.models import *
-from datetime import date
+from datetime import date,timedelta
 
 class DateInput(forms.DateInput):
     input_type = 'date'
@@ -29,6 +29,7 @@ class TicketForm(forms.ModelForm):
     def clean(self):
         super(TicketForm, self).clean()
         rdate = self.cleaned_data.get('reporting_date')
+        prior_date = date.today() + timedelta(days=3)
 
         time_obj = ZooTimings.objects.filter(holiday = True)
 
@@ -43,6 +44,8 @@ class TicketForm(forms.ModelForm):
             if i.day == weekday_names[rdate.weekday()]:
                 self._errors['reporting_date'] = self.error_class(['Preffered date is holiday'])
 
+        if  rdate > prior_date:
+            self._errors['reporting_date'] = self.error_class(['You are only allowed to book ticket prior to 3 days'])
 
         return self.cleaned_data
 

@@ -47,14 +47,14 @@
                             
                         <td>{{animal.birth_date}}</td>
                         <td>{{animal.date_joined}}</td>
-                        <td>{{animal.caretaker.user}}</td>
+                        <td>{{animal.caretaker.user.first_name}} {{animal.caretaker.user.last_name}}</td>
                         <td>{{animal.akind.class_id.Aclass}}</td>
                         <td>{{animal.health_status}}</td>
                             
                         <td>
                             <a href="{% url 'doctor_view_animal_details' animal.id %}" class="btn btn-secondary"><i class="bi bi-eye"></i></a>                           
                             {% if animal.status != -1 %}
-                            <a href="{% url 'curator_change_animal_health_status' animal.id %}" onclick="return confirm('Sure to change health status?')" class="btn btn-danger">change status</a>
+                            <a href="{% url 'doctor_change_animal_health_status' animal.id %}" onclick="return confirm('Sure to change health status?')" class="btn btn-danger">change status</a>
                             {% endif %}
                                 
                         </td>

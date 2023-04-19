@@ -5,13 +5,16 @@ from datetime import date
 from Director.forms import *
 from django.contrib.auth import authenticate
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 import time
-# Create your views here.
 
+
+@login_required()
 def loadVisitorHome(request):
     return render(request,'visitorhome.html')
 
 
+@login_required()
 def viewTickets(request):
     tickets = Ticket.objects.filter(uid = request.user.id)
     Ticket.objects.filter(payment_status=False).delete()
@@ -19,11 +22,13 @@ def viewTickets(request):
     return render(request,'view tickets.html',{'tickets':tickets,'current':current_date})
 
 
+@login_required()
 def showTicketDetails(request,id):
     catagories = BookedCatagory.objects.filter(ticket = id)
     return render(request,'ticket details.html',{'catagories':catagories})
 
 
+@login_required()
 def current_date_slot_check(book_date,book_slot):
     if date.today().__eq__(book_date):
         # print(book_slot == 'morning' and time.strftime("%H:%M:%S",time.localtime()).__gt__('12:00:00 PM'))
@@ -34,6 +39,7 @@ def current_date_slot_check(book_date,book_slot):
         return True
 
 
+@login_required()
 def bookTicket(request):
     ticketform = TicketForm()
     catagories = TicketRate.objects.all()
@@ -86,7 +92,7 @@ def bookTicket(request):
                             if int(count_list[j]) != 0:
                                 BookedCatagory.objects.create(catagory = TicketRate.objects.get(type=rate.type).type,count = count_list[j],rate = TicketRate.objects.get(type=rate.type).rate,ticket = obj)
                             j=j+1
-                    
+                        
                         return redirect('visitor_confirm_booking')
                     else:
                         messages.error(request,'visitor capacity exceeded for this booking slot, Please choose another slot for proceed booking!')
@@ -105,6 +111,7 @@ def bookTicket(request):
         return render(request,'book ticket.html',{'form':ticketform,'catagories':catagories})    
 
 
+@login_required()
 def confirmBooking(request):
     ticketStatus = Ticket.objects.filter(payment_status = False).exists()
     if ticketStatus:
@@ -112,25 +119,31 @@ def confirmBooking(request):
     return render(request,'confirm booking.html',{'ticket':obj})
 
 
+@login_required()
 def declinePayment(request,id):
     ticket = Ticket.objects.get(pk=id)
     ticket.delete()
     return redirect('visitor_view_tickets')
 
 
+@login_required()
 def acceptPayment(request,id):
     ticket = Ticket.objects.get(pk=id)
     ticket.payment_status = True
     ticket.save()
+    messages.success(request,'Ticket booked successfully')
     return redirect('visitor_view_tickets')
 
 
+@login_required()
 def cancelBooking(request,id):
     ticket = Ticket.objects.get(pk=id)
     ticket.delete()
+    messages.success(request,'Booking cancelled successfully')
     return redirect('visitor_view_tickets')
 
 
+@login_required()
 def showFeedbacks(request):
     feedbacks = Feedback.objects.filter(uid = request.user.id)
     feedbackForm = FeedbackForm()
@@ -145,6 +158,7 @@ def showFeedbacks(request):
             obj = form.save(commit=False)
             obj.uid = request.user
             obj.save()
+            messages.success(request,'Feedback send successfully')
             return redirect('visitor_view_feedback')
         else:
             return render(request,"visitor view feedbacks.html",{'feedbacks':feedbacks,'form':form,'error':True})
@@ -152,12 +166,15 @@ def showFeedbacks(request):
         return render(request,'visitor view feedbacks.html',{'feedbacks':feedbacks,'form':feedbackForm})
 
 
+@login_required()
 def deleteFeedback(request,id):
     feedback = Feedback.objects.get(pk=id)
     feedback.delete()
+    messages.success(request,'Feedback deleted successfully')
     return redirect('visitor_view_feedback')
 
 
+@login_required()
 def viewComplaints(request):
     complaints = Complaints.objects.filter(uid = request.user.id)
     recipient = Users.objects.filter(usertype__in = ['curator','director'])
@@ -176,6 +193,7 @@ def viewComplaints(request):
             obj.uid = Users.objects.get(pk=request.user.id)
             obj.rid = Staffs.objects.get(user=recipient)
             obj.save()
+            messages.success(request,'Complaint registered successfully')
             return redirect('visitor_view_complaints')
         else:
             return render(request,"visitor view complaints.html",{'complaints':complaints,'form':form,'recipients':recipient,'error':True})
@@ -183,12 +201,15 @@ def viewComplaints(request):
         return render(request,'visitor view complaints.html',{'complaints':complaints,'form':complaintForm,'recipients':recipient})
 
 
+@login_required()
 def deleteComplaint(request,id):
     complaint = Complaints.objects.get(pk=id)
     complaint.delete()
+    messages.success(request,'Complaint deleted successfully')
     return redirect('visitor_view_complaints')
 
 
+@login_required()
 def viewProfile(request):
     profileForm = UpdateProfileForm(instance=request.user)
     profileImageForm = ProfileImageForm(instance=request.user)
@@ -209,6 +230,7 @@ def viewProfile(request):
         return render(request,'visitor update profile.html',{'form':profileForm})
 
 
+@login_required()
 def updateProfileImage(request):
     profileImageForm = ProfileImageForm(instance=request.user)
     if request.method == 'POST':
@@ -221,6 +243,7 @@ def updateProfileImage(request):
             return render(request,'visitor update profile.html',{'form':form,'imageform':profileImageForm,'error':True})
 
 
+@login_required()
 def deleteProfileImage(request):
     userObj = Users.objects.get(pk=request.user.id)
     userObj.profile = 'null'
@@ -229,6 +252,7 @@ def deleteProfileImage(request):
     return redirect('visitor_view_profile')
 
 
+@login_required()
 def changePassword(request):
     currentPassword = request.POST['password']
     newPassword = request.POST['newpassword']
@@ -250,12 +274,14 @@ def changePassword(request):
         return redirect('visitor_view_profile')
 
 
+@login_required()
 def viewVacancy(request):
     vacancy = JobVacancy.objects.all()
     application = Applications.objects.filter(uid = request.user.id)
     return render(request,'view vacancy.html',{'vacancies':vacancy,'appl_obj':application})
 
 
+@login_required()
 def apply(request,id):
     vacancy = JobVacancy.objects.get(pk=id)
     applicationForm = ApplicationForm()
@@ -281,12 +307,15 @@ def apply(request,id):
         return render(request,'apply job.html',{'form':applicationForm,'vacancy':vacancy})
 
 
+@login_required()
 def viewApplications(request):
     applications = Applications.objects.filter(uid = request.user.id)
     return render(request,'view applications.html',{'applications':applications})
 
 
+@login_required()
 def deleteApplication(request,id):
     application = Applications.objects.get(pk=id)
     application.delete()
+    messages.success(request,'Application deleted successfully')
     return redirect('visitor_view_job_application')

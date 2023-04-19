@@ -1,5 +1,4 @@
 from django.shortcuts import render,redirect
-from django.http import HttpResponse,JsonResponse
 from django.db.models import Q
 from accounts.models import *
 from .forms import *
@@ -8,13 +7,70 @@ from Visitor.forms import *
 from django.contrib import messages
 from datetime import date
 from django.contrib.auth import authenticate
+from django.contrib.auth.decorators import login_required
 
-# Create your views here.
 
-
+@login_required()
 def loadCuratorHome(request):
-    return render(request,'curatorhome.html')
+    staff_obj = Users.objects.exclude(Q(usertype = 'director') | Q(usertype ='visitor') | Q(usertype = 'curator')).filter(is_active = True).values('date_joined')
+    visitor_obj = Users.objects.filter(usertype = 'visitor',is_active = True).values('date_joined')
+    animal_obj = Animals.objects.filter(status = 1).values('date_joined')
+    vacancy_obj = JobVacancy.objects.filter().values('issue_date')
+    application_obj = Applications.objects.filter().values('date')
+    ticket_obj = Ticket.objects.filter().values('tdate')
+    purchase_obj = Purchase.objects.filter().values('pdate','price')
 
+    visitors = []
+    staffs = []
+    animals = []
+    vacancy = []
+    application = []
+    ticket = []
+    purchase = []
+
+    for i in visitor_obj:
+        # print(i['date_joined'].year,date.today().year)
+        if i['date_joined'].year == date.today().year:
+            visitors.append(i)
+
+    for j in staff_obj:
+        if j['date_joined'].year == date.today().year:
+            staffs.append(j)
+
+    for k in animal_obj:
+        if k['date_joined'].year == date.today().year:
+            animals.append(k)
+
+    for l in vacancy_obj:
+        if l['issue_date'].year == date.today().year:
+            vacancy.append(l)
+
+    for m in ticket_obj:
+        if m['tdate'].year == date.today().year:
+            ticket.append(m)
+
+    for n in application_obj:
+        if n['date'].year == date.today().year:
+            application.append(n)
+
+    for p in purchase_obj:
+        if p['pdate'].year == date.today().year:
+            purchase.append(p['price'])
+
+    context ={
+        'visitors':len(visitors),
+        'staffs':len(staffs),
+        'animals':len(animals),
+        'vacancy':len(vacancy),
+        'application':len(application),
+        'ticket':len(ticket),
+        'purchase':sum(purchase),
+    }
+
+    return render(request,'curatorhome.html',context)
+
+
+@login_required()
 def viewEnclosures(request):
     enclosure = Enclosures.objects.all()
     enclosureForm = EnclosureForm()
@@ -34,6 +90,8 @@ def viewEnclosures(request):
         else:
             return render(request,"view enclosures.html",{'form':form,'enclosures':enclosure,'error':True})
 
+
+@login_required()
 def changeEnclosureStatus(request,id):
     enclosure = Enclosures.objects.get(pk=id)
     if enclosure.archieved == 0:
@@ -41,17 +99,25 @@ def changeEnclosureStatus(request,id):
     else:
         enclosure.archieved = 0
     enclosure.save()
+    messages.success(request,'Status changed sucessfully')
     return redirect('curator_manage_enclosures')
 
+
+@login_required()
 def deleteEnclosure(request,id):
     enclosure = Enclosures.objects.get(pk=id)
     enclosure.delete()
+    messages.success(request,'Enclosure deleted sucessfully')
     return redirect('curator_manage_enclosures')
 
+
+@login_required()
 def viewAnimals(request):
     animals = Animals.objects.all()
     return render(request,'view animals.html',{'animals':animals})
 
+
+@login_required()
 def addAnimal(request):
     animalFormObj = AnimalForm()
     users = Users.objects.filter(usertype='keeper')
@@ -127,6 +193,8 @@ def addAnimal(request):
     else:
         return render(request,'add animal.html',{'form1':animalFormObj,'keepers':users,'form2':animalKindFormObj,'form3':taxonomyForm})
 
+
+@login_required()
 def updateAnimal(request,id):
     animal = Animals.objects.get(pk=id)
     animalKind = AnimalKind.objects.get(pk=animal.akind.id)
@@ -163,7 +231,6 @@ def updateAnimal(request,id):
                     obj1.status = -1
                     obj1.save()
             else:
-                print(3)
                 Taxonomy.objects.create(Aclass = request.POST['Aclass'])
                 AnimalKind.objects.create(general_name = request.POST['general_name'],species = request.POST['species'],Aorder = request.POST['Aorder'],avg_lifespan = request.POST['avg_lifespan'],habitat = request.POST['habitat'],origin = request.POST['origin'],characteristics = request.POST['characteristics'],class_id =Taxonomy.objects.get(Aclass = request.POST['Aclass']).id)
                 obj2 = AnimalKind.objects.get(general_name = request.POST['general_name'],species = request.POST['species'],Aorder = request.POST['Aorder'],avg_lifespan = request.POST['avg_lifespan'],habitat = request.POST['habitat'],origin = request.POST['origin'],characteristics = request.POST['characteristics'],class_id =Taxonomy.objects.get(Aclass = request.POST['Aclass']).id)
@@ -179,6 +246,8 @@ def updateAnimal(request,id):
     else:
         return redirect('curator_manage_animals')
 
+
+@login_required()
 def viewAnimalOfWeek(request):
     form = AnimalOfTheWeekForm()
     if request.method == 'GET':
@@ -197,14 +266,16 @@ def viewAnimalOfWeek(request):
     else:
         return render(request,'view animal of the week.html',{'AOW':animalOfWeek,'form':form})
 
-            
 
+@login_required()
 def deletePerformance(request,id):
     obj = Animal_of_the_week.objects.get(pk=id)
     obj.delete()
+    messages.success(request,'Performance deleted successfully')
     return redirect('curator_view_animal_of_the_week')
 
 
+@login_required()
 def viewTransferDetails(request):
     form = TransferDetailsForm()
     if request.method == 'GET':
@@ -222,11 +293,16 @@ def viewTransferDetails(request):
     else:
         return render(request,'view transfer details.html',{'transfers':transferDetails,'form':form})
 
+
+@login_required()
 def deleteTransfer(request,id):
     obj = TransferDetails.objects.get(pk=id)
     obj.delete()
+    messages.success(request,'Transfer data deleted successfully')
     return redirect('curator_view_transfer_details')
 
+
+@login_required()
 def viewPurchases(request):
     purchases = Purchase.objects.all()
     purchaseForm = PurchaseForm()
@@ -244,15 +320,22 @@ def viewPurchases(request):
     else:
         return render(request,'view purchases.html',{'purchases':purchases,'form':purchaseForm})
 
+
+@login_required()
 def deletePurchase(request,id):
     obj = Purchase.objects.get(pk=id)
     obj.delete()
+    messages.success(request,'Purchase data deleted successfully')
     return redirect('curator_manage_purchases')
 
+
+@login_required()
 def staffList(request):
     staff = Staffs.objects.exclude(Q(desig = 'curator') | Q(desig = 'director'))
     return render(request,'stafflist.html',{'staffs':staff})
 
+
+@login_required()
 def addStaffs(request):
     regForm = StaffRegistrationForm()
     staffForm = StaffForm()
@@ -278,6 +361,8 @@ def addStaffs(request):
     else:
         return render(request,'add staff.html',{'form1':regForm,'form2':staffForm})
 
+
+@login_required()
 def updateStaffs(request,id):
     staff = Staffs.objects.get(user=id)
     uname = Users.objects.get(pk=id)
@@ -302,6 +387,8 @@ def updateStaffs(request,id):
     else:
         return redirect('curator_manage_staffs')
 
+
+@login_required()
 def curatorChangeStaffStatus(request,id):
     staff = Users.objects.get(pk=id)
     if staff.is_active == 0:
@@ -309,12 +396,17 @@ def curatorChangeStaffStatus(request,id):
     else:
         staff.is_active = 0
     staff.save()
+    messages.success(request,'Staff staus changed successfully')
     return redirect('curator_manage_staffs')
 
+
+@login_required()
 def visitorList(request):
     visitors = Users.objects.filter(usertype='visitor')
     return render(request,'view visitors.html',{'visitors':visitors})
 
+
+@login_required()
 def changeVisitorStatus(request,id):
     visitor = Users.objects.get(pk=id)
     if visitor.is_active == 1:
@@ -322,15 +414,18 @@ def changeVisitorStatus(request,id):
     else:
         visitor.is_active = 1
     visitor.save()
+    messages.success(request,'Visitor status changed successfully')
     return redirect('curator_manage_visitors')
 
+
+@login_required()
 def eventsList(request):
     events = Events.objects.all()
     participants = Participants.objects.all()
     animals = Animals.objects.all()
     current_date = date.today()
     for event in events:
-        print(event.estart,event.eend)
+        # print(event.estart,event.eend)
         if event.estart > current_date:
             event.estatus = "upcoming"
         elif event.estart <= current_date <= event.eend:
@@ -341,26 +436,41 @@ def eventsList(request):
     
     return render(request,'curator manage events.html',{'events':events,'participants':participants,'animals':animals})
 
+
+@login_required()
 def addParticipants(request,id):
     animals = Animals.objects.all()
     event = Events.objects.get(pk=id)
+    if Participants.objects.filter(event=event.id).exists():
+        participant_animals = Participants.objects.filter(event=event.id)
+    else:
+        participant_animals = []
+
     if request.method == 'GET':
-        return render(request,'add participants.html',{'animals':animals,'event':event})
+        return render(request,'add participants.html',{'animals':animals,'event':event,'participants':participant_animals})
+
     elif request.method == 'POST':
         participants = request.POST.getlist('participants')
-        print(participants)
-        for p in participants:
-            participant = Participants()
-            participant.event = event
-            animal = Animals.objects.get(pk=p)
-            participant.animal = animal
-            participant.save()
-        return redirect('curator_manage_events')
+        # print(participants)
+        if participants != []:
+            for p in participants:
+                participant = Participants()
+                participant.event = event
+                animal = Animals.objects.get(pk=p)
+                participant.animal = animal
+                participant.save()
+            messages.success(request,'Participants added successfully')
+            return redirect('curator_manage_events')
+        else:
+            messages.error(request,'Please select any animal as participants')
+            return render(request,'add participants.html',{'animals':animals,'event':event,'participants':participant_animals})
+
     else:
+        messages.error(request,'Error when adding participants')
         return render(request,'add participants.html',{'animals':animals,'event':event})
 
 
-
+@login_required()
 def removeParticipants(request,id):
     event = Events.objects.get(pk=id)
     animals = Participants.objects.filter(event=event)
@@ -369,18 +479,29 @@ def removeParticipants(request,id):
     elif request.method == 'POST':
         participants = request.POST.getlist('participants')
         # print(participants)
-        for p in participants:
-            print(event,p)
-            participant = Participants.objects.get(event=event.id,animal=p)
-            participant.delete()
-        return redirect('curator_manage_events')
+        if participants != []:
+            for p in participants:
+                # print(event,p)
+                participant = Participants.objects.get(event=event.id,animal=p)
+                participant.delete()
+            messages.success(request,'Participants removed successfully')
+            return redirect('curator_manage_events')
+        else:
+            messages.error(request,'Please select any animal to remove them from participants list')
+            return render(request,'remove participants.html',{'participants':animals,'event':event})
+            
     else:
+        messages.success(request,'Error occured when removing participants')
         return render(request,'remove participants.html',{'participants':animals,'event':event})
 
+
+@login_required()
 def viewAnimalDetails(request,id):
     animal = Animals.objects.get(pk=id)
     return render(request,'animaldetails.html',{'animal':animal})
 
+
+@login_required()
 def changeAnimalStatus(request,id):
     animal = Animals.objects.get(pk=id)
     
@@ -389,35 +510,50 @@ def changeAnimalStatus(request,id):
     else:
         animal.status = 1
     animal.save()
+    messages.success(request,'Animal status changed successfully')
     return redirect('curator_manage_animals')
 
+
+@login_required()
 def vacancyList(request):
     vacancy = JobVacancy.objects.all()
     unreviewed_applications = Applications.objects.filter(status = 'unreviewed')
     return render(request,'curator view vacancy.html',{'vacancies':vacancy,'unreviewed':unreviewed_applications})
 
+
+@login_required()
 def viewApplications(request,id):
     applications = Applications.objects.filter(vacancy = id)
     return render(request,'curator view applications.html',{'applications':applications})
 
+
+@login_required()
 def acceptApplication(request,id,vid):
     vacancy = JobVacancy.objects.get(id = vid)
     application = Applications.objects.get(pk=id)
     application.status = 'accepted'
     application.save()
+    messages.success(request,'Appication accepted successfully')
     return redirect('curator_view_applications',vacancy.id)
 
+
+@login_required()
 def rejectApplication(request,id,vid):
     vacancy = JobVacancy.objects.get(id = vid)
     application = Applications.objects.get(pk=id)
     application.status = 'rejected'
     application.save()
+    messages.success(request,'Application rejected successfully')
     return redirect('curator_view_applications',vacancy.id)
 
+
+@login_required()
 def viewMedicineStocks(request):
     medicines = Medicines.objects.all()
     return render(request,'view medicine stocks.html',{'medicines':medicines})
 
+
+@login_required()
 def viewBookings(request):
     tickets = Ticket.objects.all()
     keepers = Users.objects.filter(usertype='keeper', is_active=True)
@@ -431,19 +567,23 @@ def viewBookings(request):
             ticket = Ticket.objects.get(pk=request.POST.get('ticket'))
             ticket.Guide = Staffs.objects.get(user=guide)
             ticket.save()
+            messages.success(request,'Guide assigned successfully')
             return redirect('curator_view_bookings')
         else:
+            messages.error(request,'Error when assigning guide')
             return render(request,"view bookings.html",{'tickets':tickets,'keepers':keepers,'error':True})
 
     else:
         return render(request,'view bookings.html',{'tickets':tickets,'keepers':keepers})
 
 
+@login_required()
 def showBookingDetails(request,id):
     catagories = BookedCatagory.objects.filter(ticket = id)
     return render(request,'booking details.html',{'catagories':catagories})
     
 
+@login_required()
 def curatorViewFeedbacks(request):
     feedbacks = Feedback.objects.all()
 
@@ -458,15 +598,21 @@ def curatorViewFeedbacks(request):
         feedback_obj = Feedback.objects.get(pk=feedback_id)
         feedback_obj.reply = reply
         feedback_obj.save()
+        messages.success(request,'Feedback send successfully')
         return redirect('curator_view_feedbacks')
     else:
         return render(request,'view feedbacks.html',{'feedbacks':feedbacks})
 
+
+@login_required()
 def deleteFeedback(request,id):
     feedback = Feedback.objects.get(pk=id)
     feedback.delete()
+    messages.success(request,'Feedback deleted successfully')
     return redirect('curator_view_feedbacks')
 
+
+@login_required()
 def viewComplaints(request):
     complaints = Complaints.objects.filter(rid = Staffs.objects.get(user=request.user.id))
 
@@ -476,16 +622,18 @@ def viewComplaints(request):
     elif request.method == 'POST':
         complaint_id = request.POST.get('complaint_id')
         reply = request.POST.get('reply')
-        print(complaint_id,reply)
+        # print(complaint_id,reply)
 
         complaint_obj = Complaints.objects.get(pk=complaint_id)
         complaint_obj.reply = reply
         complaint_obj.save()
+        messages.success(request,'Complaint registered successfully')
         return redirect('curator_view_complaints')
     else:
         return render(request,'curator view complaints.html',{'complaints':complaints})
 
 
+@login_required()
 def viewGivenComplaints(request):
     complaints = Complaints.objects.filter(uid = request.user.id)
     recipient = Users.objects.filter(usertype__in = ['director'])
@@ -504,18 +652,23 @@ def viewGivenComplaints(request):
             obj.uid = Users.objects.get(pk=request.user.id)
             obj.rid = Staffs.objects.get(user=recipient)
             obj.save()
+            messages.success(request,'Reply send successfully')
             return redirect('curator_view_send_complaint')
         else:
             return render(request,"curator view given complaints.html",{'complaints':complaints,'form':form,'recipients':recipient,'error':True})
     else:
         return render(request,'curator view given complaints.html',{'complaints':complaints,'form':complaintForm,'recipients':recipient})
 
+
+@login_required()
 def deleteComplaint(request,id):
     complaint = Complaints.objects.get(pk=id)
     complaint.delete()
+    messages.success(request,'Complaint deleted successfully')
     return redirect('curator_view_send_complaint')
 
 
+@login_required()
 def viewProfile(request):
     profileForm = UpdateProfileForm(instance=request.user)
     profileImageForm = ProfileImageForm(instance=request.user)
@@ -535,6 +688,8 @@ def viewProfile(request):
     else:
         return render(request,'curator update profile.html',{'form':profileForm})
 
+
+@login_required()
 def updateProfileImage(request):
     profileImageForm = ProfileImageForm(instance=request.user)
     if request.method == 'POST':
@@ -546,6 +701,8 @@ def updateProfileImage(request):
         else:
             return render(request,'curator update profile.html',{'form':form,'imageform':profileImageForm,'error':True})
 
+
+@login_required()
 def deleteProfileImage(request):
     userObj = Users.objects.get(pk=request.user.id)
     userObj.profile = 'null'
@@ -553,6 +710,8 @@ def deleteProfileImage(request):
     messages.success(request,'profile photo deleted successfully!')
     return redirect('curator_view_profile')
 
+
+@login_required()
 def changePassword(request):
     currentPassword = request.POST['password']
     newPassword = request.POST['newpassword']
@@ -572,3 +731,4 @@ def changePassword(request):
     else:
         messages.error(request,'current password is wrong!')
         return redirect('curator_view_profile')
+        

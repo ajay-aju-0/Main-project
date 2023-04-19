@@ -31,10 +31,25 @@
                 {% csrf_token %}
                 <label>Check animals those who participate in event &nbsp;&nbsp;&nbsp; "{{event.ename}}"</label><br><br>
                 {% for animal in animals %}
-                    <label>
-                        <input type="checkbox" name="participants" id="participants" value="{{animal.id}}">
-                        {{animal.given_name}}
-                    </label>
+                    
+                    {% for participant in participants %}
+
+                        {% if event.id != participant.event.id and animal.id != participant.animal.id %}
+                            <label>
+                                <input type="checkbox" name="participants" id="participants" value="{{animal.id}}">
+                                {{animal.given_name}}
+                            </label>
+                        {% endif %}
+                    
+                    {% empty %}
+
+                        <label>
+                            <input type="checkbox" name="participants" id="participants" value="{{animal.id}}">
+                            {{animal.given_name}}
+                        </label>
+                        
+                    {% endfor %}
+
                 {% endfor %}
                     
                 <div class="panel-footer">

@@ -1,1 +1,169 @@
 {% extends 'shared/curatorpanel.html' %}
+
+
+{% block display %}
+    <!-- Customers Card -->
+ <div class="col-xxl-4 col-md-6">
+
+    <div class="card info-card customers-card">
+
+      <div class="card-body">
+        <h5 class="card-title">Staffs Recruited <span>| This Year</span></h5>
+
+        <div class="d-flex align-items-center">
+          <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+            <i class="bi bi-people"></i>
+          </div>
+          <div class="ps-3">
+            <h6>{{staffs}}</h6>
+           
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- End staffs Card -->
+
+  <!-- visitors Card -->
+  <div class="col-xxl-4 col-md-6">
+
+    <div class="card info-card customers-card">
+
+      <div class="card-body">
+        <h5 class="card-title">Visitors Registered <span>| This Year</span></h5>
+
+        <div class="d-flex align-items-center">
+          <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+            <i class="bi bi-people"></i>
+          </div>
+          <div class="ps-3">
+            <h6>{{visitors}}</h6>
+            
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- End visitors Card -->
+
+  
+ <!-- Animals Card -->
+ <div class="col-xxl-4 col-md-6">
+
+    <div class="card info-card customers-card">
+
+      <div class="card-body">
+        <h5 class="card-title">Animals Added <span>| This Year</span></h5>
+
+        <div class="d-flex align-items-center">
+          <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+            <i class="bi bi-people"></i>
+          </div>
+          <div class="ps-3">
+            <h6>{{animals}}</h6>
+            
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- End Animals Card -->
+
+  <!-- sales card -->
+  <div class="col-xxl-4 col-md-6">
+    <div class="card info-card sales-card">
+
+      <div class="card-body">
+        <h5 class="card-title">Ticket Sales <span>| This Year</span></h5>
+
+        <div class="d-flex align-items-center">
+          <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+            <i class="bi bi-ticket"></i>
+          </div>
+          <div class="ps-3">
+            <h6>{{ticket}}</h6>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- End Sales Card -->
+
+  <!-- Vacancy Card -->
+ <div class="col-xxl-4 col-md-6">
+
+    <div class="card info-card customers-card">
+
+      <div class="card-body">
+        <h5 class="card-title">Vacancy issued <span>| This Year</span></h5>
+
+        <div class="d-flex align-items-center">
+          <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+            <i class="bi bi-person-add"></i>
+          </div>
+          <div class="ps-3">
+            <h6>{{vacancy}}</h6>
+            
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- End Vacancy Card -->
+
+  
+  <!-- Application Card -->
+ <div class="col-xxl-4 col-md-6">
+
+    <div class="card info-card customers-card">
+
+      <div class="card-body">
+        <h5 class="card-title">Application recieved <span>| This Year</span></h5>
+
+        <div class="d-flex align-items-center">
+          <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+            <i class="bi bi-person-add"></i>
+          </div>
+          <div class="ps-3">
+            <h6>{{application}}</h6>
+            
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- End Application Card -->
+
+  
+  <!-- Purchase Card -->
+ <div class="col-xxl-4 col-md-6">
+
+    <div class="card info-card customers-card">
+
+      <div class="card-body">
+        <h5 class="card-title">Purchase expenditure <span>| This Year</span></h5>
+
+        <div class="d-flex align-items-center">
+          <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+            <i class="bi bi-person-add"></i>
+          </div>
+          <div class="ps-3">
+            <h6>{{purchase}}</h6>
+            
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- End Vacancy Card -->
+
+
+{% endblock display %}
+    
