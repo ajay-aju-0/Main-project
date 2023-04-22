@@ -26,35 +26,42 @@
                     <th>Count</th>
                 </tr>
             </thead>
-            
+            {{tickets}} <br>
+            {{catagory}} <br>
+            {{id}}
+
             {% for ticket in tickets %}
             <tr>
                 <td>{{ticket.tdate}}</td>
                 <td>{{ticket.tcount}}</td>
-
+                
                 <td>
-                    {% for cat in catagory %}
                     
-                        {% if cat.ticket.id == ticket.id %}
-                            {{cat.catagory}} <br>
-                        {% endif %}
+                    {% for cat in catagory %}
+                        
+                        {% for i in id %}
+                            
+                            {% if cat.ticket.id == i.id %}
+                                {{cat.catagory}} <br> 
+                            {% endif %}
+
+                        {% endfor %}
+                        
                         
                     {% endfor %}
                 </td>
 
                 <td>
                     {% for cat in catagory %}
-                    
-                        {% if cat.ticket.id == ticket.id %}
-                            {{cat.count}} <br>
-                        {% endif %}
+                        
+                        {% for i in id %}
+                            {% if cat.ticket.id == i.id %}
+                                {{cat.count}} <br>
+                            {% endif %}
+                        {% endfor %}
                         
                     {% endfor %}
                 </td>
-
-               
-                    
-
                
             </tr>
             {% endfor %}

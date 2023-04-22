@@ -12,6 +12,7 @@ urlpatterns = [
    path('manage ticket rates/',manageTicketRates,name="director_manage_ticket_rate"),
    path('delete ticket catagory/<id>',deleteTicketCatagory,name="director_delete_ticket_catagory"),
    path('update ticket catagory/<id>',UpdateTicketCatagory,name="director_update_ticket_rate"),
+   path('view ticket rate history/',viewTicketRateHistory,name='director_view_ticket_rate_history'),
    path('vacancy details/',vacancyList,name="director_manage_vacancy"),
    path('add vacancy/',addVacancy,name="director_add_vacancy"),
    path('update vacancy/<id>',updateVacancy,name="director_update_vacancy"),

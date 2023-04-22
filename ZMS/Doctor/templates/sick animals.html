@@ -49,8 +49,8 @@
                          </td>
 
                         <td>
-                            
-                            {% if animal.status == 'sick' %}
+                                
+                            {% if animal.status == 'sick' and animal.animal.status != 0 %}
                             <a href="{% url 'doctor_mark_animal_cured' animal.id %}" onclick="return confirm('Sure to mark as cured?')" class="btn btn-success text-white">Mark as Cured</a>    
                             {% else %}
                             Not Available 

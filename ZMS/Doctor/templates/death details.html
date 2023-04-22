@@ -53,11 +53,14 @@
                             
                         <td>
                             
-                            <a href="{% url 'doctor_view_animal_details' animal.id %}" class="btn btn-secondary"><i class="bi bi-eye"></i></a>                           
-                            {% if animal.death_date == None %}
-                            <a href="{% url 'doctor_update_death_details' animal.id %}" class="btn btn-success">Update</a>
-                            {% endif %}
-                                
+                            <a href="{% url 'doctor_view_animal_details' animal.id %}" class="btn btn-secondary"><i class="bi bi-eye"></i></a>
+                            
+                            {% if animal.status == 1 %}
+                                {% if animal.death_date == None %}
+                                <a href="{% url 'doctor_update_death_details' animal.id %}" class="btn btn-success">Update</a>
+                                {% endif %}  
+                            {% endif %}                                                      
+                              
                         </td>
                     </tr>
                 {% endfor %}

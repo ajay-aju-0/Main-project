@@ -21,6 +21,7 @@
             <table class="table table-stripped datatable" style="height: inherit;">
                 <thead>
                     <tr>
+                        <th>SI No.</th>
                         <th>Date</th>
                         <th>From</th>
                         <th>Complaint</th>
@@ -31,6 +32,7 @@
                 <tbody>
                 {% for complaint in complaints %}
                     <tr>
+                        <td>{{forloop.counter}}</td>
                         <td>{{complaint.cdate}}</td>
                         <td>{{complaint.uid.first_name}} {{complaint.uid.last_name}}({{complaint.uid.usertype}})</td>
                         <td>{{complaint.complaint}}</td>

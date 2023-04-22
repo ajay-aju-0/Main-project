@@ -63,6 +63,8 @@ def loadDirectorHome(request):
 
     total_revenue = sum(ticket_revenue) + sum(sponser_revenue)
 
+
+
     context ={
         'visitors':len(visitors),
         'staffs':len(staffs),
@@ -210,6 +212,7 @@ def visitorList(request):
 def manageTicketRates(request):
     rateForm = TicketRateForm()
     rates = TicketRate.objects.all()
+
     if request.method == 'GET':
         return render(request,'manageticketrates.html',{'form':rateForm,'rates':rates})
 
@@ -217,6 +220,8 @@ def manageTicketRates(request):
         form = TicketRateForm(request.POST)
         # ttype = request.POST.get('type')
         if form.is_valid():
+            # print(form.data['type'],form.data['rate'])
+            TicketRateHistory.objects.create(catagory = form.data['type'], rate = form.data['rate'])
             form.save()
             messages.success(request,"Ticket catagory added successfully")
             return render(request,'manageticketrates.html',{'form':rateForm,'rates':rates})
@@ -238,15 +243,43 @@ def deleteTicketCatagory(request,id):
 def UpdateTicketCatagory(request,id):
     rateObj = TicketRate.objects.get(pk=id)
     rateObj.rate = request.POST['rate']
+    TicketRateHistory.objects.create(catagory = rateObj.type, rate = rateObj.rate)
     rateObj.save()
     return redirect('director_manage_ticket_rate')
 
 
 @login_required()
+def viewTicketRateHistory(request):
+    rateHistObj = TicketRateHistory.objects.all()
+    return render(request,'view ticket rate history.html',{'ratehistory':rateHistObj})
+
+
+@login_required()
 def viewTicketSales(request):
-    tickets = Ticket.objects.values('tdate','id').annotate(tcount=Count('tdate')).order_by()
+    dic = {}
+    catagories = []
+    count = []
+    tickets = Ticket.objects.values('tdate').annotate(tcount=Count('tdate'))
+    id = Ticket.objects.values('id')
+    print(tickets.values('tdate')[1]['tdate'])
+    print(tickets.values('tdate'))
+    print(tickets.values('tcount')[:].values('tcount'))
+    # print(id)
+
+    for i in tickets.values('tdate','id'):
+        print(i['tdate'])
+        for j in BookedCatagory.objects.all():
+            print(j.ticket.id == i['id'])
+            if j.ticket.id == i['id']:
+                catagories.append(j.catagory)
+        dic.update({i['tdate']:{'catagories':catagories}})
+    
+    print(dic)
+
+    
+    
     catagory = BookedCatagory.objects.all()
-    return render(request,'view ticket sales.html',{'tickets':tickets,'catagory':catagory})
+    return render(request,'view ticket sales.html',{'tickets':tickets,'catagory':catagory,'id':id})
 
 
 @login_required()
@@ -310,7 +343,7 @@ def eventsList(request):
     current_date = date.today()
 
     for event in events:
-        print(event.estart,event.eend)
+        # print(event.estart,event.eend)
         if event.estart > current_date:
             event.estatus = "upcoming"
         elif event.estart <= current_date <= event.eend:
@@ -371,7 +404,9 @@ def updateEvents(request,id):
 @login_required()
 def animalList(request):
     animals = Animals.objects.all()
-    return render(request,'view animal.html',{'animals':animals})
+    available = Animals.objects.filter(status=1)
+    dead = Animals.objects.exclude(death_date = None)
+    return render(request,'view animal.html',{'animals':animals,'available':available,'dead':dead})
 
 
 @login_required()

@@ -23,6 +23,7 @@
             <table class="table table-stripped datatable" style="height: inherit;">
                 <thead>
                     <tr>
+                        <th>SI No.</th>
                         <th>Name</th>
                         <th>Starting date</th>
                         <th>Ending date</th>
@@ -35,6 +36,7 @@
                 
                 {% for event in events %}
                 <tr style="padding-left: 50px;">
+                    <td>{{forloop.counter}}</td>
                     <td>{{event.ename}}</td>
                     <td>{{event.estart}}</td>
                     <td>{{event.eend}}</td>

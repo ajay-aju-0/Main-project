@@ -17,7 +17,7 @@ def loadVisitorHome(request):
 @login_required()
 def viewTickets(request):
     tickets = Ticket.objects.filter(uid = request.user.id)
-    Ticket.objects.filter(payment_status=False).delete()
+    Ticket.objects.filter(payment_status = False).delete()
     current_date = date.today()
     return render(request,'view tickets.html',{'tickets':tickets,'current':current_date})
 
@@ -28,14 +28,15 @@ def showTicketDetails(request,id):
     return render(request,'ticket details.html',{'catagories':catagories})
 
 
-@login_required()
 def current_date_slot_check(book_date,book_slot):
-    if date.today().__eq__(book_date):
-        # print(book_slot == 'morning' and time.strftime("%H:%M:%S",time.localtime()).__gt__('12:00:00 PM'))
+    
+    if date.today() == book_date:
+        print(book_slot == 'morning' and time.strftime("%H:%M:%S",time.localtime()).__gt__('12:00:00 PM'))
         if book_slot == 'morning' and time.strftime("%H:%M:%S",time.localtime()).__gt__('12:00:00 PM'):
             return False
         elif book_slot == 'noon' and time.strftime("%H:%M:%S",time.localtime()).__gt__('15:00:00 PM'):
             return False
+    else:
         return True
 
 
@@ -55,47 +56,57 @@ def bookTicket(request):
 
         book_date = request.POST['reporting_date']
         book_slot = request.POST['reporting_time']
-        # print(book_slot)
+        # print(book_slot,book_date)
 
         current_count = Ticket.objects.filter(reporting_date = book_date, reporting_time = book_slot).count()
 
         if form.is_valid():
-            # c = current_date_slot_check(book_date,book_slot)
+            c = current_date_slot_check(book_date,book_slot)
             # print(c)
-            if current_date_slot_check(book_date,book_slot) == True:
+            if c == True:
                 obj = form.save(commit=False)
                 count_list = request.POST.getlist('catagory')
                 booked_count = sum([int(i) for i in count_list])
 
                 if booked_count != 0:
-
-                    if current_count + booked_count < capacity:
-                        i = 0
-                        total = 0
-                        total_count = 0
-                        for rate in tRate:
-
-                            if int(count_list[i]) != 0:
-                                catagory_rate = TicketRate.objects.get(type=rate.type)
-                                total += int(count_list[i]) * catagory_rate.rate
-                                total_count += int(count_list[i]) 
-
-                            i = i+1
-
-                        obj.total = total
-                        obj.total_person = total_count
-                        obj.uid = request.user
-                        obj.save()
-
-                        j=0
-                        for rate in tRate:
-                            if int(count_list[j]) != 0:
-                                BookedCatagory.objects.create(catagory = TicketRate.objects.get(type=rate.type).type,count = count_list[j],rate = TicketRate.objects.get(type=rate.type).rate,ticket = obj)
-                            j=j+1
+                    flag = True
+                    
+                    for c in [int(i) for i in count_list]:
+                        if c < 0:
+                            flag = False
                         
-                        return redirect('visitor_confirm_booking')
+                    if flag:
+                        if current_count + booked_count < capacity:
+                            i = 0
+                            total = 0
+                            total_count = 0
+                            for rate in tRate:
+
+                                if int(count_list[i]) != 0:
+                                    catagory_rate = TicketRate.objects.get(type=rate.type)
+                                    total += int(count_list[i]) * catagory_rate.rate
+                                    total_count += int(count_list[i]) 
+
+                                i = i+1
+
+                            obj.total = total
+                            obj.total_person = total_count
+                            obj.uid = request.user
+                            obj.save()
+
+                            j=0
+                            for rate in tRate:
+                                if int(count_list[j]) != 0:
+                                    BookedCatagory.objects.create(catagory = TicketRate.objects.get(type=rate.type).type,count = count_list[j],rate = TicketRate.objects.get(type=rate.type).rate,ticket = obj)
+                                j=j+1
+                            
+                            return redirect('visitor_confirm_booking')
+                        else:
+                            messages.error(request,'visitor capacity exceeded for this booking slot, Please choose another slot for proceed booking!')
+                            return render(request,'book ticket.html',{'form':form,'catagories':catagories})
+
                     else:
-                        messages.error(request,'visitor capacity exceeded for this booking slot, Please choose another slot for proceed booking!')
+                        messages.error(request,'Please provide valid count of tickets')
                         return render(request,'book ticket.html',{'form':form,'catagories':catagories})
             
                 else:

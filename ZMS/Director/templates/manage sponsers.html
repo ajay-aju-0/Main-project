@@ -23,6 +23,7 @@
             <table class="table table-stripped datatable" style="height: inherit;">
                 <thead>
                     <tr>
+                        <th>SI No.</th>
                         <th>Name</th>
                         <th>Address</th>
                         <th>Phone</th>
@@ -37,6 +38,7 @@
                 
                 {% for sponser in sponsers %}
                 <tr>
+                    <td>{{forloop.counter}}</td>
                     <td>{{sponser.name}}</td>
                     <td>{{sponser.address}}</td>
                     <td>{{sponser.phone}}</td>

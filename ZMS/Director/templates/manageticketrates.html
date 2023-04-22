@@ -8,9 +8,10 @@
 {% block pagetitle %}
 <div class="d-flex justify-content-between">
     <h1>Manage ticket rates</h1>
+    <a href="{% url 'director_view_ticket_rate_history' %}" class="btn btn-success"><i class="bi bi-eye"></i> Previous Catagories and Rates</a>
     <button class="btn btn-success fw-bold" data-toggle="modal" data-target="#catagorymodal" data-backdrop="static">+ Add Catagory</button>
 </div>
-
+<br>
 {% include 'shared/messages.html' %}
 
 {% endblock pagetitle %}
@@ -27,6 +28,7 @@
             <table class="table table-stripped datatable">
                 <thead>
                 <tr>
+                    <th>SI No.</th>
                     <th>Catagory</th>
                     <th>Rate</th>
                     <th colspan="2" class="text-center col-sm-2">Action</th>
@@ -34,6 +36,7 @@
                 </thead>
                 {% for i in rates %}
                     <tr>
+                        <td>{{forloop.counter}}</td>
                         <td>{{i.type}}</td>
                         <td>{{i.rate}}</td>
                         <td>

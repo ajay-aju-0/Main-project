@@ -24,6 +24,7 @@
                 <thead>
                     <tr>
                         <th>SI No.</th>
+                        <th>Order No.</th>
                         <th>Animal</th>
                         <th>Transfer from</th>
                         <th>Transfer to</th>
@@ -43,6 +44,7 @@
                 {% for transfer in transfers %}
                     <tr>
                         <td>{{forloop.counter}}</td>
+                        <td>{{transfer.order}}</td>
                         <td>{{transfer.animal.given_name}}</td>
                         <td>{{transfer.transfer_from}}</td>
                         <td>{{transfer.transfer_to}}</td>

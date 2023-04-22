@@ -49,7 +49,7 @@
                     <td>
                         <a href="{% url 'visitor_view_ticket_details' ticket.id %}" class="btn btn-secondary text-white"><i class="bi bi-eye"></i></a>
                         
-                        {% if ticket.reporting_date != current %}
+                        {% if ticket.reporting_date > current %}
                         <a href="{% url 'visitor_cancel_booking' ticket.id %}" onclick="return confirm('do you want to cancel this booking?')" class="btn btn-danger">Cancel</a>
                         {% endif %}
                             

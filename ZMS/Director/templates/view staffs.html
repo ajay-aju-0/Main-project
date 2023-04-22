@@ -23,6 +23,7 @@
             <table class="table table-stripped datatable" style="height: inherit;">
                 <thead>
                     <tr>
+                        <th>SI No.</th>
                         <th>Name</th>
                         <th>Username</th>
                         <th>Email</th>
@@ -39,6 +40,7 @@
                 
                 {% for staff in staffs %}
                 <tr>
+                    <td>{{forloop.counter}}</td>
                     <td>{{staff.user.first_name}} {{staff.user.last_name}}</td>
                     <td>{{staff.user.username}}</td>
                     <td>{{staff.user.email}}</td>

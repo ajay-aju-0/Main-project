@@ -237,6 +237,10 @@ class TransferDetailsForm(forms.ModelForm):
         tcompany = self.cleaned_data.get('transport_company')
         tname = self.cleaned_data.get('transporter_name')
         contact = self.cleaned_data.get('transporter_contact')
+        order = self.cleaned_data.get('order')
+        
+        if order.isdigit():
+            self._errors['order'] = self.error_class(['enter a valid order no.'])
 
         if reason.isdigit():
             self._errors['reason'] = self.error_class(['enter a valid reason'])

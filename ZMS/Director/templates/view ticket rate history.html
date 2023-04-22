@@ -1,0 +1,55 @@
+{% extends 'shared/directorpanel.html' %}
+{% load static %}
+
+{% block title %}
+    <title>Ticket Rates History</title>
+{% endblock title %}
+
+{% block pagetitle %}
+<div class="d-flex justify-content-between">
+    <h1>Ticket Rates History</h1>
+</div>
+<nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'director_manage_ticket_rate' %}">Manage ticket rates</a></li>
+      <li class="breadcrumb-item active">ticket rates history</li>
+    </ol>
+</nav>
+
+{% endblock pagetitle %}
+    
+
+
+{% block display %}
+
+<br><br>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9 offset-1">
+            <table class="table table-stripped datatable">
+                <thead>
+                <tr>
+                    <th>SI No.</th>
+                    <th>Catagory</th>
+                    <th>Rate</th>
+                    <th>Updated On</th>
+                </tr>
+                </thead>
+                {% for i in ratehistory %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{i.catagory}}</td>
+                        <td>{{i.rate}}</td>
+                        <td>{{i.updated_on}}</td>
+                    </tr>
+                {% endfor %}      
+            </table>
+        </div>
+    </div>
+</div>
+
+    
+{% endblock display %}
+
+
+    

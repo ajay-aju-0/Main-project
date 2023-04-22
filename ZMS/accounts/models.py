@@ -64,6 +64,11 @@ class BookedCatagory(models.Model):
     rate = models.IntegerField(default=0)
     ticket = models.ForeignKey(to=Ticket,on_delete=models.CASCADE)
 
+class TicketRateHistory(models.Model):
+    catagory = models.CharField(max_length=20)
+    rate = models.IntegerField()
+    updated_on = models.DateField(auto_now_add=True)
+
 class Feedback(models.Model):
     fdate = models.DateField(auto_now_add=True)
     feedback = models.CharField(max_length=250)

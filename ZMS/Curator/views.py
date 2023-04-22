@@ -114,7 +114,9 @@ def deleteEnclosure(request,id):
 @login_required()
 def viewAnimals(request):
     animals = Animals.objects.all()
-    return render(request,'view animals.html',{'animals':animals})
+    available = Animals.objects.filter(status=1)
+    dead = Animals.objects.exclude(death_date = None)
+    return render(request,'view animals.html',{'animals':animals,'available':available,'dead':dead})
 
 
 @login_required()
