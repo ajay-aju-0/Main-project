@@ -44,7 +44,7 @@ class ZooTimings(models.Model):
     holiday = models.BooleanField(default=False)
 
 class TicketRate(models.Model):
-    type = models.CharField(max_length=20,verbose_name="Ticket type")
+    type = models.CharField(max_length=20,verbose_name="Catagory")
     rate = models.IntegerField()
 
 class Ticket(models.Model):

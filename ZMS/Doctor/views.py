@@ -11,13 +11,25 @@ from django.db.models import Q
 
 @login_required()
 def loadDoctorHome(request):
+    medicine_in_stock = Medicines.objects.exclude(stock = 0).count()
+    medicine_out_stock = Medicines.objects.filter(stock = 0).count()
+    animal_obj = Animals.objects.filter(status = 1).count()
+    sick_animals = sickness_details.objects.filter(status = 'sick').values('sdate')
+    cured_animals = sickness_details.objects.filter(status = 'cured').values('sdate')
+
+
+
+    print(medicine_in_stock, medicine_out_stock)
+
+
+
     request.session['unverified_animals_count'] = Animals.objects.filter(status = -1).count()
     return render(request,'doctorHome.html',{'unverified_animals':request.session.get('unverified_animals_count')})
 
 
 @login_required()
 def animalVerification(request):
-    animals = Animals.objects.filter(status = -1)
+    animals = Animals.objects.all()
     request.session['unverified_animals_count'] = Animals.objects.filter(status = -1).count()
     return render(request,'verify animals.html',{'animals':animals,'unverified_animals':request.session.get('unverified_animals_count')})
 

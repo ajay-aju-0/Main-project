@@ -13,20 +13,15 @@
                     </div>
             <div class="modal-body">
                 
-                {% if error %}
+                {% if update_error %}
                 {% include 'shared/messages.html' %}
                 {% endif %}
-                {% if error %}
-                <div class="bg-danger bg-opacity-50 text-white">
-                    {{form.errors.type}}
-                    {{form.errors.rate}}
-                </div>
-                {% endif %}
+                
                 <form action="{% url 'director_update_ticket_rate' i.id %}" method="post" class="font-weight-bold">
                     
                 {% csrf_token %}
                 Catagory: <input type="text" class="form-control" value="{{i.type}}" name="type" disabled> <br>
-                Rate: <input type="number" class="form-control" value="{{i.rate}}" name="rate">
+                Rate: <input type="number" class="form-control" value="{{i.rate}}" name="rate" required>
                 <br>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-success btn-block">Update</button>

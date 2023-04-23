@@ -256,7 +256,7 @@ def manageTicketRates(request):
             messages.success(request,"Ticket catagory added successfully")
             return render(request,'manageticketrates.html',{'form':rateForm,'rates':rates})
         else:
-            # messages.error(request,"error while submitting form")
+            messages.error(request,"error while submitting form")
             return render(request,"manageticketrates.html",{'form':form,'rates':rates,'error':True})
     else:
         return render(request,'manageticketrates.html',{'form':rateForm,'rates':rates})
@@ -270,12 +270,23 @@ def deleteTicketCatagory(request,id):
 
 
 @login_required()
-def UpdateTicketCatagory(request,id):
+def UpdateTicketRate(request,id):
     rateObj = TicketRate.objects.get(pk=id)
-    rateObj.rate = request.POST['rate']
-    TicketRateHistory.objects.create(catagory = rateObj.type, rate = rateObj.rate)
-    rateObj.save()
-    return redirect('director_manage_ticket_rate')
+    ticketRate = request.POST['rate']
+    rates = TicketRate.objects.all()
+
+    if int(ticketRate) < 0:
+        messages.error(request,'Please provide a valid rate')
+        return render(request,"manageticketrates.html",{'rates':rates,'update_error':True,'id':id})
+
+    elif rateObj.rate == int(ticketRate):
+        messages.error(request,'Data not saved, Please provide new ticket rate !')
+        return render(request,"manageticketrates.html",{'rates':rates,'update_error':True,'id':id})
+
+    else:
+        TicketRateHistory.objects.create(catagory = rateObj.type, rate = rateObj.rate)
+        rateObj.save()
+        return redirect('director_manage_ticket_rate')
 
 
 @login_required()

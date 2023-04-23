@@ -84,6 +84,9 @@ class TicketRateForm(forms.ModelForm):
         
         if catagory.isdigit():
                 self._errors['type'] = self.error_class(['catagory cannot be integer'])
+
+        if trate < 0:
+            self._errors['rate'] = self.error_class(['Please provide valid rate'])
             
         return self.cleaned_data
 

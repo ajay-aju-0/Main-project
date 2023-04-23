@@ -16,16 +16,11 @@
                     
                 <form action="{% url 'director_manage_ticket_rate' %}" method="post" class="font-weight-bold">      
                 
-                {% if error %}
-                <div class="bg-danger bg-opacity-50 text-white">
-                    {{form.errors.type}}
-                    {{form.errors.rate}}
-                </div>
-                {% endif %}
                 
                 {% csrf_token %}
-                Catagory: {{form.type}}
-                {{form.rate.label}}: {{form.rate}}
+                <!-- Catagory: {{form.type}}
+                {{form.rate.label}}: {{form.rate}} -->
+                {{ form.as_p }}
                 <br>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-success btn-block w-100">Submit</button>
