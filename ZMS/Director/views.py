@@ -28,6 +28,7 @@ def loadDirectorHome(request):
     ticket = []
     ticket_revenue = []
     sponser_revenue = []
+
     for i in visitor_obj:
         # print(i['date_joined'].year,date.today().year)
         if i['date_joined'].year == date.today().year:
@@ -64,7 +65,34 @@ def loadDirectorHome(request):
     total_revenue = sum(ticket_revenue) + sum(sponser_revenue)
 
 
+    sales = [0,0,0,0,0,0,0,0,0,0,0,0]
+    visitors_count = [0,0,0,0,0,0,0,0,0,0,0,0]
 
+    tickets = Ticket.objects.values('tdate').annotate(tcount=Count('tdate')).order_by()
+    visitors_count_obj = Users.objects.filter(usertype = 'visitor',is_active = True).values('date_joined').annotate(vcount=Count('date_joined')).order_by()
+
+    # print(visitors_count_obj)
+    # print(tickets)
+
+    for i in tickets:
+        # print(i['tdate'].year,months[i['tdate'].month - 1],i['tcount'])
+        if i['tdate'].year == date.today().year:
+            for j in range(12):
+                if j == i['tdate'].month - 1:
+                    sales[j] += i['tcount']
+
+    # print(sales)
+
+    for i in visitors_count_obj:
+        
+        if i['date_joined'].year == date.today().year:
+            for j in range(12):
+                if j == i['date_joined'].month -1:
+                    visitors_count[j] += i['vcount']
+
+    print(visitors_count)
+
+    
     context ={
         'visitors':len(visitors),
         'staffs':len(staffs),
@@ -72,6 +100,8 @@ def loadDirectorHome(request):
         'vacancy':len(vacancy),
         'ticket':len(ticket),
         'revenue':total_revenue,
+        'sales':sales,
+        'visitor_count':visitors_count,
     }
 
     return render(request,'directorHome.html',context)

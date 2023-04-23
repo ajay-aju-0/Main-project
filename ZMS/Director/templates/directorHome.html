@@ -1,6 +1,5 @@
 {% extends 'shared/directorpanel.html' %}
 
-
 {% block display %}
 <!-- sales card -->
 <div class="col-xxl-4 col-md-6">
@@ -151,76 +150,118 @@
   <div class="col-12">
     <div class="card">
 
-      <div class="filter">
-        <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-          <li class="dropdown-header text-start">
-            <h6>Filter</h6>
-          </li>
+        <input type="hidden" id="jan" value="{{sales.0}}">
+        <input type="hidden" id="feb" value="{{sales.1}}">
+        <input type="hidden" id="mar" value="{{sales.2}}">
+        <input type="hidden" id="apr" value="{{sales.3}}">
+        <input type="hidden" id="may" value="{{sales.4}}">
+        <input type="hidden" id="jun" value="{{sales.5}}">
+        <input type="hidden" id="jul" value="{{sales.6}}">
+        <input type="hidden" id="aug" value="{{sales.7}}">
+        <input type="hidden" id="sep" value="{{sales.8}}">
+        <input type="hidden" id="oct" value="{{sales.9}}">
+        <input type="hidden" id="nov" value="{{sales.10}}">
+        <input type="hidden" id="dec" value="{{sales.11}}">
 
-          <li><a class="dropdown-item" href="#">Today</a></li>
-          <li><a class="dropdown-item" href="#">This Month</a></li>
-          <li><a class="dropdown-item" href="#">This Year</a></li>
-        </ul>
-      </div>
+        <input type="hidden" id="vjan" value="{{visitor_count.0}}">
+        <input type="hidden" id="vfeb" value="{{visitor_count.1}}">
+        <input type="hidden" id="vmar" value="{{visitor_count.2}}">
+        <input type="hidden" id="vapr" value="{{visitor_count.3}}">
+        <input type="hidden" id="vmay" value="{{visitor_count.4}}">
+        <input type="hidden" id="vjun" value="{{visitor_count.5}}">
+        <input type="hidden" id="vjul" value="{{visitor_count.6}}">
+        <input type="hidden" id="vaug" value="{{visitor_count.7}}">
+        <input type="hidden" id="vsep" value="{{visitor_count.8}}">
+        <input type="hidden" id="voct" value="{{visitor_count.9}}">
+        <input type="hidden" id="vnov" value="{{visitor_count.10}}">
+        <input type="hidden" id="vdec" value="{{visitor_count.11}}">
+
 
       <div class="card-body">
         <h5 class="card-title">Reports <span>/This Year</span></h5>
 
         <!-- Line Chart -->
         <div id="reportsChart"></div>
-
+        
         <script>
           document.addEventListener("DOMContentLoaded", () => {
+            
+            jan = parseInt(document.getElementById('jan').value)
+            feb = parseInt(document.getElementById('feb').value)
+            mar = parseInt(document.getElementById('mar').value)
+            apr = parseInt(document.getElementById('apr').value)
+            may = parseInt(document.getElementById('may').value)
+            jun = parseInt(document.getElementById('jun').value)
+            jul = parseInt(document.getElementById('jul').value)
+            aug = parseInt(document.getElementById('aug').value)
+            sep = parseInt(document.getElementById('sep').value)
+            oct = parseInt(document.getElementById('oct').value)
+            nov = parseInt(document.getElementById('nov').value)
+            dec = parseInt(document.getElementById('dec').value)
+
+            vjan = parseInt(document.getElementById('vjan').value)
+            vfeb = parseInt(document.getElementById('vfeb').value)
+            vmar = parseInt(document.getElementById('vmar').value)
+            vapr = parseInt(document.getElementById('vapr').value)
+            vmay = parseInt(document.getElementById('vmay').value)
+            vjun = parseInt(document.getElementById('vjun').value)
+            vjul = parseInt(document.getElementById('vjul').value)
+            vaug = parseInt(document.getElementById('vaug').value)
+            vsep = parseInt(document.getElementById('vsep').value)
+            voct = parseInt(document.getElementById('voct').value)
+            vnov = parseInt(document.getElementById('vnov').value)
+            vdec = parseInt(document.getElementById('vdec').value)
+           
+            
             new ApexCharts(document.querySelector("#reportsChart"), {
-              series: [{
-                name: 'Sales',
-                data: [31, 40, 28, 51, 42, 82, 56],
-              }, {
-                name: 'Revenue',
-                data: [11, 32, 45, 32, 34, 52, 41]
-              }, {
-                name: 'Customers',
-                data: [15, 11, 32, 18, 9, 24, 11]
-              }],
+              series: [
+                {name: 'Sales',data: [jan,feb,mar,apr,may,jun,jul,aug,sep,oct,nov,dec]},
+                {name: 'Visitors registered',data: [vjan,vfeb,vmar,vapr,vmay,vjun,vjul,vaug,vsep,voct,vnov,vdec]} 
+            //   {
+            //     name: 'Revenue',
+            //     data: [10,0,0,0,0,0,0,0,0,0,0,0]
+            //   }, 
+            ],
               chart: {
                 height: 350,
-                type: 'area',
+                type: 'line',
+                zoom: {
+                    enabled: true
+                },
                 toolbar: {
-                  show: false
+                  show: true
                 },
               },
+              grid: {
+                    row: {
+                    colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
+                    opacity: 0.5
+                    },
+                },
               markers: {
                 size: 4
               },
               colors: ['#4154f1', '#2eca6a', '#ff771d'],
-              fill: {
-                type: "gradient",
-                gradient: {
-                  shadeIntensity: 1,
-                  opacityFrom: 0.3,
-                  opacityTo: 0.4,
-                  stops: [0, 90, 100]
-                }
-              },
+
               dataLabels: {
-                enabled: false
+                enabled: true
               },
               stroke: {
                 curve: 'smooth',
                 width: 2
               },
               xaxis: {
-                type: 'datetime',
-                categories: ["2018-09-19T00:00:00.000Z", "2018-09-19T01:30:00.000Z", "2018-09-19T02:30:00.000Z", "2018-09-19T03:30:00.000Z", "2018-09-19T04:30:00.000Z", "2018-09-19T05:30:00.000Z", "2018-09-19T06:30:00.000Z"]
+                      categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep','Oct','Nov','Dec'],
               },
-              tooltip: {
-                x: {
-                  format: 'dd/MM/yy HH:mm'
-                },
-              }
+            //   tooltip: {
+            //     x: {
+            //       format: 'dd/MM/yy HH:mm'
+            //     },
+            //   }
             }).render();
           });
+
+
         </script>
         <!-- End Line Chart -->
 
@@ -228,6 +269,10 @@
 
     </div>
   </div><!-- End Reports -->
+  
+
+
+
 </div>
 
 
