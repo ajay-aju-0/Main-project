@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect,HttpResponse
+from django.shortcuts import render,redirect
 from accounts.models import *
 from .forms import *
 from datetime import date
@@ -11,7 +11,41 @@ import time
 
 @login_required()
 def loadVisitorHome(request):
-    return render(request,'visitorhome.html')
+    ticketObj = Ticket.objects.filter(uid = request.user.id).values('tdate')
+    applicationObj = Applications.objects.filter(uid = request.user.id).values('date')
+    feedbackObj = Feedback.objects.filter(uid = request.user.id).values('fdate')
+    complaintObj = Complaints.objects.filter(uid = request.user.id).values('cdate')
+
+    ticket = []
+    application = []
+    feedback = []
+    complaint = []
+
+    for i in ticketObj:
+        if i['tdate'].year == date.today().year:
+            ticket.append(i)
+
+    for i in applicationObj:
+        if i['date'].year == date.today().year:
+            application.append(i)
+
+    for i in feedbackObj:
+        if i['fdate'].year == date.today().year:
+            feedback.append(i)
+
+    for i in complaintObj:
+        if i['cdate'].year == date.today().year:
+            complaint.append(i)
+    
+
+    context = {
+        'ticket':len(ticket),
+        'application':len(application),
+        'feedback':len(feedback),
+        'complaints':len(complaint)
+    }
+
+    return render(request,'visitorhome.html',context)
 
 
 @login_required()
@@ -47,7 +81,6 @@ def bookTicket(request):
     capacity = ZooDetails.objects.get(pk=1).visitor_capacity
 
     if request.method == 'GET':
-        # print(time.strftime("%H:%M:%S",time.localtime()))
         return render(request,'book ticket.html',{'form':ticketform,'catagories':catagories})
 
     elif request.method == 'POST':

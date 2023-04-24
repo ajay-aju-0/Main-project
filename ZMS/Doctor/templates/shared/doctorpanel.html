@@ -145,7 +145,7 @@
 
       <li class="nav-item">
         <a class="nav-link " href="{% url 'doctor_verify_animals' %}">
-            <i class="bi bi-people"></i>
+            <i class="bi bi-check2-circle"></i>
             <span class="">Verify animals</span>
             
             {% if unverified_animals > 0  %}                
@@ -153,7 +153,7 @@
             <span class="rounded-circle bg-danger px-1 fw-bold text-white">{{unverified_animals}}</span>
             {% endif %}
         </a>
-      </li><!-- End Manage staff Nav -->
+      </li><!-- End Verify animals Nav -->
 
 
       <li class="nav-item">
@@ -161,28 +161,28 @@
             <i class="bi bi-heart-pulse"></i>
             <span>Update health status</span>
         </a>
-      </li><!-- End Manage staff Nav -->
+      </li><!-- End Update health status Nav -->
 
       <li class="nav-item">
         <a class="nav-link " href="{% url 'doctor_manage_sick_animals' %}">
-            <i class="bi bi-clock"></i>
+            <i class="bi bi-eyedropper"></i>
             <span>Manage sick animals</span>
         </a>
-      </li><!-- End view zoo timings -->
+      </li><!-- End Manage sick animals Nav -->
 
       <li class="nav-item">
         <a class="nav-link " href="{% url 'doctor_manage_medicines' %}">
-            <i class="bi bi-people"></i>
+            <i class="bi bi-capsule"></i>
             <span>Manage medicines</span>
         </a>
-      </li><!-- End View visitors Nav -->
+      </li><!-- End Manage medicines Nav -->
 
       <li class="nav-item">
         <a class="nav-link " href="{% url 'doctor_manage_animal_death' %}">
-            <i class="bi bi-coin"></i>
+            <i class="bi bi-exclamation-triangle"></i>
             <span>Manage animal death</span>
         </a>
-      </li><!-- End Manage rates Nav -->
+      </li><!-- End Manage animal death Nav -->
 
      
       <li class="nav-item">
@@ -190,7 +190,7 @@
             <i class="bi bi-person-exclamation"></i>
             <span>Report issues</span>
         </a>
-      </li><!-- End Feedback Nav -->
+      </li><!-- End Report issues Nav -->
 
     </ul>
 

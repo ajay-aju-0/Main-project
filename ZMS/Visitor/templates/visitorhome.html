@@ -1,1 +1,89 @@
 {% extends 'shared/visitorpanel.html' %}
+
+
+{% block display %}
+    <!-- Ticket card -->
+<div class="col-xxl-4 col-md-6">
+    <div class="card info-card sales-card">
+
+      <div class="card-body">
+        <h5 class="card-title">Ticket Booked <span>| This Year</span></h5>
+
+        <div class="d-flex align-items-center">
+          <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+            <i class="bi bi-ticket"></i>
+          </div>
+          <div class="ps-3">
+            <h6>{{ticket}}</h6>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- End Ticket Card -->
+
+  <!-- Application card -->
+<div class="col-xxl-4 col-md-6">
+    <div class="card info-card revenue-card">
+
+      <div class="card-body">
+        <h5 class="card-title">Applications send <span>| This Year</span></h5>
+
+        <div class="d-flex align-items-center">
+          <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+            <i class="bi bi-file-earmark-plus"></i>
+          </div>
+          <div class="ps-3">
+            <h6>{{application}}</h6>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- End Application Card -->
+
+  <!-- Feedback card -->
+<div class="col-xxl-4 col-md-6">
+    <div class="card info-card revenue-card">
+
+      <div class="card-body">
+        <h5 class="card-title">Feedbacks send <span>| This Year</span></h5>
+
+        <div class="d-flex align-items-center">
+          <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+            <i class="bi bi-chat-dots"></i>
+          </div>
+          <div class="ps-3">
+            <h6>{{feedback}}</h6>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- End Feedback Card -->
+
+  <!-- complaints card -->
+<div class="col-xxl-4 col-md-6">
+    <div class="card info-card revenue-card">
+
+      <div class="card-body">
+        <h5 class="card-title">Complaints sent <span>| This Year</span></h5>
+
+        <div class="d-flex align-items-center">
+          <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+            <i class="bi bi-envelope-exclamation"></i>
+          </div>
+          <div class="ps-3">
+            <h6>{{complaints}}</h6>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- End complaints Card -->
+{% endblock display %}
+    

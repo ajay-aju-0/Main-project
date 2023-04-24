@@ -19,8 +19,6 @@ def loadDirectorHome(request):
     ticket_revenue_obj = Ticket.objects.filter().values('tdate','total')
     sponser_revenue_obj = SponseredAnimals.objects.filter().values('sdate','amount')
 
-    # print(sponser_revenue_obj)
-
     visitors = []
     staffs = []
     animals = []
@@ -30,7 +28,6 @@ def loadDirectorHome(request):
     sponser_revenue = []
 
     for i in visitor_obj:
-        # print(i['date_joined'].year,date.today().year)
         if i['date_joined'].year == date.today().year:
             visitors.append(i)
 
@@ -58,40 +55,51 @@ def loadDirectorHome(request):
         if p['sdate'].year == date.today().year:
             sponser_revenue.append(p['amount'])
 
-    # print(visitor_obj.values('date_joined')[0]['date_joined'].day)
-    # print(len(visitors))
-    # print(len(staffs))
 
     total_revenue = sum(ticket_revenue) + sum(sponser_revenue)
 
 
-    sales = [0,0,0,0,0,0,0,0,0,0,0,0]
-    visitors_count = [0,0,0,0,0,0,0,0,0,0,0,0]
-
     tickets = Ticket.objects.values('tdate').annotate(tcount=Count('tdate')).order_by()
     visitors_count_obj = Users.objects.filter(usertype = 'visitor',is_active = True).values('date_joined').annotate(vcount=Count('date_joined')).order_by()
 
-    # print(visitors_count_obj)
-    # print(tickets)
+    sales = [0] * 12
+    visitors_count = [0] * 12
+    ticket_revenue_list = [0] * 12
+    sponser_revenue_list = [0] * 12
+    total_revenue_list = [0] * 12
+
 
     for i in tickets:
-        # print(i['tdate'].year,months[i['tdate'].month - 1],i['tcount'])
         if i['tdate'].year == date.today().year:
             for j in range(12):
                 if j == i['tdate'].month - 1:
                     sales[j] += i['tcount']
 
-    # print(sales)
-
+    
     for i in visitors_count_obj:
-        
         if i['date_joined'].year == date.today().year:
             for j in range(12):
                 if j == i['date_joined'].month -1:
                     visitors_count[j] += i['vcount']
 
-    print(visitors_count)
 
+    for t in ticket_revenue_obj:
+        if t['tdate'].year == date.today().year:
+            for j in range(12):
+                if j == t['tdate'].month -1:
+                    ticket_revenue_list[j] += t['total']
+
+
+    for s in sponser_revenue_obj:
+        if s['sdate'].year == date.today().year:
+            for j in range(12):
+                if j == s['sdate'].month -1:
+                    sponser_revenue_list[j] += s['sdate']
+
+    for i in range(12):
+        total_revenue_list[i] = ticket_revenue_list[i] + sponser_revenue_list[i]
+
+    
     
     context ={
         'visitors':len(visitors),
@@ -102,6 +110,7 @@ def loadDirectorHome(request):
         'revenue':total_revenue,
         'sales':sales,
         'visitor_count':visitors_count,
+        'total_revenue':total_revenue_list
     }
 
     return render(request,'directorHome.html',context)
@@ -205,7 +214,6 @@ def showZooTime(request):
     timeForm = ZooTimeForm()
 
     if request.method == 'GET':
-        # print(zoo_time.values('open_time'))
         return render(request,'view zoo time.html',{'time':zoo_time,'timeform':timeForm})
 
     elif request.method == 'POST':
@@ -213,7 +221,7 @@ def showZooTime(request):
         zt_obj = ZooTimings.objects.get(id=id)
         open = request.POST['open time']
         close = request.POST['close time']
-        # print(id,zt_obj.day,open,close)
+        
         zt_obj.open_time = open
         zt_obj.close_time = close
         zt_obj.holiday = False
@@ -300,22 +308,30 @@ def viewTicketSales(request):
     dic = {}
     catagories = []
     count = []
-    tickets = Ticket.objects.values('tdate').annotate(tcount=Count('tdate'))
+    tickets = Ticket.objects.values('tdate').annotate(tcount=Count('tdate')).order_by()
     id = Ticket.objects.values('id')
-    print(tickets.values('tdate')[1]['tdate'])
-    print(tickets.values('tdate'))
-    print(tickets.values('tcount')[:].values('tcount'))
-    # print(id)
 
-    for i in tickets.values('tdate','id'):
-        print(i['tdate'])
-        for j in BookedCatagory.objects.all():
-            print(j.ticket.id == i['id'])
-            if j.ticket.id == i['id']:
-                catagories.append(j.catagory)
-        dic.update({i['tdate']:{'catagories':catagories}})
+    for i in tickets:
+        print(i['tdate'],i['tcount'])
+
+    print(tickets)
+    print(id)
+    # print(tickets.values('tdate')[1]['tdate'])
+    # print(tickets.values('tdate'))
+    # print(tickets.values('tcount')[:].values('tcount'))
+
+    # for i in tickets.values('tdate','id'):
+    #     # print(i['tdate'])
+    #     for j in BookedCatagory.objects.all():
+    #         # print(j.ticket.id , i['id'])
+    #         if j.ticket.id == i['id']:
+    #             catagories.append(j.catagory)
+    #     dic.update({i['tdate']:{'catagories':catagories}})
     
-    print(dic)
+    # print(dic)
+
+    # obj = BookedCatagory.objects.values('ticket').annotate(tcount=Count('ticket')).order_by()
+    # print(obj)
 
     
     
@@ -384,7 +400,6 @@ def eventsList(request):
     current_date = date.today()
 
     for event in events:
-        # print(event.estart,event.eend)
         if event.estart > current_date:
             event.estatus = "upcoming"
         elif event.estart <= current_date <= event.eend:
@@ -573,8 +588,7 @@ def viewComplaints(request):
     elif request.method == 'POST':
         complaint_id = request.POST.get('complaint_id')
         reply = request.POST.get('reply')
-        # print(complaint_id,reply)
-
+        
         complaint_obj = Complaints.objects.get(pk=complaint_id)
         complaint_obj.reply = reply
         complaint_obj.save()

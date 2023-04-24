@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from django.http import HttpResponse
+from django.db.models import Count,Q
 from accounts.models import *
 from Visitor.forms import *
 from Director.forms import *
@@ -12,7 +12,15 @@ from .forms import *
 
 @login_required()
 def loadKeeperHome(request):
-    return render(request,'keeperhome.html')
+    animal = Animals.objects.filter(Q(status = 1) | Q(caretaker = request.user.id)).count()
+    guided = Ticket.objects.filter(Q(reporting_date__year__gte = date.today().year) & Q(Guide = Staffs.objects.get(user=request.user.id)) ).count()
+    
+    context = {
+        'animal':animal,
+        'guide':guided
+    }
+
+    return render(request,'keeperhome.html',context)
 
 
 @login_required()

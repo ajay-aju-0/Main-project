@@ -176,6 +176,19 @@
         <input type="hidden" id="vnov" value="{{visitor_count.10}}">
         <input type="hidden" id="vdec" value="{{visitor_count.11}}">
 
+        <input type="hidden" id="rjan" value="{{total_revenue.0}}">
+        <input type="hidden" id="rfeb" value="{{total_revenue.1}}">
+        <input type="hidden" id="rmar" value="{{total_revenue.2}}">
+        <input type="hidden" id="rapr" value="{{total_revenue.3}}">
+        <input type="hidden" id="rmay" value="{{total_revenue.4}}">
+        <input type="hidden" id="rjun" value="{{total_revenue.5}}">
+        <input type="hidden" id="rjul" value="{{total_revenue.6}}">
+        <input type="hidden" id="raug" value="{{total_revenue.7}}">
+        <input type="hidden" id="rsep" value="{{total_revenue.8}}">
+        <input type="hidden" id="roct" value="{{total_revenue.9}}">
+        <input type="hidden" id="rnov" value="{{total_revenue.10}}">
+        <input type="hidden" id="rdec" value="{{total_revenue.11}}">
+
 
       <div class="card-body">
         <h5 class="card-title">Reports <span>/This Year</span></h5>
@@ -211,16 +224,28 @@
             voct = parseInt(document.getElementById('voct').value)
             vnov = parseInt(document.getElementById('vnov').value)
             vdec = parseInt(document.getElementById('vdec').value)
+
+            rjan = parseInt(document.getElementById('rjan').value)
+            rfeb = parseInt(document.getElementById('rfeb').value)
+            rmar = parseInt(document.getElementById('rmar').value)
+            rapr = parseInt(document.getElementById('rapr').value)
+            rmay = parseInt(document.getElementById('rmay').value)
+            rjun = parseInt(document.getElementById('rjun').value)
+            rjul = parseInt(document.getElementById('rjul').value)
+            raug = parseInt(document.getElementById('raug').value)
+            rsep = parseInt(document.getElementById('rsep').value)
+            roct = parseInt(document.getElementById('roct').value)
+            rnov = parseInt(document.getElementById('rnov').value)
+            rdec = parseInt(document.getElementById('rdec').value)
            
             
             new ApexCharts(document.querySelector("#reportsChart"), {
               series: [
-                {name: 'Sales',data: [jan,feb,mar,apr,may,jun,jul,aug,sep,oct,nov,dec]},
-                {name: 'Visitors registered',data: [vjan,vfeb,vmar,vapr,vmay,vjun,vjul,vaug,vsep,voct,vnov,vdec]} 
-            //   {
-            //     name: 'Revenue',
-            //     data: [10,0,0,0,0,0,0,0,0,0,0,0]
-            //   }, 
+                {name: 'Ticket sales',data: [jan,feb,mar,apr,may,jun,jul,aug,sep,oct,nov,dec]},
+
+                {name: 'Visitors registered',data: [vjan,vfeb,vmar,vapr,vmay,vjun,vjul,vaug,vsep,voct,vnov,vdec]} ,
+
+                {name: 'Revenue',data: [rjan,rfeb,rmar,rapr,rmay,rjun,rjul,raug,rsep,roct,rnov,rdec]}
             ],
               chart: {
                 height: 350,

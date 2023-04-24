@@ -7,24 +7,58 @@ from django.contrib import messages
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+from datetime import date
 
 
 @login_required()
 def loadDoctorHome(request):
+    animal_obj = Animals.objects.filter(status = 1).count()
     medicine_in_stock = Medicines.objects.exclude(stock = 0).count()
     medicine_out_stock = Medicines.objects.filter(stock = 0).count()
-    animal_obj = Animals.objects.filter(status = 1).count()
     sick_animals = sickness_details.objects.filter(status = 'sick').values('sdate')
     cured_animals = sickness_details.objects.filter(status = 'cured').values('sdate')
-
-
-
-    print(medicine_in_stock, medicine_out_stock)
-
-
-
+    acceptedObj = Animals.objects.filter(reason = 'null').values('date_joined')
+    rejectedObj = Animals.objects.exclude(reason = 'null').values('date_joined')
     request.session['unverified_animals_count'] = Animals.objects.filter(status = -1).count()
-    return render(request,'doctorHome.html',{'unverified_animals':request.session.get('unverified_animals_count')})
+
+
+
+    # print(medicine_in_stock, medicine_out_stock)
+
+    sick = []
+    cured = []
+    accepted = []
+    rejected = []
+
+    for i in sick_animals:
+        if i['sdate'].year == date.today().year:
+            sick.append(i)
+
+    for i in cured_animals:
+        if i['sdate'].year == date.today().year:
+            cured.append(i)
+
+    for i in acceptedObj:
+        if i['date_joined'].year == date.today().year:
+            accepted.append(i)
+
+    for i in rejectedObj:
+        if i['date_joined'].year == date.today().year:
+            rejected.append(i)
+
+    context = {
+        'animals':animal_obj,
+        'med_stock':medicine_in_stock,
+        'med_out':medicine_out_stock,
+        'sick_animals':len(sick),
+        'cured_animals':len(cured),
+        'accepted':len(accepted),
+        'rejected':len(rejected),
+        'unverified_animals':request.session.get('unverified_animals_count')
+    }
+
+    
+    return render(request,'doctorHome.html',context)
 
 
 @login_required()
