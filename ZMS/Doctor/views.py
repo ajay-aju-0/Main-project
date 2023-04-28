@@ -31,19 +31,19 @@ def loadDoctorHome(request):
     rejected = []
 
     for i in sick_animals:
-        if i['sdate'].year == date.today().year:
+        if i['sdate'].year == date.today().year and i['sdate'].month == date.today().month:
             sick.append(i)
 
     for i in cured_animals:
-        if i['sdate'].year == date.today().year:
+        if i['sdate'].year == date.today().year and i['sdate'].month == date.today().month:
             cured.append(i)
 
     for i in acceptedObj:
-        if i['date_joined'].year == date.today().year:
+        if i['date_joined'].year == date.today().year and i['date_joined'].month == date.today().month:
             accepted.append(i)
 
     for i in rejectedObj:
-        if i['date_joined'].year == date.today().year:
+        if i['date_joined'].year == date.today().year and i['date_joined'].month == date.today().month:
             rejected.append(i)
 
     context = {

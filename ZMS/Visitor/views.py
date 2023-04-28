@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,HttpResponse
 from accounts.models import *
 from .forms import *
 from datetime import date
@@ -22,19 +22,19 @@ def loadVisitorHome(request):
     complaint = []
 
     for i in ticketObj:
-        if i['tdate'].year == date.today().year:
+        if i['tdate'].year == date.today().year and i['tdate'].month == date.today().month:
             ticket.append(i)
 
     for i in applicationObj:
-        if i['date'].year == date.today().year:
+        if i['date'].year == date.today().year and i['date'].month == date.today().month:
             application.append(i)
 
     for i in feedbackObj:
-        if i['fdate'].year == date.today().year:
+        if i['fdate'].year == date.today().year and i['fdate'].month == date.today().month:
             feedback.append(i)
 
     for i in complaintObj:
-        if i['cdate'].year == date.today().year:
+        if i['cdate'].year == date.today().year and i['cdate'].month == date.today().month:
             complaint.append(i)
     
 
@@ -113,8 +113,8 @@ def bookTicket(request):
                             i = 0
                             total = 0
                             total_count = 0
-                            for rate in tRate:
 
+                            for rate in tRate:
                                 if int(count_list[i]) != 0:
                                     catagory_rate = TicketRate.objects.get(type=rate.type)
                                     total += int(count_list[i]) * catagory_rate.rate
@@ -128,9 +128,11 @@ def bookTicket(request):
                             obj.save()
 
                             j=0
+
                             for rate in tRate:
                                 if int(count_list[j]) != 0:
                                     BookedCatagory.objects.create(catagory = TicketRate.objects.get(type=rate.type).type,count = count_list[j],rate = TicketRate.objects.get(type=rate.type).rate,ticket = obj)
+                                    
                                 j=j+1
                             
                             return redirect('visitor_confirm_booking')
@@ -145,9 +147,11 @@ def bookTicket(request):
                 else:
                     messages.error(request,'You are booking ticket with ZERO visitors please provide valid no. of visitors in available catagories')
                     return render(request,'book ticket.html',{'form':form,'catagories':catagories})
+
             else:
                 messages.error(request,'You are booking ticket for a past time please provide future date and slot for booking')
                 return render(request,'book ticket.html',{'form':form,'catagories':catagories})
+                
         else:
             return render(request,'book ticket.html',{'form':form,'catagories':catagories})
     

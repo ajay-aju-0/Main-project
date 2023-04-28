@@ -13,7 +13,7 @@ from .forms import *
 @login_required()
 def loadKeeperHome(request):
     animal = Animals.objects.filter(Q(status = 1) | Q(caretaker = request.user.id)).count()
-    guided = Ticket.objects.filter(Q(reporting_date__year__gte = date.today().year) & Q(Guide = Staffs.objects.get(user=request.user.id)) ).count()
+    guided = Ticket.objects.filter(Q(reporting_date__year = date.today().year) & Q(reporting_date__month = date.today().month) & Q(Guide = Staffs.objects.get(user=request.user.id)) ).count()
     
     context = {
         'animal':animal,

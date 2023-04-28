@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect
 from django.contrib import messages
-from django.db.models import Count,Q
+from django.db.models import Count,Q,Sum
 from accounts.forms import *
 from accounts.models import *
 from .forms import *
@@ -28,31 +28,31 @@ def loadDirectorHome(request):
     sponser_revenue = []
 
     for i in visitor_obj:
-        if i['date_joined'].year == date.today().year:
+        if i['date_joined'].year == date.today().year and i['date_joined'].month == date.today().month:
             visitors.append(i)
 
     for j in staff_obj:
-        if j['date_joined'].year == date.today().year:
+        if j['date_joined'].year == date.today().year and j['date_joined'].month == date.today().month:
             staffs.append(j)
 
     for k in animal_obj:
-        if k['date_joined'].year == date.today().year:
+        if k['date_joined'].year == date.today().year and k['date_joined'].month == date.today().month:
             animals.append(k)
 
     for l in vacancy_obj:
-        if l['issue_date'].year == date.today().year:
+        if l['issue_date'].year == date.today().year and l['issue_date'].month == date.today().month:
             vacancy.append(l)
 
     for m in ticket_obj:
-        if m['tdate'].year == date.today().year:
+        if m['tdate'].year == date.today().year and m['tdate'].month == date.today().month:
             ticket.append(m)
 
     for n in ticket_revenue_obj:
-        if n['tdate'].year == date.today().year:
+        if n['tdate'].year == date.today().year and n['tdate'].month == date.today().month:
             ticket_revenue.append(n['total'])
 
     for p in sponser_revenue_obj:
-        if p['sdate'].year == date.today().year:
+        if p['sdate'].year == date.today().year and p['sdate'].month == date.today().month:
             sponser_revenue.append(p['amount'])
 
 
@@ -61,6 +61,7 @@ def loadDirectorHome(request):
 
     tickets = Ticket.objects.values('tdate').annotate(tcount=Count('tdate')).order_by()
     visitors_count_obj = Users.objects.filter(usertype = 'visitor',is_active = True).values('date_joined').annotate(vcount=Count('date_joined')).order_by()
+
 
     sales = [0] * 12
     visitors_count = [0] * 12
@@ -305,38 +306,8 @@ def viewTicketRateHistory(request):
 
 @login_required()
 def viewTicketSales(request):
-    dic = {}
-    catagories = []
-    count = []
-    tickets = Ticket.objects.values('tdate').annotate(tcount=Count('tdate')).order_by()
-    id = Ticket.objects.values('id')
-
-    for i in tickets:
-        print(i['tdate'],i['tcount'])
-
-    print(tickets)
-    print(id)
-    # print(tickets.values('tdate')[1]['tdate'])
-    # print(tickets.values('tdate'))
-    # print(tickets.values('tcount')[:].values('tcount'))
-
-    # for i in tickets.values('tdate','id'):
-    #     # print(i['tdate'])
-    #     for j in BookedCatagory.objects.all():
-    #         # print(j.ticket.id , i['id'])
-    #         if j.ticket.id == i['id']:
-    #             catagories.append(j.catagory)
-    #     dic.update({i['tdate']:{'catagories':catagories}})
-    
-    # print(dic)
-
-    # obj = BookedCatagory.objects.values('ticket').annotate(tcount=Count('ticket')).order_by()
-    # print(obj)
-
-    
-    
-    catagory = BookedCatagory.objects.all()
-    return render(request,'view ticket sales.html',{'tickets':tickets,'catagory':catagory,'id':id})
+    tickets = Ticket.objects.values('tdate','total').annotate(tcount=Count('tdate'),revenue=Sum('total')).order_by()    
+    return render(request,'view ticket sales.html',{'tickets':tickets})
 
 
 @login_required()

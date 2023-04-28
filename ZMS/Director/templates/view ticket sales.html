@@ -22,51 +22,21 @@
                 <tr>
                     <th>Date</th>
                     <th>No.of tickets sold</th>   
-                    <th>Catagories</th>
-                    <th>Count</th>
+                    <th>Revenue</th>
                 </tr>
             </thead>
-            {{tickets}} <br>
-            {{catagory}} <br>
-            {{id}}
 
             {% for ticket in tickets %}
             <tr>
                 <td>{{ticket.tdate}}</td>
-                <td>{{ticket.tcount}}</td>
-                
-                <td>
-                    
-                    {% for cat in catagory %}
-                        
-                        {% for i in id %}
-                            
-                            {% if cat.ticket.id == i.id %}
-                                {{cat.catagory}} <br> 
-                            {% endif %}
-
-                        {% endfor %}
-                        
-                        
-                    {% endfor %}
-                </td>
-
-                <td>
-                    {% for cat in catagory %}
-                        
-                        {% for i in id %}
-                            {% if cat.ticket.id == i.id %}
-                                {{cat.count}} <br>
-                            {% endif %}
-                        {% endfor %}
-                        
-                    {% endfor %}
-                </td>
-               
+                <td>{{ticket.tcount}}</td>    
+                <td>{{ticket.revenue}}</td>             
             </tr>
             {% endfor %}
                 
+                
         </table>
+
     </div>
 </div>
 

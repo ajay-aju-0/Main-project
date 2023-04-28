@@ -29,32 +29,31 @@ def loadCuratorHome(request):
     purchase = []
 
     for i in visitor_obj:
-        # print(i['date_joined'].year,date.today().year)
-        if i['date_joined'].year == date.today().year:
+        if i['date_joined'].year == date.today().year and i['date_joined'].month == date.today().month:
             visitors.append(i)
 
     for j in staff_obj:
-        if j['date_joined'].year == date.today().year:
+        if j['date_joined'].year == date.today().year and j['date_joined'].month == date.today().month:
             staffs.append(j)
 
     for k in animal_obj:
-        if k['date_joined'].year == date.today().year:
+        if k['date_joined'].year == date.today().year and k['date_joined'].month == date.today().month:
             animals.append(k)
 
     for l in vacancy_obj:
-        if l['issue_date'].year == date.today().year:
+        if l['issue_date'].year == date.today().year and l['issue_date'].month == date.today().month:
             vacancy.append(l)
 
     for m in ticket_obj:
-        if m['tdate'].year == date.today().year:
+        if m['tdate'].year == date.today().year and m['tdate'].month == date.today().month:
             ticket.append(m)
 
     for n in application_obj:
-        if n['date'].year == date.today().year:
+        if n['date'].year == date.today().year and n['date'].month == date.today().month:
             application.append(n)
 
     for p in purchase_obj:
-        if p['pdate'].year == date.today().year:
+        if p['pdate'].year == date.today().year and p['pdate'].month == date.today().month:
             purchase.append(p['price'])
 
     context ={
