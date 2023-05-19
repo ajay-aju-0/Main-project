@@ -36,6 +36,18 @@ class EnclosureForm(forms.ModelForm):
         return self.cleaned_data        
 
 
+class DismantleEnclosureForm(forms.ModelForm):
+
+    class Meta:
+        model = DismantledEnclosures
+        exclude = ['enclosure']
+        widgets = {
+            'order':forms.TextInput(attrs={'class':'form-control'}),
+            'date':DateInput(attrs={'class':'form-control'}),
+            'reason':forms.Textarea(attrs={'class':'form-control'})
+        }
+
+
 class AnimalForm(forms.ModelForm):
 
     class Meta:
@@ -199,6 +211,14 @@ class AnimalOfTheWeekForm(forms.ModelForm):
             'animal':forms.Select(attrs={'class':'form-control'}),
             'performance':forms.FileInput(attrs={'class':'form-control'})
         }
+
+    def clean(self):
+        performance = self.cleaned_data.get('performance')
+        
+        if str(performance).split('.')[-1] not in ['jpg','jpeg','png','mp4']:
+            self._errors['performance'] = self.error_class(['File format not supported.Please Upload types[jpg,png,mp4]'])
+
+        return self.cleaned_data
 
 
 class TransferDetailsForm(forms.ModelForm):

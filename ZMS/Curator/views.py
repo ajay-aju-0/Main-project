@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,HttpResponse
 from django.db.models import Q
 from accounts.models import *
 from .forms import *
@@ -73,9 +73,10 @@ def loadCuratorHome(request):
 def viewEnclosures(request):
     enclosure = Enclosures.objects.all()
     enclosureForm = EnclosureForm()
+    dismantleForm = DismantleEnclosureForm()
     
     if request.method == 'GET':
-        return render(request,'view enclosures.html',{'enclosures':enclosure,'form':enclosureForm})
+        return render(request,'view enclosures.html',{'enclosures':enclosure,'form':enclosureForm,'dismantleform':dismantleForm})
 
     elif request.method == 'POST':
         form = EnclosureForm(request.POST)
@@ -103,11 +104,29 @@ def changeEnclosureStatus(request,id):
 
 
 @login_required()
-def deleteEnclosure(request,id):
+def dismantleEnclosure(request,id):
+    enclosures = Enclosures.objects.all()
     enclosure = Enclosures.objects.get(pk=id)
-    enclosure.delete()
-    messages.success(request,'Enclosure deleted sucessfully')
+    if request.method == 'POST':
+        form = DismantleEnclosureForm(request.POST)
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.enclosure = enclosure
+            obj.save()
+
+            enclosure.delete()
+            messages.success(request,'Enclosure dismantled sucessfully')
+            return redirect('curator_manage_enclosures')
+        else:
+            messages.error(request,"error while submitting form")
+            return render(request,"view enclosures.html",{'dismantleform':form,'enclosures':enclosures,'error':True})
     return redirect('curator_manage_enclosures')
+
+
+@login_required()
+def viewDismantledEnclosures(request):
+    enclosures = DismantledEnclosures.objects.all()
+    return render(request,'dismantled enclosures.html',{'enclosures':enclosures})
 
 
 @login_required()
@@ -257,7 +276,7 @@ def viewAnimalOfWeek(request):
 
     elif request.method == 'POST':
         form = AnimalOfTheWeekForm(request.POST,request.FILES)
-
+        
         if form.is_valid():
             form.save()
             messages.success(request,"Performance uploaded successfully")
@@ -293,14 +312,6 @@ def viewTransferDetails(request):
             return render(request,"view transfer details.html",{'form':form,'error':True})
     else:
         return render(request,'view transfer details.html',{'transfers':transferDetails,'form':form})
-
-
-@login_required()
-def deleteTransfer(request,id):
-    obj = TransferDetails.objects.get(pk=id)
-    obj.delete()
-    messages.success(request,'Transfer data deleted successfully')
-    return redirect('curator_view_transfer_details')
 
 
 @login_required()
@@ -615,7 +626,7 @@ def deleteFeedback(request,id):
 
 @login_required()
 def viewComplaints(request):
-    complaints = Complaints.objects.filter(rid = Staffs.objects.get(user=request.user.id))
+    complaints = Complaints.objects.filter(rid = Users.objects.get(pk=request.user.id))
 
     if request.method == 'GET':
         return render(request,'curator view complaints.html',{'complaints':complaints})
@@ -651,7 +662,7 @@ def viewGivenComplaints(request):
         if form.is_valid():
             obj = form.save(commit=False)
             obj.uid = Users.objects.get(pk=request.user.id)
-            obj.rid = Staffs.objects.get(user=recipient)
+            obj.rid = Users.objects.get(pk=recipient.id)
             obj.save()
             messages.success(request,'Reply send successfully')
             return redirect('curator_view_send_complaint')

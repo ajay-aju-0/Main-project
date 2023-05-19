@@ -4,6 +4,8 @@
     <title>View Animals</title>
 {% endblock title %}
 
+    
+
 {% block pagetitle %}
     
 <div class="d-flex justify-content-between">
@@ -23,7 +25,9 @@
 
     <div class="row">
         <div class="col-sm-12" id="all">
-            <table class="table table-stripped datatable">
+        <button class="btn btn-secondary" id="all-animal-print">Print</button>
+
+            <table class="table table-stripped datatable" id="all-animal">
                 <thead>
                     <tr>
                         <th>SI No.</th>
@@ -73,7 +77,9 @@
         </div>
 
         <div class="col-sm-12" id="available">
-            <table class="table table-stripped datatable">
+        <button class="btn btn-secondary" id="available-animal-print">Print</button>
+
+            <table class="table table-stripped datatable" id="available-animal">
                 <thead>
                     <tr>
                         <th>SI No.</th>
@@ -127,7 +133,9 @@
         </div>
 
         <div class="col-sm-12" id="dead">
-            <table class="table table-stripped datatable">
+        <button class="btn btn-secondary" id="dead-animal-print">Print</button>
+
+            <table class="table table-stripped datatable" id="dead-animal">
                 <thead>
                     <tr>
                         <th>SI No.</th>
@@ -175,6 +183,45 @@
         $(document).ready(function() {
             $('#available').hide();
             $('#dead').hide();
+            $("#all-animal-print").click(function() {
+                var table = $("#all-animal").clone(); // create a copy of the table
+                var printWindow = window.open('', '', 'height=600,width=800'); // open a new window
+                printWindow.document.write('<html><head><title>Print Table</title>');
+                printWindow.document.write('</head><body>');
+                printWindow.document.write(table[0].outerHTML); // write the table HTML to the new window
+                printWindow.document.write('</body></html>');
+                printWindow.document.close();
+                printWindow.focus();
+                printWindow.print(); // print the new window
+                printWindow.close(); // close the new window
+    
+            });
+
+            $("#available-animal-print").click(function() {
+                var table = $("#available-animal").clone(); // create a copy of the table
+                var printWindow = window.open('', '', 'height=600,width=800'); // open a new window
+                printWindow.document.write('<html><head><title>Print Table</title>');
+                printWindow.document.write('</head><body>');
+                printWindow.document.write(table[0].outerHTML); // write the table HTML to the new window
+                printWindow.document.write('</body></html>');
+                printWindow.document.close();
+                printWindow.focus();
+                printWindow.print(); // print the new window
+                printWindow.close(); // close the new window
+            });
+
+            $("#dead-animal-print").click(function() {
+                var table = $("#dead-animal").clone(); // create a copy of the table
+                var printWindow = window.open('', '', 'height=600,width=800'); // open a new window
+                printWindow.document.write('<html><head><title>Print Table</title>');
+                printWindow.document.write('</head><body>');
+                printWindow.document.write(table[0].outerHTML); // write the table HTML to the new window
+                printWindow.document.write('</body></html>');
+                printWindow.document.close();
+                printWindow.focus();
+                printWindow.print(); // print the new window
+                printWindow.close(); // close the new window
+            });
         })
 
         $('#all_animals').click(function() {

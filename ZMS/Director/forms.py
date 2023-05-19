@@ -206,6 +206,41 @@ class SponserForm(forms.ModelForm):
 
         return self.cleaned_data
 
+class UpdateSponserForm(forms.ModelForm):
+
+    class Meta:
+        model = SponserDetails
+        exclude = ['joined_date']
+        widgets = {
+            'name':forms.TextInput(attrs={'class':'form-control','disabled':True}),
+            'address':forms.Textarea(attrs={'class':'form-control'}),
+            'phone':forms.NumberInput(attrs={'class':'form-control'}),
+            'email':forms.EmailInput(attrs={'class':'form-control'}),
+            'stype':forms.Select(attrs={'class':'form-control'}),
+            'notes':forms.Textarea(attrs={'class':'form-control'})
+        }
+
+    def clean(self):
+        super(SponserForm, self).clean()
+        address = self.cleaned_data.get('address')
+        phone = self.cleaned_data.get('phone')
+        notes = self.cleaned_data.get('notes')
+
+        if address.isdigit():
+            self._errors['address'] = self.error_class(['Address contains only numbers'])
+
+        if phone < 0:
+            self._errors['phone'] = self.error_class(['Please provide a valid phone no.'])
+        
+        if len(str(phone)) < 10:
+            self._errors['phone'] = self.error_class(['Phone no. will contain atleast 10 numbers'])
+
+        if notes.isdigit():
+            self._errors['notes'] = self.error_class(['notes contains only numbers'])
+
+        return self.cleaned_data
+
+
 
 class SponseredAnimalForm(forms.ModelForm):
 

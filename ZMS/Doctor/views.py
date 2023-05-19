@@ -226,9 +226,11 @@ def viewAnimalDetails(request,id):
 
 @login_required()
 def viewDeathDetails(request):
-    animals = Animals.objects.filter(Q(status=1) | Q(status=0))
+    available = Animals.objects.filter(status=1)
+    dead = Animals.objects.exclude(death_date = None)
+
     request.session['unverified_animals_count'] = Animals.objects.filter(status = -1).count()
-    return render(request,'death details.html',{'animals':animals,'unverified_animals':request.session.get('unverified_animals_count')})
+    return render(request,'death details.html',{'available':available,'dead':dead,'unverified_animals':request.session.get('unverified_animals_count')})
 
 
 @login_required()
@@ -273,7 +275,7 @@ def viewComplaints(request):
         if form.is_valid():
             obj = form.save(commit=False)
             obj.uid = Users.objects.get(pk=request.user.id)
-            obj.rid = Staffs.objects.get(user=recipient)
+            obj.rid = Users.objects.get(pk=recipient.id)
             obj.save()
             messages.success(request,'Complaint registered successfully')
             return redirect('doctor_view_complaints')

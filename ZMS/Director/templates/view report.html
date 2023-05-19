@@ -58,14 +58,20 @@
 
 {% if report %}
 <div class="my-4"></div>
-<h2 class="text-center fw-bold">Zoo Report</h2>
-<h3 class="text-center fw-bold">[{{from}} &nbsp;&nbsp; To &nbsp;&nbsp; {{to}} ]</h3>
 
 <div class="container my-5">
-    <table class="table table-borderless datatable">
+    <button class="btn btn-secondary" id="report-print">Print</button>
+    <br><br>
+    <table class="table table-borderless" id="report">
         <thead>
-            
+           
         </thead>
+        <tr>
+            <th colspan="2">
+                <h2 class="text-center fw-bold">Zoo Report</h2>
+                <h3 class="text-center fw-bold">[{{from}} &nbsp;&nbsp; To &nbsp;&nbsp; {{to}} ]</h3>
+            </th>
+        </tr>
 
         <tr>
             <th colspan="2">
@@ -192,6 +198,18 @@
             <td>
                 {% if ticket != 0 %}
                     {{ticket}}
+                {% else %}
+                    None
+                {% endif %}     
+            </td>
+        </tr>
+        <tr>
+            <th>
+                No. of people visited
+            </th>
+            <td>
+                {% if visited_people != 0 %}
+                    {{visited_people}}
                 {% else %}
                     None
                 {% endif %}     
@@ -488,6 +506,7 @@
                 
             </th>
         </tr>
+        
 
         <tr>
             <th>
@@ -507,12 +526,31 @@
             </td>
         </tr>
 
-        
-        
-        
     </table>
 </div>
 {% endif %}    
+
+<script>
+    $(document).ready(function() {
+        
+        $("#report-print").click(function() {
+            var table = $("#report").clone(); // create a copy of the table
+            var printWindow = window.open('', '', 'height=600,width=800'); // open a new window
+            printWindow.document.write('<html><head><title>Zoo Report</title>');
+            printWindow.document.write('</head><body>');
+            printWindow.document.write(table[0].outerHTML); // write the table HTML to the new window
+            printWindow.document.write('</body></html>');
+            printWindow.document.close();
+            printWindow.focus();
+            printWindow.print(); // print the new window
+            printWindow.close(); // close the new window
+        });
+
+    })
+
+    
+</script>
+
 
 {% endblock display %}
 

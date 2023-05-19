@@ -17,11 +17,14 @@
 {% block display %}
 <div class="row">
     <div class="col-sm-8 offset-2">
-        <table class="table table-stripped datatable" style="height: inherit;">
+        <button class="btn btn-success" id="ticket-sales-details-print">Print</button>
+
+        <table class="table table-stripped datatable" style="height: inherit;" id="ticket-sales">
             <thead>
                 <tr>
                     <th>Date</th>
-                    <th>No.of tickets sold</th>   
+                    <th>No.of tickets sold</th>
+                    <th>No. of visitors visited</th>
                     <th>Revenue</th>
                 </tr>
             </thead>
@@ -29,7 +32,8 @@
             {% for ticket in tickets %}
             <tr>
                 <td>{{ticket.tdate}}</td>
-                <td>{{ticket.tcount}}</td>    
+                <td>{{ticket.tcount}}</td>
+                <td>{{ticket.total_person}}</td> 
                 <td>{{ticket.revenue}}</td>             
             </tr>
             {% endfor %}
@@ -39,6 +43,24 @@
 
     </div>
 </div>
+
+<script>
+    $(document).ready(function() {
+        $("#ticket-sales-details-print").click(function() {
+            var table = $("#ticket-sales").clone(); // create a copy of the table
+            var printWindow = window.open('', '', 'height=600,width=800'); // open a new window
+            printWindow.document.write('<html><head><title>Print Table</title>');
+            printWindow.document.write('</head><body>');
+            printWindow.document.write(table[0].outerHTML); // write the table HTML to the new window
+            printWindow.document.write('</body></html>');
+            printWindow.document.close();
+            printWindow.focus();
+            printWindow.print(); // print the new window
+            printWindow.close(); // close the new window
+
+        });            
+    })
+</script>
 
 {% endblock display %}
     

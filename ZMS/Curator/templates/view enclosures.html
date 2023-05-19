@@ -8,7 +8,8 @@
 {% block pagetitle %}
     
 <div class="d-flex justify-content-between">
-    <h1>Manage enclosures</h1>
+    <h1>Manage Enclosures</h1>
+    <a href="{% url 'curator_view_dismantled_enclosures' %}" class="btn btn-secondary fw-bold"><i class="bi bi-eye"></i>&nbsp;&nbsp; Dismantled Enclosures</a>
     <button data-toggle="modal" data-target="#enclosuremodal" data-backdrop="static" class="btn btn-success text-white fw-bold" style="width:max-content;">+ Add Enclosure </button>
 </div>
 {% include 'shared/messages.html' %}
@@ -19,7 +20,6 @@
 
 {% block display %}
 {% include 'add enclosure.html' %}
-
 <div class="row">
     <div class="col-sm-8 offset-1">
         <table class="table table-stripped datatable" style="height: inherit;">
@@ -45,14 +45,17 @@
                 <td>
                     {% if enclosure.archieved == False %}
                     <a href="{% url 'curator_change_enclosurestatus' enclosure.id %}" onclick="return confirm('do you want to archive?')" class="btn btn-danger text-white archive p-1 my-1 mx-5 w-25">
-                        archive
+                        Archive
                     </a>
                     {% else %}
-                    <a href="{% url 'curator_change_enclosurestatus' enclosure.id %}" onclick="return confirm('do you want to unarchive?')" class="btn btn-success text-white archive p-1 my-1 mx-5 w-25">
-                        unarchive
+                    <a href="{% url 'curator_change_enclosurestatus' enclosure.id %}" onclick="return confirm('do you want to unarchive?')" class="btn btn-success text-white archive px-1 my-1 mx-5 w-25">
+                        Unarchive
                     </a>
                     {% endif %}
-                    <a href="{% url 'curator_delete_enclosure' enclosure.id %}" onclick="return confirm('sure to delete?')" class="btn btn-danger text-white p-1 my-1">Delete</a>
+
+                    <button data-toggle="modal" data-target="#dismantlemodal{{enclosure.id}}" data-backdrop="static" class="btn btn-danger">Dismantle</button>
+                    {% include 'dismantle enclosure.html' %}
+
                 </td>
                     
             </tr>
@@ -73,6 +76,8 @@
         })
     </script>
 {% endif %}
+
+
 
 
 {% endblock display %}

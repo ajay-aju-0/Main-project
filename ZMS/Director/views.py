@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,HttpResponse
 from django.contrib import messages
 from django.db.models import Count,Q,Sum
 from accounts.forms import *
@@ -18,6 +18,7 @@ def loadDirectorHome(request):
     ticket_obj = Ticket.objects.filter().values('tdate')
     ticket_revenue_obj = Ticket.objects.filter().values('tdate','total')
     sponser_revenue_obj = SponseredAnimals.objects.filter().values('sdate','amount')
+    visited_people_obj = Ticket.objects.filter().values('tdate','total_person')
 
     visitors = []
     staffs = []
@@ -55,6 +56,7 @@ def loadDirectorHome(request):
         if p['sdate'].year == date.today().year and p['sdate'].month == date.today().month:
             sponser_revenue.append(p['amount'])
 
+    
 
     total_revenue = sum(ticket_revenue) + sum(sponser_revenue)
 
@@ -68,6 +70,7 @@ def loadDirectorHome(request):
     ticket_revenue_list = [0] * 12
     sponser_revenue_list = [0] * 12
     total_revenue_list = [0] * 12
+    visited_people_count = [0] * 12
 
 
     for i in tickets:
@@ -84,6 +87,13 @@ def loadDirectorHome(request):
                     visitors_count[j] += i['vcount']
 
 
+    for v in visited_people_obj:
+        if v['tdate'].year == date.today().year:
+            for j in range(12):
+                if j == v['tdate'].month -1:
+                    visited_people_count[j] += v['total_person']
+
+
     for t in ticket_revenue_obj:
         if t['tdate'].year == date.today().year:
             for j in range(12):
@@ -95,12 +105,11 @@ def loadDirectorHome(request):
         if s['sdate'].year == date.today().year:
             for j in range(12):
                 if j == s['sdate'].month -1:
-                    sponser_revenue_list[j] += s['sdate']
+                    sponser_revenue_list[j] += s['amount']
 
     for i in range(12):
         total_revenue_list[i] = ticket_revenue_list[i] + sponser_revenue_list[i]
 
-    
     
     context ={
         'visitors':len(visitors),
@@ -111,7 +120,8 @@ def loadDirectorHome(request):
         'revenue':total_revenue,
         'sales':sales,
         'visitor_count':visitors_count,
-        'total_revenue':total_revenue_list
+        'total_revenue':total_revenue_list,
+        'visited_people_count':visited_people_count,
     }
 
     return render(request,'directorHome.html',context)
@@ -306,7 +316,7 @@ def viewTicketRateHistory(request):
 
 @login_required()
 def viewTicketSales(request):
-    tickets = Ticket.objects.values('tdate','total').annotate(tcount=Count('tdate'),revenue=Sum('total')).order_by()    
+    tickets = Ticket.objects.values('tdate').distinct().annotate(tcount=Count('tdate'),revenue=Sum('total'),total_person=Sum('total_person')).order_by()
     return render(request,'view ticket sales.html',{'tickets':tickets})
 
 
@@ -449,6 +459,12 @@ def enclosureList(request):
 
 
 @login_required()
+def dismantledEnclosuresList(request):
+    enclosures = DismantledEnclosures.objects.all()
+    return render(request,'director view dismantled enclosures.html',{'enclosures':enclosures})
+
+
+@login_required()
 def showPurchases(request):
     purchase = Purchase.objects.all()
     return render(request,'view purchase history.html',{'purchase':purchase})
@@ -502,13 +518,13 @@ def addSponser(request):
 @login_required()
 def updateSponser(request,id):
     sponser = SponserDetails.objects.get(pk=id)
-    sponserForm = SponserForm(instance=sponser)
+    sponserForm = UpdateSponserForm(instance=sponser)
 
     if request.method == 'GET':
         return render(request,'update sponser.html',{'form':sponserForm})
     
     elif request.method == 'POST':
-        form = SponserForm(request.POST,instance=sponser)
+        form = UpdateSponserForm(request.POST,instance=sponser)
 
         if form.is_valid():
             form.save()
@@ -525,23 +541,17 @@ def updateSponser(request,id):
 @login_required()
 def showSponseredAnimals(request,id):
     animals = SponseredAnimals.objects.filter(sponser = id)
-    return render(request,'sponsered animal details.html',{'animals':animals})
+    form = SponseredAnimalForm()
+    if request.method == 'GET':
+        return render(request,'sponsered animal details.html',{'animals':animals,'form':form,'id':id})
 
-
-@login_required()
-def deleteSponseredAnimal(request,id):
-    animal = SponseredAnimals.objects.get(pk = id)
-    animal.delete()
-    messages.success(request,"sponsered animal deleted successfully!")
-    return redirect('director_manage_sponsers')
-
-
-@login_required()
-def deleteSponser(request,id):
-    sponser = SponserDetails.objects.get(pk=id)
-    sponser.delete()
-    return redirect('director_manage_sponsers')
-
+    elif request.method == 'POST':
+        form = SponseredAnimalForm(request.POST)
+        obj = form.save(commit = False)
+        obj.sponser = SponserDetails.objects.get(pk = id)
+        obj.save()
+        return redirect('director_view_sponsered_animals')
+    
 
 @login_required()
 def showFeedbacks(request):
@@ -551,7 +561,7 @@ def showFeedbacks(request):
 
 @login_required()
 def viewComplaints(request):
-    complaints = Complaints.objects.filter(rid = Staffs.objects.get(user=request.user.id))
+    complaints = Complaints.objects.filter(rid = Users.objects.get(pk=request.user.id))
 
     if request.method == 'GET':
         return render(request,'director view complaints.html',{'complaints':complaints})
@@ -658,6 +668,7 @@ def viewReport(request):
                     'total_staffs':Users.objects.filter(Q(usertype = 'curator') | Q(usertype = 'doctor') | Q(usertype = 'keeper')).count(),
                     'staffs':Users.objects.filter(date_joined__range = [from_date,to_date],usertype = ['curator','doctor','keeper']).count(),
                     'ticket':Ticket.objects.filter(tdate__range = [from_date,to_date]).count(),
+                    'visited_people':sum(Ticket.objects.filter(tdate__range = [from_date,to_date]).values_list('total_person',flat=True)),
                     'ticket_revenue':sum(Ticket.objects.filter(tdate__range = [from_date,to_date]).values_list('total',flat=True)),
                     'enclosure_count':Enclosures.objects.all().count(),
                     'enclosure_name':Enclosures.objects.all().values_list('name',flat=True),

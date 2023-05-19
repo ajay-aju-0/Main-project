@@ -1,0 +1,54 @@
+{% extends 'shared/curatorpanel.html' %}
+{% load static %}
+
+{% block title %}
+  <title>Dismantled Enclosures</title>
+{% endblock title %}
+
+{% block pagetitle %}
+    
+<div class="d-flex justify-content-between">
+    <h1>Dismantled Enclosures</h1>
+</div>
+<nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'curator_manage_enclosures' %}">Manage enclosures</a></li>
+      <li class="breadcrumb-item active">Dismantled enclosures</li>
+    </ol>
+</nav>
+{% include 'shared/messages.html' %}
+
+<br>
+{% endblock pagetitle %}
+
+
+{% block display %}
+
+<div class="row">
+    <div class="col-sm-8 offset-1">
+        <table class="table table-stripped datatable" style="height: inherit;">
+            <thead>
+                <tr>
+                    <th>Enclosure</th>
+                    <th>Order ID</th>
+                    <th>Dismantled Date</th>
+                    <th>Reason</th>
+                </tr>
+            </thead>
+            
+            
+            {% for enclosure in enclosures %}
+            <tr>
+                <td>{{enclosure.enclosure}}</td>
+                <td>{{enclosure.order}}</td>
+                <td>{{enclosure.date}}</td>
+                <td>{{enclosure.reason}}</td>
+            </tr>
+            {% endfor %}
+                
+        </table>
+    </div>
+</div>
+
+{% endblock display %}
+    

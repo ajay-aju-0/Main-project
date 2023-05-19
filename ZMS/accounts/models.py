@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.core.validators import FileExtensionValidator,validate_image_file_extension
 
 # Create your models here.
 
@@ -24,15 +25,15 @@ class Users(AbstractUser):
     house_name = models.CharField(max_length=50)
     phone = models.BigIntegerField(default=0)
     usertype = models.CharField(max_length=15)
-    profile = models.ImageField(upload_to="DP",max_length=300,verbose_name="profile photo",default="null")
-    id_card = models.FileField(upload_to="id",max_length=300)
+    profile = models.ImageField(upload_to="DP",max_length=300,verbose_name="profile photo",default="null",validators=[validate_image_file_extension])
+    id_card = models.FileField(upload_to="id",max_length=300,validators=[FileExtensionValidator(['pdf'])])
 
     def __str__(self):
         return self.username
 
 class Staffs(models.Model):
     desig = models.CharField(max_length=20,verbose_name="Designation")
-    salary = models.BigIntegerField()
+    salary = models.BigIntegerField(verbose_name='Basic pay')
     bonus = models.IntegerField(default=0)
     user = models.ForeignKey(to=Users,on_delete=models.CASCADE)
 
@@ -79,8 +80,8 @@ class Complaints(models.Model):
     cdate = models.DateField(auto_now_add=True)
     complaint = models.CharField(max_length=250)
     reply = models.CharField(max_length=200,null=True)
-    uid = models.ForeignKey(to=Users,on_delete=models.CASCADE)
-    rid = models.ForeignKey(to=Staffs,on_delete=models.CASCADE)
+    uid = models.ForeignKey(to=Users,on_delete=models.CASCADE,related_name='user_id')
+    rid = models.ForeignKey(to=Users,on_delete=models.CASCADE,related_name='recipient_id')
 
 class Enclosures(models.Model):
     name = models.CharField(max_length=20,verbose_name="Enclosure name")
@@ -88,6 +89,12 @@ class Enclosures(models.Model):
 
     def __str__(self):
         return self.name
+    
+class DismantledEnclosures(models.Model):
+    enclosure = models.CharField(max_length=20,verbose_name="Enclosure name")
+    order = models.CharField(max_length=20,verbose_name='Order ID')
+    date = models.DateField(verbose_name='Date')
+    reason = models.CharField(max_length=200,verbose_name='Dismantle reason')
 
 class Taxonomy(models.Model):
     class_choice = (('mammalia','Mammalia'),('reptilia','Reptilia'),('amphibia','Amphibia'),('aves','Aves'),('fish','Fish'))
@@ -120,9 +127,9 @@ class Animals(models.Model):
     status = models.IntegerField(default=-1)
     diatery_req = models.CharField(max_length=100,verbose_name='Diatery requirement')
     date_joined = models.DateField(auto_now_add=True)
-    image1 = models.FileField(upload_to='Animals',max_length=300,verbose_name="Image 1",default='')
-    image2 = models.FileField(upload_to='Animals',max_length=300,verbose_name="Image 2",null=True,blank=True)
-    image3 = models.FileField(upload_to='Animals',max_length=300,verbose_name="Image 3",null=True,blank=True)
+    image1 = models.ImageField(upload_to='Animals',max_length=300,verbose_name="Image 1",validators=[validate_image_file_extension])
+    image2 = models.ImageField(upload_to='Animals',max_length=300,verbose_name="Image 2",null=True,blank=True,validators=[validate_image_file_extension])
+    image3 = models.ImageField(upload_to='Animals',max_length=300,verbose_name="Image 3",null=True,blank=True,validators=[validate_image_file_extension])
     reason = models.CharField(max_length=100,default='null')
     caretaker = models.ForeignKey(to=Staffs,on_delete=models.CASCADE)
     akind = models.ForeignKey(to=AnimalKind,on_delete=models.CASCADE)
@@ -146,7 +153,7 @@ class TransferDetails(models.Model):
 
 class Animal_of_the_week(models.Model):
     animal = models.ForeignKey(to=Animals,on_delete=models.CASCADE)
-    performance = models.FileField(upload_to="performances",max_length=300)
+    performance = models.FileField(upload_to="performances",max_length=300,validators=[FileExtensionValidator(['jpg','jpeg','mp4','png'])])
     an_week_date = models.DateField(auto_now_add=True)
 
 class Medicines(models.Model):
@@ -181,7 +188,7 @@ class Events(models.Model):
     ename = models.CharField(max_length=30,verbose_name="Event name")
     estart = models.DateField(verbose_name="Starting date")
     eend = models.DateField(verbose_name="Ending date")
-    eimage = models.FileField(upload_to='events',max_length=300,verbose_name="Image")
+    eimage = models.FileField(upload_to='events',max_length=300,verbose_name="Image",validators=[FileExtensionValidator(['jpg','jpeg','png'])])
     estatus = models.CharField(max_length=10)
 
 class Participants(models.Model):

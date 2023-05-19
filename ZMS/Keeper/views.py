@@ -121,7 +121,7 @@ def viewComplaints(request):
         if form.is_valid():
             obj = form.save(commit=False)
             obj.uid = Users.objects.get(pk=request.user.id)
-            obj.rid = Staffs.objects.get(user=recipient)
+            obj.rid = Users.objects.get(pk=recipient.id)
             obj.save()
             messages.success(request,'Complaint registered successfully')
             return redirect('keeper_view_complaint')

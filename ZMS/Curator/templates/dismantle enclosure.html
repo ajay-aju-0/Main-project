@@ -1,10 +1,10 @@
 
 
-<div class="modal fade" id="performancemodal" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true" >
+<div class="modal fade" id="dismantlemodal{{enclosure.id}}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true" >
     <div class="modal-dialog" role="document">
         <div class="modal-content">
                 <div class="modal-header">
-                        <h5 class="modal-title">Upload Performance</h5>
+                        <h5 class="modal-title">Dismantle Enclosure</h5>
                             <button type="button" class="close bg-danger text-white" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -15,14 +15,17 @@
                 {% include 'shared/messages.html' %}
                 {% endif %}
                     
-                <form action="{% url 'curator_view_animal_of_the_week' %}" method="post" class="font-weight-bold" enctype="multipart/form-data">      
-                
-                
+                <form action="{% url 'curator_dismantle_enclosure' enclosure.id %}" method="post" class="font-weight-bold">      
+
                 {% csrf_token %}
-                {{ form.as_p }}
+                <p>
+                    <label for="enclosure">Enclosure:</label>
+                    <input class="form-control" type="text" name="enclosure" id="enclosure" value="{{enclosure.name}}" disabled>
+                </p>
+                {{dismantleform.as_p}}
                 <br>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-success btn-block w-100">Submit</button>
+                    <button type="submit" class="btn btn-success btn-block w-100">Dismantle</button>
                 </div>
                  </form>                
                 
@@ -33,7 +36,7 @@
 </div>
   
   <script>
-    $('#performancemodal').on('show.bs.modal', event => {
+    $('#enclosuremodal').on('show.bs.modal', event => {
         var button = $(event.relatedTarget);
         var modal = $(this);
         // Use above variables to manipulate the DOM

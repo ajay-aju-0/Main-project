@@ -36,7 +36,6 @@
                         <th>Transporter name</th>
                         <th>Contact</th>
                         <th>Expense</th>
-                        <th>Action</th>
                     </tr>
                 </thead>
                 
@@ -56,9 +55,6 @@
                         <td>{{transfer.transporter_name}}</td>
                         <td>{{transfer.transporter_contact}}</td> 
                         <td>{{transfer.expense}}</td>                  
-                        <td>
-                            <a href="{% url 'curator_remove_animal_transfer' transfer.id %}" onclick="return confirm('sure to delete?')" class="btn btn-danger">Delete</a>
-                        </td>
                     </tr>
                 {% endfor %}
                

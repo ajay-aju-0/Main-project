@@ -176,6 +176,20 @@
         <input type="hidden" id="vnov" value="{{visitor_count.10}}">
         <input type="hidden" id="vdec" value="{{visitor_count.11}}">
 
+        <input type="hidden" id="vpjan" value="{{visited_people_count.0}}">
+        <input type="hidden" id="vpfeb" value="{{visited_people_count.1}}">
+        <input type="hidden" id="vpmar" value="{{visited_people_count.2}}">
+        <input type="hidden" id="vpapr" value="{{visited_people_count.3}}">
+        <input type="hidden" id="vpmay" value="{{visited_people_count.4}}">
+        <input type="hidden" id="vpjun" value="{{visited_people_count.5}}">
+        <input type="hidden" id="vpjul" value="{{visited_people_count.6}}">
+        <input type="hidden" id="vpaug" value="{{visited_people_count.7}}">
+        <input type="hidden" id="vpsep" value="{{visited_people_count.8}}">
+        <input type="hidden" id="vpoct" value="{{visited_people_count.9}}">
+        <input type="hidden" id="vpnov" value="{{visited_people_count.10}}">
+        <input type="hidden" id="vpdec" value="{{visited_people_count.11}}">
+
+
         <input type="hidden" id="rjan" value="{{total_revenue.0}}">
         <input type="hidden" id="rfeb" value="{{total_revenue.1}}">
         <input type="hidden" id="rmar" value="{{total_revenue.2}}">
@@ -225,6 +239,20 @@
             vnov = parseInt(document.getElementById('vnov').value)
             vdec = parseInt(document.getElementById('vdec').value)
 
+            vpjan = parseInt(document.getElementById('vpjan').value)
+            vpfeb = parseInt(document.getElementById('vpfeb').value)
+            vpmar = parseInt(document.getElementById('vpmar').value)
+            vpapr = parseInt(document.getElementById('vpapr').value)
+            vpmay = parseInt(document.getElementById('vpmay').value)
+            vpjun = parseInt(document.getElementById('vpjun').value)
+            vpjul = parseInt(document.getElementById('vpjul').value)
+            vpaug = parseInt(document.getElementById('vpaug').value)
+            vpsep = parseInt(document.getElementById('vpsep').value)
+            vpoct = parseInt(document.getElementById('vpoct').value)
+            vpnov = parseInt(document.getElementById('vpnov').value)
+            vpdec = parseInt(document.getElementById('vpdec').value)
+
+
             rjan = parseInt(document.getElementById('rjan').value)
             rfeb = parseInt(document.getElementById('rfeb').value)
             rmar = parseInt(document.getElementById('rmar').value)
@@ -242,6 +270,8 @@
             new ApexCharts(document.querySelector("#reportsChart"), {
               series: [
                 {name: 'Ticket sales',data: [jan,feb,mar,apr,may,jun,jul,aug,sep,oct,nov,dec]},
+
+                {name:'People visited',data: [vpjan,vpfeb,vpmar,vpapr,vpmay,vpjun,vpjul,vpaug,vpsep,vpoct,vpnov,vpdec]},
 
                 {name: 'Visitors registered',data: [vjan,vfeb,vmar,vapr,vmay,vjun,vjul,vaug,vsep,voct,vnov,vdec]} ,
 
@@ -266,7 +296,7 @@
               markers: {
                 size: 4
               },
-              colors: ['#4154f1', '#2eca6a', '#ff771d'],
+              colors: ['#4154f1','#ffd700', '#2eca6a', '#ff771d'],
 
               dataLabels: {
                 enabled: true
