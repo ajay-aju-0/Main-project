@@ -1,0 +1,38 @@
+{% extends 'index.html' %}
+
+
+{% block display %}
+    {% include 'login.html' %}
+    {% include 'shared/messages.html' %}
+    <div class="container">
+        <div class="row">
+            <div class="card">
+                <div class="card-body">
+                    <table class="table table-stripped">
+                        <tr>
+                            <th>Day</th>
+                            <th>Open Time</th>
+                            <th>Close Time</th>
+                        </tr>
+                        {% for time in timings %}                
+                            <tr>
+                                <td>{{time.day}}</td>
+                                
+                                {% if time.holiday == True %}
+                                    <td><i>Holiday</i></td>
+                                    <td><i>Holiday</i></td>
+                                {% else %}
+                                    <td>{{time.open_time}}</td>
+                                    <td>{{time.close_time}}</td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                    </table> 
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock display %}
+    
+    

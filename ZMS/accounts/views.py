@@ -80,6 +80,25 @@ def authenticatedUser(request):
         return HttpResponse('requested page unavailable')
  
 
+def viewAnimals(request):
+    animals = Animals.objects.all()
+    return render(request,'visitor view animals.html',{'animals':animals})
+
+
+def viewTimings(request):
+    timings = ZooTimings.objects.all()
+    return render(request,'view zoo time.html',{'timings':timings})
+
+
+def viewEvents(request):
+    events = reversed(Events.objects.all())
+    return render(request,'view events.html',{'events':events})
+
+
+def viewFeedbacks(request):
+    feedbacks = reversed(Feedback.objects.all())
+    return render(request,'view feedbacks.html',{'feedbacks':feedbacks})
+
 def logoutUser(request):
     logout(request)
     request.user = None

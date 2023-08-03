@@ -4,7 +4,7 @@ from django.db.models import Count,Q,Sum
 from accounts.forms import *
 from accounts.models import *
 from .forms import *
-from datetime import date
+from datetime import date,datetime
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
 
@@ -63,6 +63,7 @@ def loadDirectorHome(request):
 
     tickets = Ticket.objects.values('tdate').annotate(tcount=Count('tdate')).order_by()
     visitors_count_obj = Users.objects.filter(usertype = 'visitor',is_active = True).values('date_joined').annotate(vcount=Count('date_joined')).order_by()
+    animal_count_obj = Animals.objects.exclude(Q(status = -1) & Q(status = -2)).values('date_joined')
 
 
     sales = [0] * 12
@@ -71,6 +72,7 @@ def loadDirectorHome(request):
     sponser_revenue_list = [0] * 12
     total_revenue_list = [0] * 12
     visited_people_count = [0] * 12
+    animal_count = [0]*12
 
 
     for i in tickets:
@@ -94,6 +96,22 @@ def loadDirectorHome(request):
                     visited_people_count[j] += v['total_person']
 
 
+    for a in animal_count_obj:
+        if a['date_joined'].year == date.today().year:
+            for j in range(12):
+                if j == a['date_joined'].month -1:
+                    animal_count[j] += 1
+    
+    c = 1
+    for i in range(11):
+        print(i)
+        if i <= date.today().month:
+            animal_count[c] += animal_count[c-1]
+            c = c+1
+        else:
+            break
+       
+
     for t in ticket_revenue_obj:
         if t['tdate'].year == date.today().year:
             for j in range(12):
@@ -110,7 +128,7 @@ def loadDirectorHome(request):
     for i in range(12):
         total_revenue_list[i] = ticket_revenue_list[i] + sponser_revenue_list[i]
 
-    
+
     context ={
         'visitors':len(visitors),
         'staffs':len(staffs),
@@ -122,6 +140,7 @@ def loadDirectorHome(request):
         'visitor_count':visitors_count,
         'total_revenue':total_revenue_list,
         'visited_people_count':visited_people_count,
+        'animal_count':animal_count
     }
 
     return render(request,'directorHome.html',context)
@@ -131,6 +150,8 @@ def loadDirectorHome(request):
 def viewZooDetails(request):
     details = ZooDetails.objects.get(pk=1)
     detailsForm = ZooDetailsForm(instance=details)
+    details.enclosure_types = Enclosures.objects.all().count()
+    details.current_animal_occupancy = Animals.objects.filter(status=1).count()
 
     if request.method == 'GET':
         return render(request,'zoo details.html',{'form':detailsForm,'details':details})
@@ -317,12 +338,18 @@ def viewTicketRateHistory(request):
 @login_required()
 def viewTicketSales(request):
     tickets = Ticket.objects.values('tdate').distinct().annotate(tcount=Count('tdate'),revenue=Sum('total'),total_person=Sum('total_person')).order_by()
-    return render(request,'view ticket sales.html',{'tickets':tickets})
+    return render(request,'view ticket sales.html',{'tickets':tickets,'list':[0]*12})
 
 
 @login_required()
 def vacancyList(request):
     vacancy = JobVacancy.objects.all()
+    time_now = datetime.now().strftime('%H:%M:%S')
+
+    for v in vacancy:
+        if date.today() == v.vend and time_now >= str(v.vend_time):
+            v.vstatus = 'closed'
+            v.save()
     return render(request,'manage vacancy.html',{'vacancies':vacancy})
 
 
@@ -365,14 +392,6 @@ def updateVacancy(request,id):
 
     else:
         return redirect('director_manage_vacancy')
-
-@login_required()
-def closeVacancy(request,id):
-    catagory = JobVacancy.objects.get(pk=id)
-    vacancy = JobVacancy.objects.all()
-    catagory.vstatus = "closed"
-    catagory.save()
-    return render(request,'manage vacancy.html',{'message':True,'vacancies':vacancy})
 
 
 @login_required()
@@ -467,7 +486,7 @@ def dismantledEnclosuresList(request):
 @login_required()
 def showPurchases(request):
     purchase = Purchase.objects.all()
-    return render(request,'view purchase history.html',{'purchase':purchase})
+    return render(request,'view purchase history.html',{'purchases':purchase})
 
 
 @login_required()
@@ -532,7 +551,7 @@ def updateSponser(request,id):
             return redirect('director_manage_sponsers')
         else:
             messages.error(request,"error while submitting form")
-            return render(request,'update sponser.html',{'form1':form})
+            return render(request,'update sponser.html',{'form':form})
 
     else:
         return redirect('director_manage_sponsers')

@@ -33,7 +33,7 @@
                 {% for complaint in complaints %}
                     <tr>
                         <td>{{complaint.cdate}}</td>
-                        <td>{{complaint.rid.user}}({{complaint.rid.user.usertype}})</td>
+                        <td>{{complaint.rid.username}}({{complaint.rid.usertype}})</td>
                         <td>{{complaint.complaint}}</td>
                         
                         {% if complaint.reply == None %}

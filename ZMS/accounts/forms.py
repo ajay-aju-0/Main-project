@@ -113,6 +113,9 @@ class VacancyForm(forms.ModelForm):
             'vtype':forms.Select(attrs={'class':'form-control'}),
             'vstart':DateInput(attrs={'class':'form-control'}),
             'vend':DateInput(attrs={'class':'form-control'}),
+            'order':forms.TextInput(attrs={'class':'form-control'}),
+            'vstart_time':forms.TimeInput(attrs={'class':'form-control','type':'time'}),
+            'vend_time':forms.TimeInput(attrs={'class':'form-control','type':'time'}),
         }
 
     def clean(self):

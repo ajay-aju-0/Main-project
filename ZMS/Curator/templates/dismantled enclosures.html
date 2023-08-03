@@ -29,6 +29,7 @@
         <table class="table table-stripped datatable" style="height: inherit;">
             <thead>
                 <tr>
+                    <th>SI No.</th>
                     <th>Enclosure</th>
                     <th>Order ID</th>
                     <th>Dismantled Date</th>
@@ -39,6 +40,7 @@
             
             {% for enclosure in enclosures %}
             <tr>
+                <td>{{forloop.counter}}</td>
                 <td>{{enclosure.enclosure}}</td>
                 <td>{{enclosure.order}}</td>
                 <td>{{enclosure.date}}</td>

@@ -24,12 +24,15 @@
                     <thead>
                     <tr>
                         <th>SI No.</th>
+                        <th>Order ID</th>
                         <th>Position</th>
                         <th>Qualification</th>
                         <th>Description</th>
                         <th>Type</th>
                         <th>Start date</th>
+                        <th>Start time</th>
                         <th>End date</th>
+                        <th>End time</th>
                         <th>Issued on</th>
                         <th colspan="2">Action</th>
                     </tr>
@@ -38,21 +41,20 @@
                     {% for vacancy in vacancies %}
                     <tr>
                         <td>{{forloop.counter}}</td>
+                        <td>{{vacancy.order}}</td>
                         <td>{{vacancy.vposition}}</td>
                         <td>{{vacancy.qualification}}</td>
                         <td>{{vacancy.description}}</td>                            
                         <td>{{vacancy.vtype}}</td>
                         <td>{{vacancy.vstart}}</td>
+                        <td>{{vacancy.vstart_time}}</td>
                         <td>{{vacancy.vend}}</td>
+                        <td>{{vacancy.vend_time}}</td>
                         <td>{{vacancy.issue_date}}</td>
                         <td>
                             {% if vacancy.vstatus == 'available' %}
                             <a href="{% url 'director_update_vacancy' vacancy.id %}" class="btn btn-success text-white">
                             Update
-                            </a>
-                            <br>
-                            <a href="{% url 'director_close_vacancy' vacancy.id %}" onclick="return confirm('Sure to close?')" class="btn btn-danger text-white my-1">
-                            Close
                             </a>
                             {% else %}
                            <h6 class="text-center"> Vacancy closed</h6>

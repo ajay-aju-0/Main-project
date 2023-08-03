@@ -34,6 +34,7 @@
                         <th>Designation</th>
                         <th>Basic pay</th>
                         <th>Bonus</th>
+                        <th>ID Card</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -57,6 +58,7 @@
                     <td>{{staff.desig}}</td>
                     <td>{{staff.salary}}</td>
                     <td>{{staff.bonus}}</td>
+                    <td><a href="{{staff.user.id_card.url}}">{{staff.user.id_card}}</a></td>
                     <td><a href="{% url 'director_update_staff' staff.user.id %}" class="btn btn-success text-white">
                         Update
                         </a>

@@ -30,8 +30,6 @@
                     <th>Quantity</th>
                     <th>Unit</th>
                     <th>Total Price</th>
-
-                    <th colspan="2">Action</th>
                 </tr>
             </thead>
             
@@ -45,10 +43,6 @@
                 <td>{{purchase.unit}}</td>
                 <td>{{purchase.price}}</td>
 
-                <td>
-                    <a href="{% url 'curator_delete_purchase' purchase.id %}" onclick="return confirm('sure to delete?')" class="btn btn-danger text-white p-1 my-1">Delete</a>
-                </td>
-                    
             </tr>
             {% endfor %}
                 

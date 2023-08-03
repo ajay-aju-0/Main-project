@@ -29,6 +29,7 @@
                             <th>DOB</th>
                             <th>Address</th>
                             <th>Phone</th>
+                            <th>ID Card</th>
                         </tr>
                     </thead>
                     
@@ -49,6 +50,9 @@
                         <td>{{visitor.dob}}</td>
                         <td>{{visitor.house_name}} <br> {{visitor.street}},{{visitor.city}},<br>{{visitor.state}},{{visitor.country}}</td>
                         <td>{{visitor.phone}}</td>
+                        <td>
+                            <a href="{{visitor.id_card.href}}">{{visitor.id_card}}</a>
+                        </td>
                     </tr>
                     {% endfor %}
                         

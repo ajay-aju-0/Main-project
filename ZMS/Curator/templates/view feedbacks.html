@@ -45,6 +45,8 @@
                     <button data-toggle="modal" data-target="#feedbackmodal{{feedback.id}}" data-backdrop="static"  class="btn btn-danger text-white p-1 my-1">Reply</button>
                     {% include 'give feedback reply.html' %}
                     {% endif %}
+                </td>
+                <td>
                     <a href="{% url 'curator_delete_feedbacks' feedback.id %}" onclick="return confirm('do you want to delete this feedback?')" class="btn btn-danger"><i class="bi bi-trash"></i></a>
                 </td>
                     

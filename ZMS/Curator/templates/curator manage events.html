@@ -47,9 +47,9 @@
                     {% for participant in participants  %}
                         
                         {% if participant.event.id == event.id %}
-                            {{participant.animal}}
+                            {{participant.animal}}. <br>
                         {% else %}
-                           <h2>No participants</h2> 
+                            <i>No participants</i>
                         {% endif %}
 
                     {% empty %}

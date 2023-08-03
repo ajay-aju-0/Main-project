@@ -44,7 +44,11 @@
                         {% endif %}
                             
                         <td>
-                            <a href="{% url 'visitor_delete_complaint' complaint.id %}" onclick="return confirm('do you want to delete this complaint?')" class="btn btn-danger text-white">Delete</a>
+                            {% if complaint.reply == None %}
+                                <a href="{% url 'visitor_delete_complaint' complaint.id %}" onclick="return confirm('do you want to delete this complaint?')" class="btn btn-danger text-white">Delete</a>
+                            {% else %}
+                                <i>No action available</i>
+                            {% endif %}
                         </td>
                     </tr>
                 </tbody>

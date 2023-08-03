@@ -1,0 +1,60 @@
+{% extends 'shared/curatorpanel.html' %}
+{% load static %}
+
+{% block title %}
+<title>View Expired medicines</title>
+{% endblock title %}
+
+{% block pagetitle %}
+
+<div class="d-flex justify-content-between">
+    <h1>Expired medicines</h1>
+</div>
+<nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'curator_view_medicine_stock' %}">View medicine stock</a></li>
+      <li class="breadcrumb-item active">Expired medicines</li>
+    </ol>
+</nav>
+{% include 'shared/messages.html' %}
+
+{% endblock pagetitle %}
+
+
+{% block display %}
+
+<div class="row">
+    <div class="col-sm-8 offset-1">
+        <table class="table table-stripped datatable" style="height: inherit;">
+            <thead>
+                <tr>
+                    <th>SI No.</th>
+                    <th>Name</th>
+                    <th>Stock</th>
+                    <th>Expired date</th>
+                </tr>
+            </thead>
+            
+            
+            {% for medicine in medicines %}
+            <tr>
+                <td>{{forloop.counter}}</td>
+                <td>{{medicine.medicine}}</td>
+                
+                {% if medicine.stock == 0 %}
+                    <td>Stock out</td>
+                {% else %}
+                    <td>{{medicine.stock}}</td>    
+                {% endif %}
+                
+                <td>{{medicine.expire}}</td>
+            </tr>
+            {% endfor %}
+                
+        </table>
+    </div>
+</div>
+
+
+{% endblock display %}
+    

@@ -212,7 +212,7 @@ class UpdateSponserForm(forms.ModelForm):
         model = SponserDetails
         exclude = ['joined_date']
         widgets = {
-            'name':forms.TextInput(attrs={'class':'form-control','disabled':True}),
+            'name':forms.TextInput(attrs={'class':'form-control','readonly':True,'disabled':True}),
             'address':forms.Textarea(attrs={'class':'form-control'}),
             'phone':forms.NumberInput(attrs={'class':'form-control'}),
             'email':forms.EmailInput(attrs={'class':'form-control'}),
@@ -221,7 +221,7 @@ class UpdateSponserForm(forms.ModelForm):
         }
 
     def clean(self):
-        super(SponserForm, self).clean()
+        super(UpdateSponserForm, self).clean()
         address = self.cleaned_data.get('address')
         phone = self.cleaned_data.get('phone')
         notes = self.cleaned_data.get('notes')

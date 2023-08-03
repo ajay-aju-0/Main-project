@@ -1,0 +1,129 @@
+{% extends 'index.html' %}
+
+
+{% block display %}
+    {% include 'login.html' %}
+    {% include 'shared/messages.html' %}
+    <div class="container">
+        <div class="row">
+            {% for animal in animals %}                
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <img src="{{animal.image1.url}}" alt="{{animal.given_name}}" style="width:100%;height: 150px;margin-top: 5px;">
+                        <h5 class="card-title">{{animal.given_name}}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">Species : {{animal.akind.species}}</h6>
+                        <h6 class="card-subtitle mb-2 text-muted">Status :
+                            {% if animal.status == 1 %}
+                                Available
+                            {% else %}
+                                Currently unavailable
+                            {% endif %}
+                        </h6>
+                        <button data-toggle="modal" data-target="#animal_details{{animal}}" class="btn btn-success offset-6">View details</button>
+                        <!-- Modal -->
+                        <div class="modal fade" id="animal_details{{animal}}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">{{animal.given_name}}</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <table class="table table-stripped" style="border: black;">
+                                            <tr>
+                                                <td colspan="2" class="fw-bold text-center">
+                                                    <img src="{{animal.image1.url}}" alt="" height="80px" width="100px">
+                                                    
+                                                    {% if animal.image2 != '' %}
+                                                    <img src="{{animal.image2.url}}" alt="" height="80px" width="100px">    
+                                                    {% endif %}
+                                                    {% if animal.image3 != '' %}
+                                                    <img src="{{animal.image3.url}}" alt="" height="80px" width="100px">    
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fw-bold w-50">General Name</td>
+                                                <td> {{animal.akind.general_name}} </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fw-bold">Gender</td>
+                                                
+                                                {% if animal.gender == 'm' %}
+                                                <td> Male </td>
+                                                {% else %}
+                                                <td> Female </td>
+                                                {% endif %}
+                                
+                                            </tr>
+                                            <tr>
+                                                <td class="fw-bold">Height</td>
+                                                <td> {{animal.height}} </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fw-bold">Weight</td>
+                                                <td> {{animal.weight}} </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fw-bold">Birth date</td>
+                                                <td> {{animal.birth_date}} </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fw-bold">Location</td>
+                                                <td> {{animal.location}} </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fw-bold">Health status</td>
+                                                <td> {{animal.health_status}} </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fw-bold">Diatery Req.</td>
+                                                <td> {{animal.diatery_req}} </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fw-bold">Species</td>
+                                                <td> {{animal.akind.species}} </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fw-bold">Avg. lifespan</td>
+                                                <td> {{animal.akind.avg_lifespan}} </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fw-bold">Habitat</td>
+                                                <td> {{animal.akind.habitat}} </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fw-bold">Origin</td>
+                                                <td> {{animal.akind.origin}} </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fw-bold">Order</td>
+                                                <td> {{animal.akind.Aorder}} </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fw-bold">Class</td>
+                                                <td> {{animal.akind.class_id.Aclass}} </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fw-bold">Characteristics</td>
+                                                <td> {{animal.akind.characteristics}} </td>
+                                            </tr>
+                                        </table>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock display %}
+    
+    

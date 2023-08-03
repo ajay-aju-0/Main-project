@@ -9,8 +9,10 @@
 
 <div class="d-flex justify-content-between">
     <h1>Manage medicines</h1>
+    <a href="{% url 'doctor_view_expired_medicines' %}" class="btn btn-secondary"><i class="bi bi-eye"></i>&nbsp;&nbsp;View Expired Medicines</a>
     <button data-toggle="modal" data-target="#medicinemodal" data-backdrop="static" class="btn btn-success text-white fw-bold" style="width:max-content;">+ Add Medicine </button>
 </div>
+<br>
 {% include 'shared/messages.html' %}
 
 {% endblock pagetitle %}
@@ -24,6 +26,7 @@
         <table class="table table-stripped datatable" style="height: inherit;">
             <thead>
                 <tr>
+                    <th>SI No.</th>
                     <th>Name</th>
                     <th>Stock</th>
                     <th colspan="2">Action</th>
@@ -33,6 +36,7 @@
             
             {% for medicine in medicines %}
             <tr>
+                <td>{{forloop.counter}}</td>
                 <td>{{medicine.medicine}}</td>
                 
                 {% if medicine.stock == 0 %}
@@ -45,7 +49,8 @@
                 <td>  
                     <button data-toggle="modal" data-target="#updatemedicinemodal{{medicine.id}}" data-backdrop="static" class="btn btn-block btn-success text-white mx-2">Update</button>
                             {% include 'updatemedicinestocks.html' %}
-                    <a href="{% url 'doctor_delete_medicine' medicine.id %}" onclick="return confirm('do you want to delete?')" class="btn btn-danger text-white mx-2">Delete</a>
+                    <button data-toggle="modal" data-target="#medicineexpiremodal{{medicine.id}}" data-backdrop="static" class="btn btn-danger text-white mx-2">Mark Expired</button>
+                            {% include 'update medicine expire.html' %}
                 </td>
                         {% if update_error %}
                             <script src="{% static 'assets/js/jquery-3.6.3.slim.min.js' %}"></script>
@@ -75,6 +80,7 @@
         })
     </script>
 {% endif %}
+    
 
 
 {% endblock display %}

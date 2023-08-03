@@ -22,9 +22,6 @@ def loadDoctorHome(request):
     request.session['unverified_animals_count'] = Animals.objects.filter(status = -1).count()
 
 
-
-    # print(medicine_in_stock, medicine_out_stock)
-
     sick = []
     cured = []
     accepted = []
@@ -56,7 +53,6 @@ def loadDoctorHome(request):
         'rejected':len(rejected),
         'unverified_animals':request.session.get('unverified_animals_count')
     }
-
     
     return render(request,'doctorHome.html',context)
 
@@ -84,6 +80,7 @@ def rejectAnimal(request):
         id = request.POST['id']
         animal = Animals.objects.get(pk=id)
         reason = request.POST['reason']
+        animal.reason = reason
 
         if reason.isdigit():
             return render(request,'verify animals.html',{'error':True,'unverified_animals':request.session.get('unverified_animals_count')})
@@ -126,20 +123,27 @@ def sickAnimalList(request):
 @login_required()
 def addSickness(request):
     sicknessForm = SicknessForm()
+    animals = Animals.objects.filter(status=1)
+    medicines = Medicines.objects.filter(expire = None)
     request.session['unverified_animals_count'] = Animals.objects.filter(status = -1).count()
 
     if request.method == 'GET':
-        return render(request,'add sickness details.html',{'form':sicknessForm,'unverified_animals':request.session.get('unverified_animals_count')})
+        return render(request,'add sickness details.html',{'form':sicknessForm,'unverified_animals':request.session.get('unverified_animals_count'),'animals':animals,'medicines':medicines})
 
     elif request.method == 'POST':
         form = SicknessForm(request.POST)
+        animal = request.POST['animals']
+        medicine = request.POST['medicines']
         if form.is_valid():
             obj = form.save(commit=False)
+            obj.animal = Animals.objects.get(pk=animal)
+            obj.medicine = Medicines.objects.get(pk=medicine)
             obj.status = 'sick'
-            animal = Animals.objects.get(pk=obj.animal.id)
-            animal.health_status = 'sick'
+            animal_obj = Animals.objects.get(pk=animal)
+
+            animal_obj.health_status = 'sick'
             # print(animal.health_status)
-            animal.save()
+            animal_obj.save()
             obj.save()
             messages.success(request,'Sickness added successfully')
             return redirect('doctor_manage_sick_animals')
@@ -172,7 +176,8 @@ def viewMedicineConsumption(request,id):
 
 @login_required()
 def medicineList(request):
-    medicines = Medicines.objects.all()
+    medicines = Medicines.objects.filter(expire=None)
+    # print(medicines)
     medicineForm = MedicineForm()
     request.session['unverified_animals_count'] = Animals.objects.filter(status = -1).count()
     
@@ -210,11 +215,26 @@ def updateStock(request,id):
 
 
 @login_required()
-def deleteMedicine(request,id):
+def expireMedicine(request,id):
+    medicines = Medicines.objects.all()
+    request.session['unverified_animals_count'] = Animals.objects.filter(status = -1).count()
     medicine = Medicines.objects.get(pk=id)
-    medicine.delete()
-    messages.success(request,'Medicine deleted successfully')
-    return redirect('doctor_manage_medicines')
+    expire_date = request.POST.get('expire')
+    if expire_date.__lt__(str(date.today())):
+        # print(expire_date < str(date.today()))
+        medicine.expire = expire_date
+        medicine.save()
+        messages.success(request,'Medicine expire details updated successfully')
+        return redirect('doctor_manage_medicines')
+    else:
+        messages.error(request,'Future date is not permitted!')
+        return render(request,"view medicines.html",{'medicines':medicines,'unverified_animals':request.session.get('unverified_animals_count')})
+
+
+@login_required()
+def viewExpiredMedicines(request):
+    medicine = Medicines.objects.exclude(expire=None)
+    return render(request,'view expired medicines.html',{'medicines':medicine})
 
 
 @login_required()
@@ -275,7 +295,7 @@ def viewComplaints(request):
         if form.is_valid():
             obj = form.save(commit=False)
             obj.uid = Users.objects.get(pk=request.user.id)
-            obj.rid = Users.objects.get(pk=recipient.id)
+            obj.rid = Users.objects.get(pk=recipient)
             obj.save()
             messages.success(request,'Complaint registered successfully')
             return redirect('doctor_view_complaints')

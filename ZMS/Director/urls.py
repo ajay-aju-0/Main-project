@@ -16,7 +16,6 @@ urlpatterns = [
    path('vacancy details/',vacancyList,name="director_manage_vacancy"),
    path('add vacancy/',addVacancy,name="director_add_vacancy"),
    path('update vacancy/<id>',updateVacancy,name="director_update_vacancy"),
-   path('close vacancy/<id>',closeVacancy,name="director_close_vacancy"),
    path('view visitors/',visitorList,name="director_view_visitors"),
    path('zoo time/',showZooTime,name="director_manage_zoo_time"),
    path('mark holiday/<id>',markHoliday,name='director_mark_holiday'),

@@ -1,0 +1,22 @@
+{% extends 'index.html' %}
+
+
+{% block display %}
+    {% include 'login.html' %}
+    {% include 'shared/messages.html' %}
+    <div class="container">
+        <div class="row">
+            {% for feedback in feedbacks %}                
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{feedback.uid.username}} <br> <span>{{feedback.fdate}}</span>  </h5>
+                        <h6 class="card-subtitle mb-2 text-muted">{{feedback.feedback}} </h6>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock display %}
+    
+    

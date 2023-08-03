@@ -10,21 +10,19 @@
     <h1>Manage Animals</h1>
     <a href="{% url 'curator_add_animal' %}" class="btn btn-success text-white" style="width:max-content;"> <b>+ Add Animal</b> </a>
 </div>
-
-<br>
 {% include 'shared/messages.html' %}
 {% endblock pagetitle %}
 
 
 {% block display %}
 
-<div class="d-flex justify-content-between w-50">
+<div class="d-flex justify-content-between w-50 offset-2">
     <button id="all_animals" class="btn btn-secondary fw-bold">All animals</button>
     <button id="available_animals" class="btn btn-success fw-bold">Available animals</button>
     <button id="dead_animals" class="btn btn-danger fw-bold">Dead Animals</button>
 </div>
 <div>
-    <br><br>
+    <br>
 </div>
 
     <div class="row">
@@ -40,7 +38,7 @@
                         <th>Caretaker</th>
                         <th>Class</th>
                         <th>Status</th>
-                        <th colspan="3">Action</th>
+                        <th colspan="4">Action</th>
                     </tr>
                 </thead>
                 
@@ -73,8 +71,12 @@
                         {% endif %}
                             
                         <td>
-                            <a href="{% url 'curator_view_animal_details' animal.id %}" class="btn btn-secondary"><i class="bi bi-eye"></i></a>                        
+                            <a href="{% url 'curator_view_animal_details' animal.id %}" class="btn btn-secondary"><i class="bi bi-eye"></i></a>
+                            
+                            {% if animal.status != 0 %}
                             <a href="{% url 'curator_update_animal' animal.id %}" class="btn btn-success"><i class="bi bi-pencil"></i></a>
+                            {% endif %}
+                                                   
                             
                             {% if animal.status != -1 and animal.status != -2 %}
                             <a href="{% url 'curator_change_animal_status' animal.id %}" onclick="return confirm('Sure to change status?')" class="btn btn-danger">change status</a>

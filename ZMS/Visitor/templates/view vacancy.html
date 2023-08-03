@@ -43,22 +43,23 @@
                         <td>{{vacancy.vend}}</td>
                         <td>{{vacancy.issue_date}}</td>
                         <td>
-                            {% if vacancy.vstatus == 'closed' %}
-                                <h6 class="text-center"> Vacancy closed </h6>
                            
-                            {% elif appl_obj %}
+                            {% if appl_obj %}
                                 
                                 {% for apply in appl_obj %}
-                                    
                                     {% if apply.vacancy.id == vacancy.id %}
                                     <h6 class="text-center"> Applied </h6>
+                                    {% else %}
+                                    <a href="{% url 'visitor_apply_job' vacancy.id %}" class="btn btn-success text-white">Apply</a>
                                     {% endif %}
                                         
                                 {% endfor %}
+                            
+                            {% elif vacancy.vstatus == 'closed' %}
+                                <h6 class="text-center"> Vacancy closed </h6>
 
-                            {% else %}
-                                <a href="{% url 'visitor_apply_job' vacancy.id %}" class="btn btn-success text-white">Apply</a>
-                            {% endif %}      
+                            {% endif %}
+                               
                         </td>
                     </tr>
                     {% endfor %}

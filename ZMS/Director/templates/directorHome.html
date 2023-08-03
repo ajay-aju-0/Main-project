@@ -204,6 +204,20 @@
         <input type="hidden" id="rdec" value="{{total_revenue.11}}">
 
 
+        <input type="hidden" id="ajan" value="{{animal_count.0}}">
+        <input type="hidden" id="afeb" value="{{animal_count.1}}">
+        <input type="hidden" id="amar" value="{{animal_count.2}}">
+        <input type="hidden" id="aapr" value="{{animal_count.3}}">
+        <input type="hidden" id="amay" value="{{animal_count.4}}">
+        <input type="hidden" id="ajun" value="{{animal_count.5}}">
+        <input type="hidden" id="ajul" value="{{animal_count.6}}">
+        <input type="hidden" id="aaug" value="{{animal_count.7}}">
+        <input type="hidden" id="asep" value="{{animal_count.8}}">
+        <input type="hidden" id="aoct" value="{{animal_count.9}}">
+        <input type="hidden" id="anov" value="{{animal_count.10}}">
+        <input type="hidden" id="adec" value="{{animal_count.11}}">
+        
+
       <div class="card-body">
         <h5 class="card-title">Reports <span>/This Year</span></h5>
 
@@ -265,6 +279,20 @@
             roct = parseInt(document.getElementById('roct').value)
             rnov = parseInt(document.getElementById('rnov').value)
             rdec = parseInt(document.getElementById('rdec').value)
+
+
+            ajan = parseInt(document.getElementById('ajan').value)
+            afeb = parseInt(document.getElementById('afeb').value)
+            amar = parseInt(document.getElementById('amar').value)
+            aapr = parseInt(document.getElementById('aapr').value)
+            amay = parseInt(document.getElementById('amay').value)
+            ajun = parseInt(document.getElementById('ajun').value)
+            ajul = parseInt(document.getElementById('ajul').value)
+            aaug = parseInt(document.getElementById('aaug').value)
+            asep = parseInt(document.getElementById('asep').value)
+            aoct = parseInt(document.getElementById('aoct').value)
+            anov = parseInt(document.getElementById('anov').value)
+            adec = parseInt(document.getElementById('adec').value)
            
             
             new ApexCharts(document.querySelector("#reportsChart"), {
@@ -274,6 +302,8 @@
                 {name:'People visited',data: [vpjan,vpfeb,vpmar,vpapr,vpmay,vpjun,vpjul,vpaug,vpsep,vpoct,vpnov,vpdec]},
 
                 {name: 'Visitors registered',data: [vjan,vfeb,vmar,vapr,vmay,vjun,vjul,vaug,vsep,voct,vnov,vdec]} ,
+
+                {name:'Animals',data: [ajan,afeb,amar,aapr,amay,ajun,ajul,aaug,asep,aoct,anov,adec]},
 
                 {name: 'Revenue',data: [rjan,rfeb,rmar,rapr,rmay,rjun,rjul,raug,rsep,roct,rnov,rdec]}
             ],
@@ -296,7 +326,7 @@
               markers: {
                 size: 4
               },
-              colors: ['#4154f1','#ffd700', '#2eca6a', '#ff771d'],
+              colors: ['#4154f1','#ffd700', '#2eca6a', '#a0025c', '#ff771d'],
 
               dataLabels: {
                 enabled: true

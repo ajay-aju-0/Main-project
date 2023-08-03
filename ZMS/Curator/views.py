@@ -226,12 +226,14 @@ def updateAnimal(request,id):
         animalForm = UpdateAnimalForm(instance=animal)
         animalKindForm = AnimalKindForm(instance=animalKind)
         taxonomyForm = TaxonomyForm(instance=taxonomy)
-        return render(request,'update animal.html',{'form1':animalForm,'form2':animalKindForm,'form3':taxonomyForm,'keepers':users,'current':current_ct})
+        return render(request,'update animal.html',{'form1':animalForm,'form2':animalKindForm,'form3':taxonomyForm,'keepers':users,'current':current_ct,'name':animal.given_name})
 
     elif request.method == 'POST':
         form1 = UpdateAnimalForm(request.POST,instance=animal)
         form2 = AnimalKindForm(request.POST,instance=animalKind)
         form3 = TaxonomyForm(request.POST,instance=taxonomy)
+        caretaker = request.POST['caretaker']
+        caretaker_obj = Staffs.objects.get(user_id=caretaker)
         
         if form1.is_valid() and form2.is_valid() and form3.is_valid():
             AclassCheck = Taxonomy.objects.filter(Aclass = request.POST['Aclass']).exists()
@@ -242,6 +244,7 @@ def updateAnimal(request,id):
                     obj1 = form1.save(commit=False)
                     obj1.akind = AnimalKind.objects.get(general_name = request.POST['general_name'],species = request.POST['species'],Aorder = request.POST['Aorder'])
                     obj1.status = -1
+                    obj1.caretaker = caretaker_obj
                     obj1.save()
                 else:
                     AnimalKind.objects.create(general_name = request.POST['general_name'],species = request.POST['species'],Aorder = request.POST['Aorder'],avg_lifespan = request.POST['avg_lifespan'],habitat = request.POST['habitat'],origin = request.POST['origin'],characteristics = request.POST['characteristics'],class_id =Taxonomy.objects.get(Aclass = request.POST['Aclass']))
@@ -249,6 +252,7 @@ def updateAnimal(request,id):
                     obj1 = form1.save(commit=False)
                     obj1.akind = obj2
                     obj1.status = -1
+                    obj1.caretaker = caretaker_obj
                     obj1.save()
             else:
                 Taxonomy.objects.create(Aclass = request.POST['Aclass'])
@@ -257,6 +261,7 @@ def updateAnimal(request,id):
                 obj1 = form1.save(commit=False)
                 obj1.akind = obj2
                 obj1.status = -1
+                obj1.caretaker = caretaker_obj
                 obj1.save()
             messages.success(request,'Animal updated successfully')
             return redirect('curator_manage_animals')
@@ -285,14 +290,6 @@ def viewAnimalOfWeek(request):
             return render(request,"view animal of the week.html",{'form':form,'error':True})
     else:
         return render(request,'view animal of the week.html',{'AOW':animalOfWeek,'form':form})
-
-
-@login_required()
-def deletePerformance(request,id):
-    obj = Animal_of_the_week.objects.get(pk=id)
-    obj.delete()
-    messages.success(request,'Performance deleted successfully')
-    return redirect('curator_view_animal_of_the_week')
 
 
 @login_required()
@@ -331,14 +328,6 @@ def viewPurchases(request):
             return render(request,"view purchases.html",{'form':form,'error':True})
     else:
         return render(request,'view purchases.html',{'purchases':purchases,'form':purchaseForm})
-
-
-@login_required()
-def deletePurchase(request,id):
-    obj = Purchase.objects.get(pk=id)
-    obj.delete()
-    messages.success(request,'Purchase data deleted successfully')
-    return redirect('curator_manage_purchases')
 
 
 @login_required()
@@ -561,8 +550,14 @@ def rejectApplication(request,id,vid):
 
 @login_required()
 def viewMedicineStocks(request):
-    medicines = Medicines.objects.all()
+    medicines = Medicines.objects.filter(expire=None)
     return render(request,'view medicine stocks.html',{'medicines':medicines})
+
+
+@login_required()
+def viewExpiredMedicines(request):
+    medicine = Medicines.objects.exclude(expire=None)
+    return render(request,'view expired medicines.html',{'medicines':medicine})
 
 
 @login_required()
@@ -662,7 +657,7 @@ def viewGivenComplaints(request):
         if form.is_valid():
             obj = form.save(commit=False)
             obj.uid = Users.objects.get(pk=request.user.id)
-            obj.rid = Users.objects.get(pk=recipient.id)
+            obj.rid = Users.objects.get(pk=recipient)
             obj.save()
             messages.success(request,'Reply send successfully')
             return redirect('curator_view_send_complaint')

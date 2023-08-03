@@ -31,8 +31,37 @@
         <div class="panel-body">
             <form action="" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
-                {{form.as_p}}       
+                <p>
+                    {{form.errors}}
+                </p>
+                <p>
+                    <label for="animals">Animal:</label>
+                    <select class="form-control" name="animals" id="animals">
+                        <option value="None">---------</option>
+                        {% for animal in animals %}
+                            <option value="{{animal.id}}">{{animal.given_name}}</option>
+                        {% endfor %}   
+                    </select>
+                </p>
+                <p>
+                    {{form.sdate.label}}:{{form.sdate}}
+                </p>
+                <p>
+                    {{form.disease.label}}:{{form.disease}}
+                </p>
                     
+                <p>
+                    <label for="medicines">Medicine:</label>
+                    <select class="form-control" name="medicines" id="medicines">
+                        <option value="None">---------</option>
+                        {% for medicine in medicines %}
+                            <option value="{{medicine.id}}">{{medicine.medicine}}</option>
+                        {% endfor %}   
+                    </select>
+                </p>
+                <p>
+                    {{form.consumption.label}}:{{form.consumption}}
+                </p>
                 <div class="panel-footer">
                     <br>
                     <button type="submit" class="btn btn-block btn-success fw-bold w-100 fs-5" >SUBMIT</button>

@@ -140,8 +140,8 @@ class Animals(models.Model):
 class TransferDetails(models.Model):
     animal = models.ForeignKey(to=Animals,on_delete=models.CASCADE)
     order = models.CharField(max_length=30,verbose_name='Order No.')
-    transfer_from = models.CharField(max_length=25)
-    transfer_to = models.CharField(max_length=25)
+    transfer_from = models.CharField(max_length=50)
+    transfer_to = models.CharField(max_length=50)
     transfer_date = models.DateField()
     transfer_time = models.TimeField(default=None)
     transport_type = models.CharField(max_length=20,default=None)
@@ -159,6 +159,7 @@ class Animal_of_the_week(models.Model):
 class Medicines(models.Model):
     medicine = models.CharField(max_length=30)
     stock = models.IntegerField()
+    expire = models.DateField(verbose_name='Expired date',default=None,null=True)
 
     def __str__(self):
         return self.medicine
@@ -196,14 +197,17 @@ class Participants(models.Model):
     animal = models.ForeignKey(to=Animals,on_delete=models.CASCADE)
 
 class JobVacancy(models.Model):
-    type_choice = (("temporary","temporary"),("permenant","permenant"))
-    vposition = models.CharField(max_length=25,verbose_name="vacancy position")
-    qualification = models.CharField(max_length=20)
+    type_choice = (("temporary","temporary"),("permanent","permanent"))
+    order = models.CharField(max_length=20,verbose_name='Order ID',default=None)
+    vposition = models.CharField(max_length=25,verbose_name="Vacancy Position")
+    qualification = models.CharField(max_length=50)
     description = models.CharField(max_length=200)
-    vtype = models.CharField(max_length=10,choices=type_choice,verbose_name="vacancy type")
-    vstart = models.DateField(verbose_name="start date")
-    vend = models.DateField(verbose_name="end date")
-    vstatus = models.CharField(max_length=10,default="available",verbose_name="status")
+    vtype = models.CharField(max_length=10,choices=type_choice,verbose_name="Vacancy Type")
+    vstart = models.DateField(verbose_name="Start Date")
+    vstart_time = models.TimeField(verbose_name="Start Time",default=None)
+    vend = models.DateField(verbose_name="End Date")
+    vend_time = models.TimeField(verbose_name="End Time",default=None)
+    vstatus = models.CharField(max_length=10,default="available",verbose_name="Status")
     issue_date = models.DateField(auto_now=True)
 
 class Applications(models.Model):

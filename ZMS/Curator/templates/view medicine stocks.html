@@ -9,6 +9,8 @@
 
 <div class="d-flex justify-content-between">
     <h1>View medicines</h1>
+    <a href="{% url 'curator_view_expired_medicines' %}" class="btn btn-secondary"><i class="bi bi-eye"></i>&nbsp;&nbsp;View Expired Medicines</a>
+
 </div>
 
 {% include 'shared/messages.html' %}
@@ -23,6 +25,7 @@
         <table class="table table-stripped datatable" style="height: inherit;">
             <thead>
                 <tr>
+                    <th>SI No.</th>
                     <th>Name</th>
                     <th>Stock</th>
                 </tr>
@@ -31,6 +34,7 @@
             
             {% for medicine in medicines %}
             <tr>
+                <td>{{forloop.counter}}</td>
                 <td>{{medicine.medicine}}</td>
                 
                 {% if medicine.stock == 0 %}

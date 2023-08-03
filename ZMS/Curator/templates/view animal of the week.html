@@ -28,7 +28,6 @@
                         <th>Animal</th>
                         <th>Date</th>
                         <th>Performance</th>
-                        <th>Action</th>
                     </tr>
                 </thead>
                 
@@ -42,9 +41,6 @@
                             <img src="{{animal.performance.url}}" alt="" height="50px" width="100px">
                         </td>
                             
-                        <td>
-                            <a href="{% url 'curator_remove_animal_performance' animal.id %}" onclick="return confirm('sure to delete?')" class="btn btn-danger">Delete</a>
-                        </td>
                     </tr>
                 {% endfor %}
                

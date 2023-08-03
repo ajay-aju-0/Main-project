@@ -12,7 +12,7 @@ from .forms import *
 
 @login_required()
 def loadKeeperHome(request):
-    animal = Animals.objects.filter(Q(status = 1) | Q(caretaker = request.user.id)).count()
+    animal = Animals.objects.filter(Q(status = 1) & Q(caretaker = Staffs.objects.get(user=request.user.id).id)).count()
     guided = Ticket.objects.filter(Q(reporting_date__year = date.today().year) & Q(reporting_date__month = date.today().month) & Q(Guide = Staffs.objects.get(user=request.user.id)) ).count()
     
     context = {
@@ -25,7 +25,7 @@ def loadKeeperHome(request):
 
 @login_required()
 def viewAnimalHealthStatus(request):
-    animals = Animals.objects.all()
+    animals = Animals.objects.filter(Q(status = 1) & Q(caretaker = request.user.id))
     return render(request,'viewanimalhealthstatus.html',{'animals':animals})
 
 
@@ -51,8 +51,18 @@ def changeAnimalHealthStatus(request,id):
 
 @login_required()
 def viewSickAnimals(request):
-    sick_animals = sickness_details.objects.all()
-    return render(request,'keeper view sick animals.html',{'sickAnimals':sick_animals})
+    sick_animals = []
+    sick_animals_list = []
+    j=0
+    for i in Animals.objects.filter(caretaker = request.user.id):
+        if sickness_details.objects.filter(animal = i.id).exists():
+            sick_animals.append(sickness_details.objects.filter(animal = i.id))
+    # print(sick_animals)
+    for j in range(len(sick_animals)):
+        sick_animals_list.append(sick_animals[j][0])
+
+    # print(sick_animals_list)
+    return render(request,'keeper view sick animals.html',{'sickAnimals':sick_animals_list})
 
 
 @login_required()
@@ -121,7 +131,7 @@ def viewComplaints(request):
         if form.is_valid():
             obj = form.save(commit=False)
             obj.uid = Users.objects.get(pk=request.user.id)
-            obj.rid = Users.objects.get(pk=recipient.id)
+            obj.rid = Users.objects.get(pk=recipient)
             obj.save()
             messages.success(request,'Complaint registered successfully')
             return redirect('keeper_view_complaint')
