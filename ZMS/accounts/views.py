@@ -87,7 +87,7 @@ def viewAnimals(request):
 
 def viewTimings(request):
     timings = ZooTimings.objects.all()
-    return render(request,'view zoo time.html',{'timings':timings})
+    return render(request,'user view zoo time.html',{'timings':timings})
 
 
 def viewEvents(request):

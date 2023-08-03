@@ -247,6 +247,7 @@ def showZooTime(request):
 
     if request.method == 'GET':
         return render(request,'view zoo time.html',{'time':zoo_time,'timeform':timeForm})
+        # return HttpResponse('hi')
 
     elif request.method == 'POST':
         id = request.POST.get('id')
